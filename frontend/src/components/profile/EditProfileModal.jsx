@@ -9,119 +9,110 @@ export default function EditProfileModal({user,close,refresh}){
   const [skillInput,setSkillInput] = useState("")
 
   const addSkill = ()=>{
-
     if(skillInput.trim() === "") return
-
     setSkills([...skills,skillInput])
     setSkillInput("")
-
   }
 
   const removeSkill = (skill)=>{
-
     setSkills(skills.filter(s=>s !== skill))
-
   }
-
-  // const saveProfile = async ()=>{
-
-  //   await api.put("/users/update",{
-  //     bio,
-  //     skills
-  //   })
-
-  //   refresh()
-  //   close()
-
-  // }
 
   const saveProfile = async () => {
+    try {
+      const formData = new FormData()
 
-  try {
+      formData.append("bio", bio)
+      formData.append("skills", JSON.stringify(skills))
 
-    const formData = new FormData()
-
-    formData.append("bio", bio)
-    formData.append("skills", JSON.stringify(skills))
-    if (file) {
-      formData.append("image", file)
-    }
-
-    await api.put("/users/update", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data"
+      if (file) {
+        formData.append("image", file)
       }
-    })
 
-    refresh()
-    close()
+      await api.put("/users/update", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      })
 
-  } catch (err) {
-    console.error(err)
+      refresh()
+      close()
+
+    } catch (err) {
+      console.error(err)
+    }
   }
 
-}
   return(
 
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
 
-      <div className="bg-white p-6 rounded-xl w-[400px] space-y-4">
+      <div className="glass p-6 rounded-2xl w-[420px] space-y-5 text-white">
 
         <h2 className="text-xl font-bold">
           Edit Profile
         </h2>
 
+        {/* IMAGE */}
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e)=>setFile(e.target.files[0])}
+          className="w-full p-2 rounded-lg bg-white/5 border border-white/10 text-gray-300"
+        />
+
+        {/* BIO */}
         <div>
-<input
-  type="file"
-  accept="image/*"
-  className="w-full border rounded-lg p-2"
-  onChange={(e) => setFile(e.target.files[0])}
-/>
-          <p className="text-sm">Bio</p>
+          <p className="text-sm text-gray-400 mb-1">
+            Bio
+          </p>
 
           <textarea
             value={bio}
             onChange={(e)=>setBio(e.target.value)}
-            className="w-full border rounded-lg p-2"
+            rows="3"
+            className="w-full p-3 rounded-lg bg-white/5 border border-white/10 text-gray-300 outline-none focus:border-indigo-500"
           />
-
         </div>
 
+        {/* SKILLS */}
         <div>
 
-          <p className="text-sm">Skills</p>
+          <p className="text-sm text-gray-400 mb-1">
+            Skills
+          </p>
 
           <div className="flex gap-2">
 
             <input
               value={skillInput}
               onChange={(e)=>setSkillInput(e.target.value)}
-              className="border p-2 rounded-lg flex-1"
               placeholder="Add skill"
+              className="flex-1 p-2 rounded-lg bg-white/5 border border-white/10 text-gray-300 outline-none"
             />
 
             <button
               onClick={addSkill}
-              className="bg-gray-200 px-3 rounded-lg"
+              className="px-3 bg-indigo-500 hover:bg-indigo-600 rounded-lg text-white"
             >
               Add
             </button>
 
           </div>
 
-          <div className="flex gap-2 flex-wrap mt-2">
+          {/* SKILL TAGS */}
+          <div className="flex gap-2 flex-wrap mt-3">
 
             {skills.map(skill=>(
               <span
                 key={skill}
-                className="bg-gray-200 px-2 py-1 rounded-full text-sm"
+                className="bg-white/10 px-3 py-1 rounded-full text-xs flex items-center gap-1"
               >
                 {skill}
 
                 <button
                   onClick={()=>removeSkill(skill)}
-                  className="ml-1"
+                  className="text-red-400 hover:text-red-500"
                 >
                   ✕
                 </button>
@@ -133,18 +124,19 @@ export default function EditProfileModal({user,close,refresh}){
 
         </div>
 
-        <div className="flex justify-end gap-2">
+        {/* ACTIONS */}
+        <div className="flex justify-end gap-3 pt-2">
 
           <button
             onClick={close}
-            className="px-4 py-2 border rounded-lg"
+            className="px-4 py-2 rounded-lg bg-white/10 text-gray-300 hover:bg-white/20"
           >
             Cancel
           </button>
 
           <button
             onClick={saveProfile}
-            className="px-4 py-2 bg-indigo-600 text-white rounded-lg"
+            className="px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg shadow-[0_0_15px_rgba(99,102,241,0.4)]"
           >
             Save Changes
           </button>
@@ -156,5 +148,4 @@ export default function EditProfileModal({user,close,refresh}){
     </div>
 
   )
-
 }

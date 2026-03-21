@@ -15,29 +15,41 @@ const UserRow = ({ user }) => {
   };
 
   return (
-    <div className="flex items-center justify-between bg-white p-4 rounded-xl shadow">
+    <div className="glass p-4 rounded-2xl flex items-center justify-between">
 
       <div className="flex items-center gap-3">
 
-        <div className="w-10 h-10 bg-gray-300 rounded-full"></div>
+        {user.profileImage ? (
+          <img
+            src={user.profileImage}
+            className="w-10 h-10 rounded-full object-cover"
+          />
+        ) : (
+          <div className="w-10 h-10 bg-indigo-500 text-white rounded-full flex items-center justify-center">
+            {user.name?.[0]}
+          </div>
+        )}
 
         <div>
-          <p className="font-semibold">{user.name}</p>
-          <p className="text-sm text-gray-500">{user.email}</p>
+          <p className="text-white font-semibold">{user.name}</p>
+          <p className="text-sm text-gray-400">{user.email}</p>
         </div>
 
       </div>
 
       <div className="flex items-center gap-3">
 
-        <span className={`text-xs px-2 py-1 rounded 
-        ${user.isBanned ? "bg-red-500 text-white" : "bg-gray-200"}`}>
+        <span className={`text-xs px-2 py-1 rounded-full ${
+          user.isBanned
+            ? "bg-red-500/80 text-white"
+            : "bg-white/10 text-gray-300"
+        }`}>
           {user.isBanned ? "flagged" : "active"}
         </span>
 
         <button
           onClick={toggleBan}
-          className="px-3 py-1 bg-gray-200 rounded"
+          className="px-3 py-1 bg-white/10 hover:bg-white/20 rounded text-gray-300"
         >
           {user.isBanned ? "Unban" : "Ban"}
         </button>

@@ -35,69 +35,52 @@ const AdminPanel = () => {
   }, []);
 
   return (
-    <div className="max-w-5xl mx-auto p-6">
+    <div className="max-w-5xl mx-auto p-6 space-y-6">
 
-      <h1 className="text-2xl font-bold mb-6">
+      <h1 className="text-2xl font-bold text-white">
         🛡 Admin Panel
       </h1>
 
       {stats && <AdminStats stats={stats} />}
 
-      {/* Tabs */}
+      {/* TABS */}
+      <div className="flex gap-4 glass p-2 rounded-2xl">
 
-      <div className="flex gap-4 bg-gray-100 p-2 rounded-xl mb-6 mt-6">
-
-        <button
-          onClick={() => setActiveTab("reported")}
-          className={`flex-1 p-2 rounded-lg ${activeTab==="reported" ? "bg-white shadow" : ""}`}
-        >
-          Reported Posts
-        </button>
-
-        <button
-          onClick={() => setActiveTab("users")}
-          className={`flex-1 p-2 rounded-lg ${activeTab==="users" ? "bg-white shadow" : ""}`}
-        >
-          Users
-        </button>
-
-        <button
-          onClick={() => setActiveTab("analytics")}
-          className={`flex-1 p-2 rounded-lg ${activeTab==="analytics" ? "bg-white shadow" : ""}`}
-        >
-          Analytics
-        </button>
+        {["reported","users","analytics"].map(tab => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className={`flex-1 p-2 rounded-xl transition ${
+              activeTab===tab
+                ? "bg-indigo-500/20 text-white shadow-[0_0_20px_rgba(99,102,241,0.3)]"
+                : "text-gray-400 hover:bg-white/10"
+            }`}
+          >
+            {tab === "reported" && "Reported Posts"}
+            {tab === "users" && "Users"}
+            {tab === "analytics" && "Analytics"}
+          </button>
+        ))}
 
       </div>
 
-      {/* Reported Posts */}
+      {/* CONTENT */}
 
       {activeTab === "reported" && (
         <div className="flex flex-col gap-4">
-
-          {reportedPosts.map((post) => (
-            <ReportedPostCard
-              key={post._id}
-              post={post}
-            />
+          {reportedPosts.map(post => (
+            <ReportedPostCard key={post._id} post={post} />
           ))}
-
         </div>
       )}
-
-      {/* Users */}
 
       {activeTab === "users" && (
         <div className="flex flex-col gap-3">
-
-          {users.map((user) => (
+          {users.map(user => (
             <UserRow key={user._id} user={user} />
           ))}
-
         </div>
       )}
-
-      {/* Analytics */}
 
       {activeTab === "analytics" && (
         <AnalyticsPanel stats={stats} />

@@ -123,16 +123,16 @@ const Notifications = () => {
       {/* HEADER */}
       <div className="flex items-center justify-between mb-6">
 
-        <h1 className="text-2xl font-bold flex items-center gap-2">
-          🔔 Notifications
-        </h1>
+       <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+  🔔 Notifications
+</h1>
 
-        <button
-          onClick={markAllRead}
-          className="px-4 py-2 bg-gray-200 rounded-lg text-sm hover:bg-gray-300"
-        >
-          Mark all as read
-        </button>
+<button
+  onClick={markAllRead}
+  className="px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl shadow-[0_0_15px_rgba(99,102,241,0.4)] text-sm"
+>
+  Mark all as read
+</button>
 
       </div>
 
@@ -161,46 +161,42 @@ const Notifications = () => {
 
       {/* 🔥 CONTACT MODAL */}
       {selectedRequest && (
-        <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
+        <div className="glass p-6 rounded-2xl w-[400px] space-y-4 text-white">
 
-          <div className="bg-white p-6 rounded-xl w-[400px] space-y-4 shadow-lg">
+  <h2 className="text-lg font-semibold">
+    Share Contact Info
+  </h2>
 
-            <h2 className="text-lg font-semibold">
-              Share Contact Info
-            </h2>
+  <input
+    placeholder="WhatsApp / Email"
+    value={contact}
+    onChange={(e) => setContact(e.target.value)}
+    className="w-full p-3 rounded-lg bg-white/5 border border-white/10 text-gray-300 outline-none"
+  />
 
-            <input
-              placeholder="WhatsApp / Email"
-              value={contact}
-              onChange={(e) => setContact(e.target.value)}
-              className="w-full border p-2 rounded"
-            />
+  <div className="flex justify-end gap-3">
 
-            <div className="flex justify-end gap-3">
+    <button
+      onClick={() => {
+        setSelectedRequest(null);
+        setContact("");
+      }}
+      className="px-4 py-2 rounded bg-white/10 text-gray-300"
+    >
+      Cancel
+    </button>
 
-              <button
-                onClick={() => {
-                  setSelectedRequest(null);
-                  setContact("");
-                }}
-                className="border px-4 py-2 rounded"
-              >
-                Cancel
-              </button>
+    <button
+      onClick={handleAccept}
+      disabled={loadingId === selectedRequest._id}
+      className="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-lg"
+    >
+      {loadingId === selectedRequest._id ? "Sending..." : "Accept & Send"}
+    </button>
 
-              <button
-                onClick={handleAccept}
-                disabled={loadingId === selectedRequest._id}
-                className="bg-green-600 text-white px-4 py-2 rounded disabled:opacity-50"
-              >
-                {loadingId === selectedRequest._id ? "Sending..." : "Accept & Send"}
-              </button>
+  </div>
 
-            </div>
-
-          </div>
-
-        </div>
+</div>
       )}
 
     </div>

@@ -42,7 +42,6 @@ export default function Settings() {
     }
 
     try {
-
       await api.put("/auth/change-password", {
         currentPassword,
         newPassword
@@ -70,28 +69,29 @@ export default function Settings() {
 
     <div className="max-w-3xl mx-auto p-6 space-y-6">
 
-      <h1 className="text-2xl font-bold flex items-center gap-2">
+      <h1 className="text-2xl font-bold text-white flex items-center gap-2">
         ⚙ Settings
       </h1>
 
       {/* ACCOUNT INFO */}
+      <div className="glass p-6 rounded-2xl space-y-4">
 
-      <div className="bg-white p-6 rounded-xl shadow">
-
-        <h2 className="font-semibold mb-4">Account Information</h2>
+        <h2 className="font-semibold text-white">
+          Account Information
+        </h2>
 
         <div className="space-y-3">
 
           <input
             value={user.email}
             disabled
-            className="w-full border p-2 rounded"
+            className="w-full p-3 rounded-lg bg-white/5 border border-white/10 text-gray-300"
           />
 
           <input
             value={user.name}
             disabled
-            className="w-full border p-2 rounded"
+            className="w-full p-3 rounded-lg bg-white/5 border border-white/10 text-gray-300"
           />
 
           <div className="flex gap-4">
@@ -99,13 +99,13 @@ export default function Settings() {
             <input
               value={user.branch}
               disabled
-              className="w-full border p-2 rounded"
+              className="w-full p-3 rounded-lg bg-white/5 border border-white/10 text-gray-300"
             />
 
             <input
               value={user.year}
               disabled
-              className="w-full border p-2 rounded"
+              className="w-full p-3 rounded-lg bg-white/5 border border-white/10 text-gray-300"
             />
 
           </div>
@@ -115,10 +115,9 @@ export default function Settings() {
       </div>
 
       {/* CHANGE PASSWORD */}
+      <div className="glass p-6 rounded-2xl space-y-4">
 
-      <div className="bg-white p-6 rounded-xl shadow">
-
-        <h2 className="font-semibold mb-4">
+        <h2 className="font-semibold text-white">
           🔒 Change Password
         </h2>
 
@@ -129,7 +128,7 @@ export default function Settings() {
             placeholder="Current password"
             value={currentPassword}
             onChange={(e) => setCurrentPassword(e.target.value)}
-            className="w-full border p-2 rounded"
+            className="w-full p-3 rounded-lg bg-white/5 border border-white/10 text-gray-300 placeholder-gray-500 outline-none focus:border-indigo-500"
           />
 
           <input
@@ -137,7 +136,7 @@ export default function Settings() {
             placeholder="New password"
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
-            className="w-full border p-2 rounded"
+            className="w-full p-3 rounded-lg bg-white/5 border border-white/10 text-gray-300 placeholder-gray-500 outline-none focus:border-indigo-500"
           />
 
           <input
@@ -145,10 +144,10 @@ export default function Settings() {
             placeholder="Confirm password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            className="w-full border p-2 rounded"
+            className="w-full p-3 rounded-lg bg-white/5 border border-white/10 text-gray-300 placeholder-gray-500 outline-none focus:border-indigo-500"
           />
 
-          <button className="bg-indigo-600 text-white px-4 py-2 rounded">
+          <button className="w-full bg-indigo-500 hover:bg-indigo-600 text-white py-2 rounded-xl shadow-[0_0_15px_rgba(99,102,241,0.4)]">
             Update Password
           </button>
 
@@ -157,38 +156,37 @@ export default function Settings() {
       </div>
 
       {/* PRIVACY */}
+      <div className="glass p-6 rounded-2xl space-y-4">
 
-      <div className="bg-white p-6 rounded-xl shadow">
-
-        <h2 className="font-semibold mb-4">
+        <h2 className="font-semibold text-white">
           👁 Privacy
         </h2>
 
-        <div className="space-y-2">
+        <div className="space-y-2 text-gray-300">
 
-          <label className="flex gap-2">
-            <input
-              type="checkbox"
+          <label className="flex gap-2 items-center">
+            <input type="checkbox"
               checked={privacy.anonymous}
               onChange={() => setPrivacy({ ...privacy, anonymous: !privacy.anonymous })}
+              className="accent-indigo-500"
             />
             Allow anonymous posting
           </label>
 
-          <label className="flex gap-2">
-            <input
-              type="checkbox"
+          <label className="flex gap-2 items-center">
+            <input type="checkbox"
               checked={privacy.hideProfile}
               onChange={() => setPrivacy({ ...privacy, hideProfile: !privacy.hideProfile })}
+              className="accent-indigo-500"
             />
-            Hide profile details from non-followers
+            Hide profile details
           </label>
 
-          <label className="flex gap-2">
-            <input
-              type="checkbox"
+          <label className="flex gap-2 items-center">
+            <input type="checkbox"
               checked={privacy.showOnline}
               onChange={() => setPrivacy({ ...privacy, showOnline: !privacy.showOnline })}
+              className="accent-indigo-500"
             />
             Show online status
           </label>
@@ -198,40 +196,39 @@ export default function Settings() {
       </div>
 
       {/* NOTIFICATIONS */}
+      <div className="glass p-6 rounded-2xl space-y-4">
 
-      <div className="bg-white p-6 rounded-xl shadow">
-
-        <h2 className="font-semibold mb-4">
+        <h2 className="font-semibold text-white">
           🔔 Notifications
         </h2>
 
-        <div className="space-y-2">
+        <div className="space-y-2 text-gray-300">
 
-          <label className="flex gap-2">
-            <input
-              type="checkbox"
+          <label className="flex gap-2 items-center">
+            <input type="checkbox"
               checked={notifications.email}
               onChange={() => setNotifications({ ...notifications, email: !notifications.email })}
+              className="accent-indigo-500"
             />
             Email notifications
           </label>
 
-          <label className="flex gap-2">
-            <input
-              type="checkbox"
+          <label className="flex gap-2 items-center">
+            <input type="checkbox"
               checked={notifications.posts}
               onChange={() => setNotifications({ ...notifications, posts: !notifications.posts })}
+              className="accent-indigo-500"
             />
-            Notifications for new posts
+            New post notifications
           </label>
 
-          <label className="flex gap-2">
-            <input
-              type="checkbox"
+          <label className="flex gap-2 items-center">
+            <input type="checkbox"
               checked={notifications.comments}
               onChange={() => setNotifications({ ...notifications, comments: !notifications.comments })}
+              className="accent-indigo-500"
             />
-            Notifications for comments and likes
+            Comments & likes
           </label>
 
         </div>
@@ -239,16 +236,15 @@ export default function Settings() {
       </div>
 
       {/* DANGER ZONE */}
+      <div className="glass p-6 rounded-2xl border border-red-500/30 space-y-4">
 
-      <div className="bg-red-50 border border-red-200 p-6 rounded-xl">
-
-        <h2 className="text-red-600 font-semibold mb-4">
+        <h2 className="text-red-400 font-semibold">
           Danger Zone
         </h2>
 
         <button
           onClick={logout}
-          className="bg-red-600 text-white px-6 py-2 rounded w-full"
+          className="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-xl"
         >
           Log Out
         </button>

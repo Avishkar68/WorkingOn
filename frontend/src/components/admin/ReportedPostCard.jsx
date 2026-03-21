@@ -14,26 +14,26 @@ const ReportedPostCard = ({ post }) => {
   };
 
   return (
-    <div className="border border-red-400 p-4 rounded-xl">
+    <div className="glass p-5 rounded-2xl space-y-4 border border-red-500/30">
 
-      <div className="flex items-center gap-3 mb-3">
+      <div className="flex items-center gap-3">
 
         <img
           src={post.author.profileImage}
-          className="w-10 h-10 rounded-full"
+          className="w-10 h-10 rounded-full object-cover"
         />
 
-        <p className="font-semibold">
+        <p className="font-semibold text-white">
           {post.author.name}
         </p>
 
-        <span className="text-xs bg-red-500 text-white px-2 py-1 rounded">
+        <span className="text-xs bg-red-500/80 text-white px-2 py-1 rounded-full">
           Reported
         </span>
 
       </div>
 
-      <p className="text-gray-700 mb-3">
+      <p className="text-gray-300 text-sm">
         {post.content}
       </p>
 
@@ -41,22 +41,20 @@ const ReportedPostCard = ({ post }) => {
 
         <button
           onClick={pinPost}
-          className="px-3 py-1 bg-gray-200 rounded"
+          className="px-3 py-1 bg-white/10 hover:bg-white/20 rounded text-gray-300"
         >
-          📌 Pin Post
+          📌 Pin
         </button>
 
-        <button
-          className="px-3 py-1 bg-yellow-200 rounded"
-        >
-          ⚠ Warn User
+        <button className="px-3 py-1 bg-yellow-500/20 text-yellow-300 rounded">
+          ⚠ Warn
         </button>
 
         <button
           onClick={deletePost}
-          className="px-3 py-1 bg-red-500 text-white rounded"
+          className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
         >
-          🗑 Delete Post
+          🗑 Delete
         </button>
 
       </div>
