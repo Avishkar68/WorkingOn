@@ -80,9 +80,17 @@ export default function Profile(){
       {/* PROFILE CARD */}
       <div className="bg-white p-6 rounded-xl shadow flex gap-6">
 
-        <div className="w-24 h-24 rounded-full bg-indigo-600 text-white flex items-center justify-center text-3xl">
-          {profile.name?.[0]}
-        </div>
+        {profile.profileImage ? (
+  <img
+    src={profile.profileImage}
+    alt="profile"
+    className="w-24 h-24 rounded-full object-cover"
+  />
+) : (
+  <div className="w-24 h-24 rounded-full bg-indigo-600 text-white flex items-center justify-center text-3xl">
+    {profile.name?.[0]}
+  </div>
+)}
 
         <div className="flex-1">
 

@@ -5,7 +5,7 @@ export default function EditProfileModal({user,close,refresh}){
 
   const [bio,setBio] = useState(user.bio || "")
   const [skills,setSkills] = useState(user.skills || [])
-
+  const [file, setFile] = useState(null)
   const [skillInput,setSkillInput] = useState("")
 
   const addSkill = ()=>{
@@ -23,18 +23,44 @@ export default function EditProfileModal({user,close,refresh}){
 
   }
 
-  const saveProfile = async ()=>{
+  // const saveProfile = async ()=>{
 
-    await api.put("/users/update",{
-      bio,
-      skills
+  //   await api.put("/users/update",{
+  //     bio,
+  //     skills
+  //   })
+
+  //   refresh()
+  //   close()
+
+  // }
+
+  const saveProfile = async () => {
+
+  try {
+
+    const formData = new FormData()
+
+    formData.append("bio", bio)
+    formData.append("skills", JSON.stringify(skills))
+    if (file) {
+      formData.append("image", file)
+    }
+
+    await api.put("/users/update", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data"
+      }
     })
 
     refresh()
     close()
 
+  } catch (err) {
+    console.error(err)
   }
 
+}
   return(
 
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center">
@@ -46,7 +72,12 @@ export default function EditProfileModal({user,close,refresh}){
         </h2>
 
         <div>
-
+<input
+  type="file"
+  accept="image/*"
+  className="w-full border rounded-lg p-2"
+  onChange={(e) => setFile(e.target.files[0])}
+/>
           <p className="text-sm">Bio</p>
 
           <textarea

@@ -1,4 +1,5 @@
 import User from "../models/User.js";
+import uploadImage from "../utils/uploadImage.js";
 
 export const getUserProfile = async (req, res) => {
 
@@ -11,32 +12,67 @@ export const getUserProfile = async (req, res) => {
 };
 
 
+// export const updateProfile = async (req, res) => {
+
+//   const user = await User.findById(req.user._id);
+
+//   if (!user) {
+//     return res.status(404).json({ message: "User not found" });
+//   }
+
+//   if (req.body.bio !== undefined) {
+//     user.bio = req.body.bio;
+//   }
+
+//   if (req.body.skills !== undefined) {
+//     user.skills = req.body.skills;
+//   }
+
+//   if (req.body.profileImage !== undefined) {
+//     user.profileImage = req.body.profileImage;
+//   }
+
+//   const updatedUser = await user.save();
+
+//   res.json(updatedUser);
+
+// };
+
 export const updateProfile = async (req, res) => {
 
-  const user = await User.findById(req.user._id);
+  try {
 
-  if (!user) {
-    return res.status(404).json({ message: "User not found" });
+    const user = await User.findById(req.user._id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // ✅ HANDLE TEXT DATA
+    if (req.body.bio !== undefined) {
+      user.bio = req.body.bio;
+    }
+
+    if (req.body.skills !== undefined) {
+      user.skills = JSON.parse(req.body.skills);
+    }
+
+    // ✅ HANDLE IMAGE UPLOAD
+    if (req.file) {
+      const imageUrl = await uploadImage(req.file.path);
+      user.profileImage = imageUrl;
+    }
+
+    const updatedUser = await user.save();
+
+    res.json(updatedUser);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Profile update failed" });
   }
-
-  if (req.body.bio !== undefined) {
-    user.bio = req.body.bio;
-  }
-
-  if (req.body.skills !== undefined) {
-    user.skills = req.body.skills;
-  }
-
-  if (req.body.profileImage !== undefined) {
-    user.profileImage = req.body.profileImage;
-  }
-
-  const updatedUser = await user.save();
-
-  res.json(updatedUser);
 
 };
-
 
 export const followUser = async (req, res) => {
 

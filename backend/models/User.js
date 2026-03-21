@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema(
 
   profileImage: {
     type: String,
-    default: "https://via.placeholder.com/200?text=Profile"
+    default: "https://thumbs.dreamstime.com/b/anonimos-icon-profie-social-network-over-color-background-differnt-uses-purple-icon-social-profile-148257420.jpg"
   },
 
   branch: {

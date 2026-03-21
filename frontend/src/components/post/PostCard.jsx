@@ -41,10 +41,21 @@ export default function PostCard({ post, refreshFeed }) {
 
       <div className="flex items-center gap-3">
 
-        <div className="w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center font-semibold">
+        {/* <div className="w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center font-semibold">
           {post.author?.name?.[0]}
-        </div>
+        </div> */}
 
+{post.author?.profileImage ? (
+  <img
+    src={post.author.profileImage}
+    alt="avatar"
+    className="w-10 h-10 rounded-full object-cover"
+  />
+) : (
+  <div className="w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center font-semibold">
+    {post.author?.name?.[0]}
+  </div>
+)}
         <div>
 
           <p className="font-semibold">

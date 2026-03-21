@@ -1,6 +1,6 @@
 import express from "express";
 import protect from "../middleware/authMiddleware.js";
-
+import upload from "../middleware/upload.js";
 import {
   getUserProfile,
   updateProfile,
@@ -16,7 +16,7 @@ const router = express.Router();
 router.get("/me", protect, getCurrentUser);
 
 router.get("/:id", protect, getUserProfile);
-router.put("/update", protect, updateProfile);
+router.put("/update", protect, upload.single("image"), updateProfile);
 
 router.post("/:id/follow", protect, followUser);
 router.post("/:id/unfollow", protect, unfollowUser);

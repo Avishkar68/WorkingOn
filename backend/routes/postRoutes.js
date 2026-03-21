@@ -1,6 +1,6 @@
 import express from "express";
 import protect from "../middleware/authMiddleware.js";
-
+import upload from "../middleware/upload.js";
 import {
   createPost,
   getFeed,
@@ -13,7 +13,7 @@ import {
 
 const router = express.Router();
 
-router.post("/", protect, createPost);
+router.post("/", protect, upload.single("image"), createPost);
 router.get("/feed", protect, getFeed);
 
 router.post("/:id/like", protect, likePost);
