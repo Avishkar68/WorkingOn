@@ -11,21 +11,19 @@ export default function Search(){
   const [activeTab,setActiveTab] = useState("posts")
 
   const search = async (value)=>{
-
     setQuery(value)
 
-    if(!value) return setResults(null)
+    if(!value.trim()){
+      setResults(null)
+      return
+    }
 
     try{
-
       const res = await api.get(`/search?q=${value}`)
-
       setResults(res.data)
-
     }catch(err){
       console.error(err)
     }
-
   }
 
   return(
@@ -33,44 +31,49 @@ export default function Search(){
     <div className="space-y-6">
 
       {/* SEARCH BAR */}
-
-      <input
-        type="text"
-        placeholder="Search posts, users, opportunities..."
-        value={query}
-        onChange={(e)=>search(e.target.value)}
-        className="w-full border rounded-lg p-3"
-      />
-
+      <div className="glass rounded-2xl p-3">
+        <input
+          type="text"
+          placeholder="Search posts, users..."
+          value={query}
+          onChange={(e)=>search(e.target.value)}
+          className="w-full bg-transparent outline-none text-gray-300 placeholder-gray-500"
+        />
+      </div>
 
       {/* TABS */}
-
       {results && (
 
-        <div className="flex gap-4 bg-gray-100 p-2 rounded-lg">
+        <div className="glass rounded-2xl p-2 flex gap-2">
 
           <button
             onClick={()=>setActiveTab("posts")}
-            className={`px-4 py-1 rounded ${
-              activeTab==="posts" && "bg-white shadow"
+            className={`px-4 py-2 rounded-xl text-sm transition ${
+              activeTab==="posts"
+                ? "bg-indigo-500 text-white shadow-[0_0_10px_rgba(99,102,241,0.4)]"
+                : "text-gray-400 hover:bg-white/10"
             }`}
           >
-            Posts ({results.posts.length})
+            Posts ({results.posts?.length || 0})
           </button>
 
           <button
             onClick={()=>setActiveTab("users")}
-            className={`px-4 py-1 rounded ${
-              activeTab==="users" && "bg-white shadow"
+            className={`px-4 py-2 rounded-xl text-sm transition ${
+              activeTab==="users"
+                ? "bg-indigo-500 text-white shadow-[0_0_10px_rgba(99,102,241,0.4)]"
+                : "text-gray-400 hover:bg-white/10"
             }`}
           >
-            Users ({results.users.length})
+            Users ({results.users?.length || 0})
           </button>
 
           <button
             onClick={()=>setActiveTab("tags")}
-            className={`px-4 py-1 rounded ${
-              activeTab==="tags" && "bg-white shadow"
+            className={`px-4 py-2 rounded-xl text-sm transition ${
+              activeTab==="tags"
+                ? "bg-indigo-500 text-white shadow-[0_0_10px_rgba(99,102,241,0.4)]"
+                : "text-gray-400 hover:bg-white/10"
             }`}
           >
             Tags
@@ -80,46 +83,38 @@ export default function Search(){
 
       )}
 
-
       {/* RESULTS */}
 
+      {/* POSTS */}
       {results && activeTab==="posts" && (
-
         <div className="space-y-6">
 
-          {results.posts.map(post => (
-
-            <SearchPostCard
-              key={post._id}
-              post={post}
-            />
-
-          ))}
+          {results.posts?.length === 0 ? (
+            <p className="text-gray-400">No posts found</p>
+          ) : (
+            results.posts.map(post => (
+              <SearchPostCard key={post._id} post={post} />
+            ))
+          )}
 
         </div>
-
       )}
 
-
+      {/* USERS */}
       {results && activeTab==="users" && (
-
         <div className="space-y-4">
 
-          {results.users.map(user => (
-
-            <SearchUserCard
-              key={user._id}
-              user={user}
-            />
-
-          ))}
+          {results.users?.length === 0 ? (
+            <p className="text-gray-400">No users found</p>
+          ) : (
+            results.users.map(user => (
+              <SearchUserCard key={user._id} user={user} />
+            ))
+          )}
 
         </div>
-
       )}
 
     </div>
-
   )
-
 }

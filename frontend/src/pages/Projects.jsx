@@ -10,16 +10,12 @@ export default function Projects(){
   const [showCreate,setShowCreate] = useState(false)
 
   const loadProjects = async ()=>{
-
     try{
-
       const res = await api.get("/projects")
       setProjects(res.data)
-
     }catch(err){
       console.error(err)
     }
-
   }
 
   useEffect(()=>{
@@ -31,33 +27,28 @@ export default function Projects(){
     <div className="space-y-6">
 
       {/* HEADER */}
-
       <div className="flex justify-between items-center">
 
         <div>
-
-          <h1 className="text-2xl font-bold flex gap-2 items-center">
+          <h1 className="text-2xl font-bold text-white flex gap-2 items-center">
             {"</>"} Projects
           </h1>
 
-          <p className="text-gray-500">
+          <p className="text-gray-400">
             Collaborate on exciting projects
           </p>
-
         </div>
 
         <button
           onClick={()=>setShowCreate(true)}
-          className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-5 py-2 rounded-lg"
+          className="bg-indigo-500 hover:bg-indigo-600 text-white px-5 py-2 rounded-xl shadow-[0_0_20px_rgba(99,102,241,0.3)]"
         >
           Create Project
         </button>
 
       </div>
 
-
-      {/* PROJECT LIST */}
-
+      {/* LIST */}
       <div className="space-y-6">
 
         {projects.map(project => (
@@ -70,7 +61,6 @@ export default function Projects(){
 
       </div>
 
-
       {showCreate &&
         <CreateProjectModal
           close={()=>setShowCreate(false)}
@@ -81,5 +71,4 @@ export default function Projects(){
     </div>
 
   )
-
 }

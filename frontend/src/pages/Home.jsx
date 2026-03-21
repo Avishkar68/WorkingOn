@@ -11,19 +11,12 @@ export default function Home(){
   const [openModal,setOpenModal] = useState(false)
 
   const fetchFeed = async () => {
-
     try{
-
       const res = await api.get("/posts/feed")
-
       setPosts(res.data)
-
     }catch(err){
-
       console.error(err)
-
     }
-
     setLoading(false)
   }
 
@@ -32,25 +25,27 @@ export default function Home(){
   },[])
 
   if(loading){
-    return <div>Loading feed...</div>
+    return (
+      <div className="text-gray-400 text-center mt-10">
+        Loading feed...
+      </div>
+    )
   }
 
   return(
-
     <div className="space-y-6">
 
-      {/* CREATE POST BUTTON */}
-
-      <button
+      {/* CREATE POST INPUT STYLE */}
+      <div
         onClick={()=>setOpenModal(true)}
-        className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-xl font-medium shadow"
+        className="glass rounded-2xl p-4 cursor-pointer hover:shadow-[0_0_20px_rgba(99,102,241,0.3)] transition"
       >
-        Create a Post
-      </button>
+        <p className="text-gray-400">
+          What’s happening?
+        </p>
+      </div>
 
-
-      {/* CREATE POST MODAL */}
-
+      {/* MODAL */}
       {openModal &&
         <CreatePostModal
           close={()=>setOpenModal(false)}
@@ -58,9 +53,7 @@ export default function Home(){
         />
       }
 
-
       {/* POSTS */}
-
       {posts.map(post=>(
         <PostCard
           key={post._id}
@@ -70,6 +63,5 @@ export default function Home(){
       ))}
 
     </div>
-
   )
 }

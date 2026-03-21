@@ -1,29 +1,28 @@
 import { useNavigate } from "react-router-dom"
 
 export default function SearchUserCard({ user }) {
+
   const navigate = useNavigate()
 
   return (
 
-    <div className="bg-white shadow rounded-lg p-4 flex items-center gap-4">
+    <div
+      onClick={() => navigate(`/user/${user._id}`)}
+      className="glass rounded-2xl p-4 flex items-center gap-4 cursor-pointer hover:shadow-[0_0_20px_rgba(99,102,241,0.2)] transition"
+    >
 
       <img
         src={user.profileImage}
-        className="w-12 h-12 rounded-full"
+        className="w-12 h-12 rounded-full object-cover"
       />
 
       <div>
 
-
-
-        <div
-          onClick={() => navigate(`/user/${user._id}`)}
-          className="cursor-pointer hover:bg-gray-100 p-3 rounded"
-        >
+        <p className="text-white font-medium">
           {user.name}
-        </div>
+        </p>
 
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-gray-400">
           {user.branch}
         </p>
 
@@ -32,5 +31,4 @@ export default function SearchUserCard({ user }) {
     </div>
 
   )
-
 }

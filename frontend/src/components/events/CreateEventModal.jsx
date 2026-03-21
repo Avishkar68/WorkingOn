@@ -7,7 +7,6 @@ export default function CreateEventModal({close,refresh}){
   const [description,setDescription] = useState("")
   const [date,setDate] = useState("")
   const [location,setLocation] = useState("")
-  const [eventType,setEventType] = useState("workshop")
   const [capacity,setCapacity] = useState(100)
   const [tags,setTags] = useState([])
   const [tagInput,setTagInput] = useState("")
@@ -32,13 +31,11 @@ export default function CreateEventModal({close,refresh}){
     }
 
     try{
-
       await api.post("/events",{
         title,
         description,
         date,
         location,
-        eventType,
         capacity,
         tags,
         registrationLink
@@ -54,56 +51,55 @@ export default function CreateEventModal({close,refresh}){
 
   return(
 
-    <div className="fixed inset-0 bg-black/30 flex items-center justify-center">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
 
-      <div className="bg-white w-[500px] rounded-xl p-6 space-y-4">
+      <div className="glass w-[500px] rounded-2xl p-6 space-y-4 text-white">
 
         <div className="flex justify-between">
           <h2 className="text-lg font-semibold">Create Event</h2>
-          <button onClick={close}>✕</button>
+          <button onClick={close} className="text-gray-400 hover:text-white">✕</button>
         </div>
 
         <input
           placeholder="Title"
           value={title}
           onChange={(e)=>setTitle(e.target.value)}
-          className="w-full border p-2 rounded"
+          className="w-full bg-white/5 border border-white/10 p-2 rounded text-gray-300"
         />
 
         <textarea
           placeholder="Description"
           value={description}
           onChange={(e)=>setDescription(e.target.value)}
-          className="w-full border p-2 rounded"
+          className="w-full bg-white/5 border border-white/10 p-2 rounded text-gray-300"
         />
 
         <input
           type="datetime-local"
           value={date}
           onChange={(e)=>setDate(e.target.value)}
-          className="w-full border p-2 rounded"
+          className="w-full bg-white/5 border border-white/10 p-2 rounded text-gray-300"
         />
 
         <input
           placeholder="Location"
           value={location}
           onChange={(e)=>setLocation(e.target.value)}
-          className="w-full border p-2 rounded"
+          className="w-full bg-white/5 border border-white/10 p-2 rounded text-gray-300"
         />
 
         <input
           type="number"
           value={capacity}
           onChange={(e)=>setCapacity(e.target.value)}
-          className="w-full border p-2 rounded"
+          className="w-full bg-white/5 border border-white/10 p-2 rounded text-gray-300"
         />
 
-        {/* 🔥 REGISTRATION LINK */}
         <input
-          placeholder="Registration Link (Google Form / Website)"
+          placeholder="Registration Link"
           value={registrationLink}
           onChange={(e)=>setRegistrationLink(e.target.value)}
-          className="w-full border p-2 rounded"
+          className="w-full bg-white/5 border border-white/10 p-2 rounded text-gray-300"
         />
 
         {/* TAGS */}
@@ -112,12 +108,12 @@ export default function CreateEventModal({close,refresh}){
             placeholder="Add tag"
             value={tagInput}
             onChange={(e)=>setTagInput(e.target.value)}
-            className="flex-1 border p-2 rounded"
+            className="flex-1 bg-white/5 border border-white/10 p-2 rounded text-gray-300"
           />
 
           <button
             onClick={addTag}
-            className="bg-gray-200 px-3 rounded"
+            className="bg-indigo-500 px-3 rounded text-white"
           >
             Add
           </button>
@@ -125,10 +121,7 @@ export default function CreateEventModal({close,refresh}){
 
         <div className="flex gap-2 flex-wrap">
           {tags.map(tag => (
-            <span
-              key={tag}
-              className="bg-gray-100 px-3 py-1 rounded-full text-sm"
-            >
+            <span key={tag} className="bg-white/10 px-3 py-1 rounded-full text-xs">
               {tag}
             </span>
           ))}
@@ -137,14 +130,14 @@ export default function CreateEventModal({close,refresh}){
         <div className="flex justify-end gap-3">
           <button
             onClick={close}
-            className="border px-4 py-2 rounded"
+            className="px-4 py-2 bg-white/10 rounded text-gray-300"
           >
             Cancel
           </button>
 
           <button
             onClick={createEvent}
-            className="bg-indigo-600 text-white px-4 py-2 rounded"
+            className="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded shadow-[0_0_15px_rgba(99,102,241,0.4)]"
           >
             Create Event
           </button>

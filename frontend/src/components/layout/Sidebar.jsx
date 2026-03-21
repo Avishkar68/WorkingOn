@@ -1,33 +1,24 @@
 import { NavLink } from "react-router-dom"
 import {
-  Home,
-  Briefcase,
-  BookOpen,
-  Code,
-  Calendar,
-  Compass,
-  Search,
-  User,
-  Bell,
-  Settings,
-  Shield
+  Home, Briefcase, BookOpen, Code, Calendar,
+  Compass, Search, User, Bell, Settings, Shield
 } from "lucide-react"
 
 export default function Sidebar() {
 
   const link =
-    "flex items-center gap-3 px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 transition"
+    "flex items-center gap-3 px-4 py-2 rounded-xl text-gray-300 hover:bg-white/10 transition"
 
   const active =
-    "flex items-center gap-3 px-4 py-2 rounded-lg bg-black text-white"
+    "flex items-center gap-3 px-4 py-2 rounded-xl bg-indigo-500/20 text-white shadow-[0_0_20px_rgba(99,102,241,0.3)]"
 
   return (
-    <div className="w-[250px] bg-white border-r h-screen fixed left-0 top-0 flex flex-col justify-between">
+    <div className="w-[250px] h-screen fixed left-0 top-0 flex flex-col justify-between glass">
 
       {/* TOP */}
       <div>
-        <div className="p-5 font-bold text-lg">
-          SPIT Connect
+        <div className="p-5 font-bold text-xl text-white">
+          Lenspace
         </div>
 
         <nav className="space-y-2 px-3">
@@ -64,7 +55,7 @@ export default function Sidebar() {
       </div>
 
       {/* BOTTOM */}
-      <div className="p-3 space-y-2 border-t">
+      <div className="p-3 space-y-2 border-t border-white/10">
 
         <NavLink to="/profile" className={link}>
           <User size={18}/> Profile
@@ -82,12 +73,7 @@ export default function Sidebar() {
           <Shield size={18}/> Admin Panel
         </NavLink>
 
-        {/* <button className="text-red-500 px-4 py-2 hover:opacity-80">
-          Logout
-        </button> */}
-
       </div>
-
     </div>
   )
 }

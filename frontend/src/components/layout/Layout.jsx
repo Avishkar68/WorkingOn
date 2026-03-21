@@ -4,22 +4,22 @@ import RightSidebar from "./RightSidebar"
 
 export default function Layout({ children }) {
   return (
-    <div className="flex h-screen bg-gray-100 overflow-hidden">
+    <div className="flex h-screen overflow-hidden bg-[#0b0b17]">
 
-      {/* LEFT SIDEBAR */}
+      {/* LEFT */}
       <Sidebar />
 
-      {/* RIGHT SIDE CONTENT */}
+      {/* RIGHT */}
       <div className="flex-1 flex flex-col ml-[250px]">
 
         {/* TOPBAR */}
         <Topbar />
 
-        {/* MAIN CONTENT AREA */}
+        {/* CONTENT */}
         <div className="flex flex-1 overflow-hidden">
 
-          {/* CENTER CONTENT (SCROLLABLE ONLY THIS) */}
-          <main className="flex-1 max-w-[800px] mx-auto p-6 overflow-y-auto">
+          {/* CENTER */}
+          <main className="flex-1 max-w-[700px] mx-auto p-6 overflow-y-auto space-y-6">
             {children}
           </main>
 
@@ -27,7 +27,6 @@ export default function Layout({ children }) {
           <RightSidebar />
 
         </div>
-
       </div>
     </div>
   )
