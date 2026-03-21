@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import api from "../../api/axios"
+import { useNavigate } from "react-router-dom"
 
 export default function CommentSection({ postId }) {
 
@@ -7,74 +8,62 @@ export default function CommentSection({ postId }) {
   const [content,setContent] = useState("")
   const [loading,setLoading] = useState(true)
 
+  const navigate = useNavigate()
+
   const loadComments = async () => {
-
     try {
-
       const res = await api.get(`/comments/${postId}`)
       setComments(res.data)
-
     } catch (err) {
-
-      console.error("Failed to load comments", err)
-
+      console.error(err)
     }
-
     setLoading(false)
   }
 
   const addComment = async () => {
-
     if (!content.trim()) return
 
     try {
-
-      await api.post("/comments", {
-        postId,
-        content
-      })
-
+      await api.post("/comments",{ postId, content })
       setContent("")
       loadComments()
-
     } catch (err) {
-
       console.error(err)
-
     }
-
   }
 
-  useEffect(() => {
+  useEffect(()=>{
     loadComments()
-  }, [])
+  },[])
 
-  if (loading) {
-    return <div className="text-sm text-gray-500">Loading comments...</div>
+  if (loading){
+    return <p className="text-sm text-gray-400">Loading...</p>
   }
 
   return (
 
-    <div className="border-t pt-3 mt-3 space-y-2">
+    <div className="border-t border-white/10 pt-4 space-y-3">
 
       {comments.map((c) => (
 
-        <div key={c._id} className="flex items-start gap-2 text-sm">
+        <div key={c._id} className="flex items-start gap-3">
 
           <img
             src={c.author?.profileImage}
-            className="w-6 h-6 rounded-full"
+            onClick={()=>navigate(`/user/${c.author?._id}`)}
+            className="w-7 h-7 rounded-full cursor-pointer"
           />
 
-          <div>
+          <div className="bg-white/5 px-3 py-2 rounded-lg text-sm text-gray-300">
 
-            <span className="font-semibold">
+            <span
+              onClick={()=>navigate(`/user/${c.author?._id}`)}
+              className="font-semibold text-indigo-400 cursor-pointer mr-1"
+            >
               {c.author?.name}
             </span>
 
-            <span className="ml-2 text-gray-700">
-              {c.content}
-            </span>
+            {c.content}
 
           </div>
 
@@ -82,18 +71,19 @@ export default function CommentSection({ postId }) {
 
       ))}
 
+      {/* INPUT */}
       <div className="flex gap-2 mt-3">
 
         <input
           value={content}
           onChange={(e)=>setContent(e.target.value)}
-          className="flex-1 border rounded p-2 text-sm"
+          className="flex-1 bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-gray-300"
           placeholder="Write a comment..."
         />
 
         <button
           onClick={addComment}
-          className="bg-indigo-600 text-white px-3 rounded"
+          className="bg-indigo-500 hover:bg-indigo-600 px-4 rounded-lg text-white"
         >
           Post
         </button>

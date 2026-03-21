@@ -2,39 +2,60 @@ import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import User from "../models/User.js";
 import generateToken from "../utils/generateToken.js";
+import uploadImage from "../utils/uploadImage.js";
 
 export const registerUser = async (req, res) => {
+  try {
 
-  const { name, email, password, branch, year } = req.body;
+    const name = req.body.name;
+    const email = req.body.email;
+    const password = req.body.password;
+    const branch = req.body.branch;
+    const year = req.body.year;
 
-  if (!email.endsWith("@spit.ac.in")) {
-    return res.status(400).json({ message: "Only SPIT email allowed" });
+    if (!email.endsWith("@spit.ac.in")) {
+      return res.status(400).json({ message: "Only SPIT email allowed" });
+    }
+
+    const userExists = await User.findOne({ email });
+
+    if (userExists) {
+      return res.status(400).json({ message: "User already exists" });
+    }
+
+    // ✅ HASH PASSWORD
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    // ✅ HANDLE IMAGE
+    let profileImage = "";
+
+    if (req.file) {
+      profileImage = await uploadImage(req.file.path);
+    }
+
+    // ✅ CREATE USER
+    const user = await User.create({
+      name,
+      email,
+      password: hashedPassword,
+      branch,
+      year,
+      profileImage
+    });
+
+    res.status(201).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      profileImage: user.profileImage,
+      token: generateToken(user._id)
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Registration failed" });
   }
-
-  const userExists = await User.findOne({ email });
-
-  if (userExists) {
-    return res.status(400).json({ message: "User already exists" });
-  }
-
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(password, salt);
-
-  const user = await User.create({
-    name,
-    email,
-    password: hashedPassword,
-    branch,
-    year
-  });
-
-  res.status(201).json({
-    _id: user._id,
-    name: user.name,
-    email: user.email,
-    token: generateToken(user._id)
-  });
-
 };
 
 
