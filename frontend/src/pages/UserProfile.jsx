@@ -85,15 +85,15 @@ export default function UserProfile(){
 
         {/* AVATAR */}
           {/* {user.name?.[0]} */}
-           {profile.profileImage ? (
+           {user.profileImage ? (
           <img
-            src={profile.profileImage}
+            src={user.profileImage}
             alt="profile"
             className="w-24 h-24 rounded-full object-cover"
           />
         ) : (
           <div className="w-24 h-24 rounded-full bg-indigo-600 text-white flex items-center justify-center text-3xl">
-            {profile.name?.[0]}
+            {user.name?.[0]}
           </div>
         )}
 
