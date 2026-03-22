@@ -10,11 +10,12 @@ export default function Register(){
     name:"",
     email:"",
     password:"",
-    branch:"",
-    year:""
+    branch:"Computer Engineering",
+    year:1
   })
 
   const [file,setFile] = useState(null)
+  const [preview,setPreview] = useState(null)
   const [loading,setLoading] = useState(false)
 
   const handleSubmit = async (e)=>{
@@ -25,20 +26,16 @@ export default function Register(){
 
       const formData = new FormData()
 
-      formData.append("name",form.name)
-      formData.append("email",form.email)
-      formData.append("password",form.password)
-      formData.append("branch",form.branch)
-      formData.append("year",form.year)
+      Object.entries(form).forEach(([key,value])=>{
+        formData.append(key,value)
+      })
 
       if(file){
         formData.append("profileImage",file)
       }
 
       await api.post("/auth/register",formData,{
-        headers:{
-          "Content-Type":"multipart/form-data"
-        }
+        headers:{ "Content-Type":"multipart/form-data" }
       })
 
       navigate("/login")
@@ -52,76 +49,143 @@ export default function Register(){
 
   return(
 
-    <div className="min-h-screen flex items-center justify-center bg-[#0b0b17]">
+    <div className="min-h-screen flex items-center justify-center bg-[#0b0b17] relative overflow-hidden">
 
       {/* BG GLOW */}
-      <div className="absolute w-[500px] h-[500px] bg-purple-500/20 blur-[120px] rounded-full"></div>
+      <div className="absolute w-[600px] h-[600px] bg-indigo-500/20 blur-[140px] rounded-full top-[-100px] left-[-100px]" />
+      <div className="absolute w-[500px] h-[500px] bg-purple-500/20 blur-[120px] rounded-full bottom-[-100px] right-[-100px]" />
 
       <form
         onSubmit={handleSubmit}
-        className="glass relative z-10 p-8 rounded-2xl w-[350px] space-y-4 text-white"
+        className="glass relative z-10 p-8 rounded-2xl w-[420px] space-y-6 text-white border border-white/10 shadow-[0_0_40px_rgba(99,102,241,0.15)]"
       >
 
+        {/* HEADER */}
         <div>
-          <h2 className="text-2xl font-semibold">
+          <h2 className="text-3xl font-bold">
             Create Account 🚀
           </h2>
-          <p className="text-gray-400 text-sm">
+          <p className="text-gray-400 text-sm mt-1">
             Join your campus network
           </p>
         </div>
 
-        {/* PROFILE IMAGE */}
-        <input
-          type="file"
-          accept="image/*"
-          className="w-full bg-white/5 border border-white/10 p-2 rounded-lg text-gray-300"
-          onChange={(e)=>setFile(e.target.files[0])}
-        />
+        <div className="space-y-2">
 
-        <input
-          placeholder="Name"
-          className="input"
-          onChange={(e)=>setForm({...form,name:e.target.value})}
-        />
+<label className="label">Profile Image</label>
 
-        <input
-          placeholder="Email"
-          className="input"
-          onChange={(e)=>setForm({...form,email:e.target.value})}
-        />
+{/* CLICKABLE CONTAINER */}
+<div
+  onClick={() => document.getElementById("fileInput").click()}
+  className="w-full h-32 rounded-xl overflow-hidden border border-white/10 bg-white/5 flex items-center justify-center cursor-pointer hover:border-indigo-500 transition"
+>
+  {preview ? (
+    <img src={preview} className="w-full h-full object-cover"/>
+  ) : (
+    <span className="text-gray-400 text-sm">
+      Click to upload image
+    </span>
+  )}
+</div>
 
-        <input
-          type="password"
-          placeholder="Password"
-          className="input"
-          onChange={(e)=>setForm({...form,password:e.target.value})}
-        />
+{/* HIDDEN INPUT */}
+<input
+  id="fileInput"
+  type="file"
+  accept="image/*"
+  className="hidden"
+  onChange={(e)=>{
+    const f = e.target.files[0]
+    setFile(f)
+    if(f){
+      setPreview(URL.createObjectURL(f))
+    }
+  }}
+/>
 
-        <input
-          placeholder="Branch"
-          className="input"
-          onChange={(e)=>setForm({...form,branch:e.target.value})}
-        />
+</div>
 
-        <input
-          placeholder="Year"
-          className="input"
-          onChange={(e)=>setForm({...form,year:e.target.value})}
-        />
+        {/* INPUTS */}
+        <div className="space-y-4">
 
+          <div>
+            <label className="label">Full Name</label>
+            <input
+              type="text"
+              placeholder="Enter your name"
+              className="input"
+              onChange={(e)=>setForm({...form,name:e.target.value})}
+            />
+          </div>
+
+          <div>
+            <label className="label">Email</label>
+            <input
+              type="email"
+              placeholder="you@spit.ac.in"
+              className="input"
+              onChange={(e)=>setForm({...form,email:e.target.value})}
+            />
+          </div>
+
+          <div>
+            <label className="label">Password</label>
+            <input
+              type="password"
+              placeholder="Minimum 6 characters"
+              className="input"
+              onChange={(e)=>setForm({...form,password:e.target.value})}
+            />
+          </div>
+
+          {/* DROPDOWNS */}
+          <div className="grid grid-cols-2 gap-4">
+
+            <div>
+              <label className="label">Branch</label>
+              <select
+                className="input"
+                value={form.branch}
+                onChange={(e)=>setForm({...form,branch:e.target.value})}
+              >
+                <option>Computer Engineering</option>
+                <option>Computer Science and Engineering</option>
+                <option>Electronics Engineering</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="label">Year</label>
+              <select
+                className="input"
+                value={form.year}
+                onChange={(e)=>setForm({...form,year:e.target.value})}
+              >
+                <option value={1}>1st Year</option>
+                <option value={2}>2nd Year</option>
+                <option value={3}>3rd Year</option>
+                <option value={4}>4th Year</option>
+              </select>
+            </div>
+
+          </div>
+
+        </div>
+
+        {/* BUTTON */}
         <button
           disabled={loading}
-          className="w-full bg-indigo-500 hover:bg-indigo-600 py-3 rounded-xl"
+          className="w-full bg-indigo-500 hover:bg-indigo-600 py-3 rounded-xl font-medium transition shadow-[0_0_25px_rgba(99,102,241,0.4)] active:scale-[0.98]"
         >
-          {loading ? "Creating..." : "Register"}
+          {loading ? "Creating..." : "Create Account"}
         </button>
 
+        {/* FOOTER */}
         <p className="text-sm text-gray-400 text-center">
           Already have an account?{" "}
           <span
             onClick={()=>navigate("/login")}
-            className="text-indigo-400 cursor-pointer"
+            className="text-indigo-400 cursor-pointer hover:underline"
           >
             Login
           </span>
