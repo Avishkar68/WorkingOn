@@ -29,7 +29,7 @@ export default function RightSidebar() {
   },[])
 
   return (
-    <div className="w-[320px] p-4 space-y-4 hidden lg:block overflow-y-auto">
+    <div className="w-[280px] xl:w-[320px] p-3 sm:p-4 space-y-4 overflow-y-auto">
 
       {/* TAGS */}
       <div className="glass rounded-2xl p-4">
@@ -37,7 +37,10 @@ export default function RightSidebar() {
 
         <div className="flex flex-wrap gap-2">
           {["React","Internship","Hackathon","DevOps","DataScience"].map(tag => (
-            <span key={tag} className="bg-white/10 text-xs px-3 py-1 rounded-full text-gray-300">
+            <span 
+              key={tag} 
+              className="bg-white/10 text-xs px-3 py-1 rounded-full text-gray-300"
+            >
               {tag}
             </span>
           ))}
@@ -48,32 +51,48 @@ export default function RightSidebar() {
       <div className="glass rounded-2xl p-4">
         <h3 className="font-semibold mb-3 text-white">Upcoming Events</h3>
 
-        {events.map(event => (
-          <div
-            key={event._id}
-            onClick={()=>navigate(`/events/${event._id}`)}
-            className="cursor-pointer mb-3 hover:bg-white/10 p-2 rounded-lg"
-          >
-            <p className="text-sm font-medium text-white">{event.title}</p>
-            <p className="text-xs text-gray-400">{event.location}</p>
-          </div>
-        ))}
+        {events.length === 0 ? (
+          <p className="text-gray-400 text-sm">No events</p>
+        ) : (
+          events.map(event => (
+            <div
+              key={event._id}
+              onClick={()=>navigate(`/events/${event._id}`)}
+              className="cursor-pointer mb-3 hover:bg-white/10 p-2 rounded-lg transition"
+            >
+              <p className="text-sm font-medium text-white line-clamp-1">
+                {event.title}
+              </p>
+              <p className="text-xs text-gray-400 line-clamp-1">
+                {event.location}
+              </p>
+            </div>
+          ))
+        )}
       </div>
 
       {/* OPPORTUNITIES */}
       <div className="glass rounded-2xl p-4">
         <h3 className="font-semibold mb-3 text-white">Recent Opportunities</h3>
 
-        {opportunities.map(op => (
-          <div
-            key={op._id}
-            onClick={()=>navigate(`/opportunities/${op._id}`)}
-            className="cursor-pointer mb-3 hover:bg-white/10 p-2 rounded-lg"
-          >
-            <p className="text-sm font-medium text-white">{op.title}</p>
-            <p className="text-xs text-gray-400">{op.company}</p>
-          </div>
-        ))}
+        {opportunities.length === 0 ? (
+          <p className="text-gray-400 text-sm">No opportunities</p>
+        ) : (
+          opportunities.map(op => (
+            <div
+              key={op._id}
+              onClick={()=>navigate(`/opportunities/${op._id}`)}
+              className="cursor-pointer mb-3 hover:bg-white/10 p-2 rounded-lg transition"
+            >
+              <p className="text-sm font-medium text-white line-clamp-1">
+                {op.title}
+              </p>
+              <p className="text-xs text-gray-400 line-clamp-1">
+                {op.company}
+              </p>
+            </div>
+          ))
+        )}
       </div>
 
     </div>

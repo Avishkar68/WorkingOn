@@ -169,7 +169,7 @@ export default function PostCard({ post, refreshFeed }) {
           <button
             onClick={handleLike}
             disabled={loading}
-            className={`flex items-center gap-1 transition transform ${
+            className={`flex items-center gap-1 transition transform cursor-pointer ${
               isLiked
                 ? "text-red-500 scale-105"
                 : "hover:text-red-400"
@@ -185,7 +185,7 @@ export default function PostCard({ post, refreshFeed }) {
           {/* 💬 COMMENT */}
           <button
             onClick={() => setShowComments(!showComments)}
-            className="flex items-center gap-1 hover:text-indigo-400 transition"
+            className="flex items-center gap-1 cursor-pointer hover:text-indigo-400 transition"
           >
             <MessageCircle size={18} />
             Comment
@@ -199,7 +199,7 @@ export default function PostCard({ post, refreshFeed }) {
           <button
             onClick={sharePost}
             title="Share"
-            className="hover:text-indigo-400 transition"
+            className="hover:text-indigo-400 cursor-pointer transition"
           >
             <Share2 size={18} />
           </button>
