@@ -22,11 +22,23 @@ export default function EventCard({event}){
     <div className="glass rounded-2xl overflow-hidden hover:shadow-[0_0_25px_rgba(99,102,241,0.2)] transition">
 
       {/* IMAGE */}
-      <img
+      {/* <img
         src="https://images.unsplash.com/photo-1552664730-d307ca884978"
         className="w-full h-48 object-cover"
-      />
-
+      /> */}
+{event.image ? (
+  <img
+    src={event.image}
+    alt="event"
+    className="w-full h-48 object-cover"
+  />
+) : (
+  <img
+    src="https://images.unsplash.com/photo-1552664730-d307ca884978"
+    alt="fallback"
+    className="w-full h-48 object-cover"
+  />
+)}
       <div className="p-6 space-y-4">
 
         {/* TITLE */}
