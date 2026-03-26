@@ -20,6 +20,7 @@ import AdminPanel from "./pages/AdminPanel"
 import UserProfile from "./pages/UserProfile"
 import EventDetail from "./pages/EventDetail"
 import OpportunityDetail from "./pages/OpportunityDetail"
+import Opportunity from "./pages/try/Opportunity"
 
 function App() {
 
@@ -61,6 +62,8 @@ function App() {
         <Route path="/user/:id" element={<Layout><UserProfile /></Layout>} />
         <Route path="/events/:id" element={<Layout><EventDetail /></Layout>} />
 <Route path="/opportunities/:id" element={<Layout><OpportunityDetail /></Layout>} />
+<Route path="/opportunity" element={<Layout><Opportunity /></Layout>} />
+
       </Routes>
 
     </BrowserRouter>

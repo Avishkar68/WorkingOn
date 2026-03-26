@@ -12,6 +12,7 @@ import {
   getUserOpportunities,
   deleteOpportunity
 } from "../controllers/opportunityController.js";
+import { scrapeInternshala } from "../controllers/opportunityScraper.js";
 
 const router = express.Router();
 
@@ -25,5 +26,6 @@ router.post("/:id/apply", protect, applyOpportunity);
 router.put("/:id/close", protect, closeOpportunity);
 router.get("/user/:id", protect, getUserOpportunities);
 router.delete("/:id", protect, deleteOpportunity)
+router.get("/scrape", scrapeInternshala);
 
 export default router;

@@ -6,7 +6,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 
 import connectDB from "./config/db.js";
-
+import cron from "node-cron";
 import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import postRoutes from "./routes/postRoutes.js";
@@ -20,13 +20,17 @@ import commentRoutes from "./routes/commentRoutes.js";
 import searchRoutes from "./routes/searchRoutes.js";
 import exploreRoutes from "./routes/exploreRoutes.js";
 import academicRoutes from "./routes/academicRoutes.js";
+import { scrapeInternshala } from "./controllers/opportunityScraper.js";
 
 dotenv.config();
 
 const app = express();
 
 connectDB();
-
+cron.schedule("0 9 * * *", async () => {
+  console.log("⏳ Running daily scraper...");
+  await scrapeInternshala();
+});
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors());

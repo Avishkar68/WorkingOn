@@ -2,6 +2,8 @@ import { useEffect, useState } from "react"
 import api from "../api/axios"
 import CreateOpportunityModal from "../components/opportunity/CreateOpportunityModal"
 
+const EXTERNAL_USER_ID = "000000000000000000000001"
+
 export default function Opportunities() {
 
   const [opportunities,setOpportunities] = useState([])
@@ -21,6 +23,7 @@ export default function Opportunities() {
   },[])
 
   const daysLeft = (deadline)=>{
+    if(!deadline) return "No deadline"
     const diff = new Date(deadline) - new Date()
     const days = Math.ceil(diff / (1000*60*60*24))
     return days > 0 ? `${days} days left` : "Expired"
@@ -54,59 +57,89 @@ export default function Opportunities() {
       {/* LIST */}
       <div className="space-y-5">
 
-        {opportunities.map(op => (
+        {opportunities.map(op => {
 
-          <div
-            key={op._id}
-            className="glass p-6 rounded-2xl space-y-4 hover:shadow-[0_0_25px_rgba(99,102,241,0.2)] transition"
-          >
+          const isUserPost =
+            op.postedBy?._id !== EXTERNAL_USER_ID
 
-            {/* TITLE */}
-            <div>
-              <h2 className="text-lg font-semibold text-white">
-                {op.title}
-              </h2>
-
-              <p className="text-indigo-400 text-sm">
-                {op.company}
-              </p>
-            </div>
-
-            {/* DESCRIPTION */}
-            <p className="text-gray-300 text-sm leading-relaxed">
-              {op.description}
-            </p>
-
-            {/* TAGS */}
-            <div className="flex gap-2 flex-wrap">
-              {op.tags?.map(tag=>(
-                <span
-                  key={tag}
-                  className="bg-white/10 text-xs px-3 py-1 rounded-full text-gray-300"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-
-            {/* DEADLINE */}
-            <div className="text-gray-400 text-sm">
-              📅 {daysLeft(op.deadline)}
-            </div>
-
-            {/* APPLY */}
-            <a
-              href={op.registrationLink}
-              target="_blank"
-              rel="noreferrer"
-              className="block w-full text-center bg-indigo-500 hover:bg-indigo-600 text-white py-3 rounded-xl shadow-[0_0_15px_rgba(99,102,241,0.3)]"
+          return (
+            <div
+              key={op._id}
+              className={`glass p-6 rounded-2xl space-y-4 transition
+                ${
+                  isUserPost
+                    ? "border border-yellow-400 shadow-[0_0_25px_rgba(255,215,0,0.35)]"
+                    : "hover:shadow-[0_0_25px_rgba(99,102,241,0.2)]"
+                }
+              `}
             >
-              Apply Now
-            </a>
 
-          </div>
+              {/* BADGES */}
+              <div className="flex gap-2">
 
-        ))}
+                {isUserPost ? (
+                  <span className="text-xs bg-yellow-400 text-black px-2 py-1 rounded-full font-medium">
+                    ⭐ Student Post
+                  </span>
+                ) : (
+                  <span className="text-xs bg-white/10 text-gray-300 px-2 py-1 rounded-full">
+                    🌐 External
+                  </span>
+                )}
+
+              </div>
+
+              {/* TITLE */}
+              <div>
+                <h2 className="text-lg font-semibold text-white">
+                  {op.title}
+                </h2>
+
+                <p className="text-indigo-400 text-sm">
+                  {op.company}
+                </p>
+              </div>
+
+              {/* DESCRIPTION */}
+              <p className="text-gray-300 text-sm leading-relaxed">
+                {op.description}
+              </p>
+
+              {/* TAGS */}
+              <div className="flex gap-2 flex-wrap">
+                {op.tags?.map(tag=>(
+                  <span
+                    key={tag}
+                    className="bg-white/10 text-xs px-3 py-1 rounded-full text-gray-300"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+
+              {/* EXTRA INFO */}
+              <div className="flex gap-4 text-gray-400 text-sm flex-wrap">
+
+                {op.stipend && <span>💰 {op.stipend}</span>}
+                {op.duration && <span>⏳ {op.duration}</span>}
+
+                <span>📅 {daysLeft(op.deadline)}</span>
+
+              </div>
+
+              {/* APPLY */}
+              <a
+                href={op.registrationLink || op.link}
+                target="_blank"
+                rel="noreferrer"
+                className="block w-full text-center bg-indigo-500 hover:bg-indigo-600 text-white py-3 rounded-xl shadow-[0_0_15px_rgba(99,102,241,0.3)]"
+              >
+                Apply Now
+              </a>
+
+            </div>
+          )
+        })}
 
       </div>
 
