@@ -8,15 +8,26 @@ export default function SearchUserCard({ user }) {
 
     <div
       onClick={() => navigate(`/user/${user._id}`)}
-      className="glass rounded-2xl p-4 flex items-center gap-4 cursor-pointer hover:shadow-[0_0_20px_rgba(99,102,241,0.2)] transition"
+      className="glass rounded-2xl p-4 flex items-center gap-4 cursor-pointer 
+      transition-all duration-200
+      hover:shadow-[0_0_25px_rgba(99,102,241,0.25)]
+      hover:bg-white/5"
     >
 
-      <img
-        src={user.profileImage}
-        className="w-12 h-12 rounded-full object-cover"
-      />
+      {/* AVATAR */}
+      {user.profileImage ? (
+        <img
+          src={user.profileImage}
+          className="w-12 h-12 rounded-full object-cover border border-white/10"
+        />
+      ) : (
+        <div className="w-12 h-12 rounded-full bg-indigo-500 text-white flex items-center justify-center font-semibold">
+          {user.name?.[0]}
+        </div>
+      )}
 
-      <div>
+      {/* USER INFO */}
+      <div className="flex-1">
 
         <p className="text-white font-medium">
           {user.name}
@@ -27,6 +38,11 @@ export default function SearchUserCard({ user }) {
         </p>
 
       </div>
+
+      {/* OPTIONAL RIGHT ARROW (nice UX touch) */}
+      <span className="text-gray-500 text-sm opacity-0 group-hover:opacity-100 transition">
+        →
+      </span>
 
     </div>
 
