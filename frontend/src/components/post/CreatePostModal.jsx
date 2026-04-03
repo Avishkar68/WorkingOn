@@ -1,85 +1,3 @@
-// import { useState } from "react"
-// import api from "../../api/axios"
-
-// export default function CreatePostModal({close,refreshFeed}){
-
-//   const [content,setContent] = useState("")
-//   const [image,setImage] = useState("")
-//   const [tags,setTags] = useState("")
-
-//   const submitPost = async () => {
-
-//     try{
-
-//       await api.post("/posts",{
-//         content,
-//         image,
-//         tags: tags.split(",")
-//       })
-
-//       refreshFeed()
-//       close()
-
-//     }catch(err){
-//       console.error(err)
-//     }
-
-//   }
-
-//   return(
-
-//     <div className="fixed inset-0 flex items-center justify-center bg-black/40">
-
-//       <div className="bg-white p-6 rounded-xl w-[500px]">
-
-//         <h2 className="text-lg font-semibold mb-4">
-//           Create a Post
-//         </h2>
-
-//         <textarea
-//           placeholder="Share your thoughts..."
-//           className="w-full border rounded-lg p-3 mb-3"
-//           rows="4"
-//           onChange={(e)=>setContent(e.target.value)}
-//         />
-
-//         <input
-//           placeholder="Image URL"
-//           className="w-full border rounded-lg p-2 mb-3"
-//           onChange={(e)=>setImage(e.target.value)}
-//         />
-
-//         <input
-//           placeholder="Tags (React,Node,AI)"
-//           className="w-full border rounded-lg p-2 mb-3"
-//           onChange={(e)=>setTags(e.target.value)}
-//         />
-
-//         <div className="flex justify-end gap-2">
-
-//           <button
-//             onClick={close}
-//             className="px-4 py-2 border rounded-lg"
-//           >
-//             Cancel
-//           </button>
-
-//           <button
-//             onClick={submitPost}
-//             className="bg-indigo-600 text-white px-4 py-2 rounded-lg"
-//           >
-//             Post
-//           </button>
-
-//         </div>
-
-//       </div>
-
-//     </div>
-//   )
-// }
-
-
 import { useState } from "react"
 import api from "../../api/axios"
 
@@ -91,7 +9,6 @@ export default function CreatePostModal({ close, refreshFeed }) {
 
   const submitPost = async () => {
     try {
-
       const formData = new FormData()
 
       formData.append("content", content)
@@ -112,54 +29,103 @@ export default function CreatePostModal({ close, refreshFeed }) {
   }
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+    <div className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50">
 
-      <div className="glass p-6 rounded-2xl w-[500px] text-white space-y-4">
+      {/* GLASS MODAL */}
+      <div className="w-[500px] rounded-2xl p-6 text-white space-y-5 
+        bg-white/5 backdrop-blur-xl border border-white/10 
+        shadow-[0_0_25px_rgba(99,102,241,0.15)]">
 
-        <h2 className="text-lg font-semibold">
-          Create a Post
-        </h2>
+        {/* HEADER */}
+        <div className="flex justify-between items-center">
+          <h2 className="text-xl font-semibold tracking-wide">
+            Create a Post
+          </h2>
+          <button
+            onClick={close}
+            className="text-gray-400 hover:text-white text-lg"
+          >
+            ✕
+          </button>
+        </div>
 
+        {/* TEXTAREA */}
         <textarea
-          placeholder="Share your thoughts..."
-          className="w-full bg-white/5 border border-white/10 rounded-lg p-3 outline-none text-gray-300 placeholder-gray-500"
+          placeholder="What's on your mind?"
           rows="4"
+          value={content}
           onChange={(e) => setContent(e.target.value)}
+          className="w-full bg-white/5 border border-white/10 rounded-xl p-4 outline-none text-gray-200 placeholder-gray-500 
+          focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30 transition"
         />
 
-        <input
-          type="file"
-          accept="image/*"
-          className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-gray-300"
-          onChange={(e) => setFile(e.target.files[0])}
-        />
+        {/* FILE UPLOAD */}
+        <div className="space-y-2">
+          <label className="text-sm text-gray-400">Add Image</label>
 
-        <input
-          placeholder="Tags (React,Node,AI)"
-          className="w-full bg-white/5 border border-white/10 rounded-lg p-2 outline-none text-gray-300 placeholder-gray-500"
-          onChange={(e) => setTags(e.target.value)}
-        />
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => setFile(e.target.files[0])}
+            className="w-full text-sm bg-white/5 border border-white/10 rounded-xl p-2 text-gray-300 
+            file:bg-indigo-500 file:text-white file:px-4 file:py-1 file:rounded-lg file:border-none file:cursor-pointer"
+          />
 
-        <div className="flex justify-end gap-2">
+          {file && (
+            <img
+              src={URL.createObjectURL(file)}
+              alt="preview"
+              className="rounded-xl mt-2 max-h-40 object-cover border border-white/10"
+            />
+          )}
+        </div>
+
+        {/* TAGS */}
+        <div className="space-y-2">
+          <label className="text-sm text-gray-400">Tags</label>
+
+          <input
+            placeholder="React, Node, AI"
+            value={tags}
+            onChange={(e) => setTags(e.target.value)}
+            className="w-full bg-white/5 border border-white/10 rounded-xl p-3 outline-none text-gray-300 placeholder-gray-500 
+            focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30 transition"
+          />
+
+          {/* TAG CHIPS */}
+          <div className="flex flex-wrap gap-2">
+            {tags.split(",").map(tag => tag.trim()).filter(Boolean).map(tag => (
+              <span
+                key={tag}
+                className="bg-white/10 text-gray-300 px-3 py-1 rounded-full text-xs border border-white/10"
+              >
+                #{tag}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* ACTIONS */}
+        <div className="flex justify-end gap-3 pt-2">
 
           <button
             onClick={close}
-            className="px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-gray-300"
+            className="px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-gray-300 transition"
           >
             Cancel
           </button>
 
           <button
             onClick={submitPost}
-            className="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-lg shadow-[0_0_15px_rgba(99,102,241,0.4)]"
+            className="px-5 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-600 text-white 
+            shadow-[0_0_15px_rgba(99,102,241,0.4)] hover:scale-105 transition"
           >
-            Post
+            Post 🚀
           </button>
 
         </div>
 
       </div>
-
     </div>
   )
 }

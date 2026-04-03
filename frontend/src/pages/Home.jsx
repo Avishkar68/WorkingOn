@@ -3,12 +3,14 @@ import api from "../api/axios"
 
 import PostCard from "../components/post/PostCard"
 import CreatePostModal from "../components/post/CreatePostModal"
+import WelcomeModal from "../components/dialogueboxes/WelcomeModal"
 
 export default function Home(){
 
   const [posts,setPosts] = useState([])
   const [loading,setLoading] = useState(true)
   const [openModal,setOpenModal] = useState(false)
+  const [showWelcome,setShowWelcome] = useState(false)
 
   const fetchFeed = async () => {
     try{
@@ -22,6 +24,15 @@ export default function Home(){
 
   useEffect(()=>{
     fetchFeed()
+
+    // ✅ FIRST TIME USER CHECK
+    const isFirstVisit = localStorage.getItem("firstVisit")
+
+    if(!isFirstVisit){
+      setShowWelcome(true)
+      localStorage.setItem("firstVisit","true")
+    }
+
   },[])
 
   if(loading){
@@ -35,7 +46,15 @@ export default function Home(){
   return(
     <div className="space-y-6">
 
-      {/* CREATE POST INPUT STYLE */}
+      {/* ✅ WELCOME MODAL */}
+      {showWelcome && (
+        <WelcomeModal
+          close={() => setShowWelcome(false)}
+          openCreatePost={() => setOpenModal(true)}
+        />
+      )}
+
+      {/* CREATE POST */}
       <div
         onClick={()=>setOpenModal(true)}
         className="glass rounded-2xl p-4 cursor-pointer hover:shadow-[0_0_20px_rgba(99,102,241,0.3)] transition"
@@ -45,7 +64,7 @@ export default function Home(){
         </p>
       </div>
 
-      {/* MODAL */}
+      {/* CREATE POST MODAL */}
       {openModal &&
         <CreatePostModal
           close={()=>setOpenModal(false)}

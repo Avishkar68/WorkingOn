@@ -28,7 +28,7 @@ const app = express();
 
 connectDB();
 cron.schedule("0 9 * * *", async () => {
-  console.log("⏳ Running daily scraper...");
+  console.log("⏳ Running scraper every minute...");
   await scrapeInternshala();
 });
 app.use(express.json());

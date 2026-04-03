@@ -16,40 +16,39 @@ export default function ProjectCard({ project, refresh }) {
   )
 
   return (
-    <div className="glass p-6 rounded-2xl space-y-4 hover:shadow-[0_0_25px_rgba(99,102,241,0.2)] transition">
+    <div className="glass p-4 sm:p-6 rounded-2xl space-y-4 hover:shadow-[0_0_25px_rgba(99,102,241,0.2)] transition">
 
       {/* TITLE */}
-      <h2 className="text-lg font-semibold text-white">
+      <h2 className="text-base sm:text-lg font-semibold text-white">
         {project.title}
       </h2>
 
       {/* CREATOR */}
       <div className="flex items-center gap-3">
 
-        {/* <div className="w-10 h-10 rounded-full bg-indigo-500 text-white flex items-center justify-center">
-          {project.creator?.name?.[0]}
-        </div> */}
         {project.creator?.profileImage ? (
-  <img
-    src={project.creator.profileImage}
-    alt="creator"
-    className="w-10 h-10 rounded-full object-cover"
-  />
-) : (
-  <div className="w-10 h-10 rounded-full bg-indigo-500 text-white flex items-center justify-center">
-    {project.creator?.name?.[0]}
-  </div>
-)}
+          <img
+            src={project.creator.profileImage}
+            alt="creator"
+            className="w-9 h-9 sm:w-10 sm:h-10 rounded-full object-cover"
+          />
+        ) : (
+          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-indigo-500 text-white flex items-center justify-center">
+            {project.creator?.name?.[0]}
+          </div>
+        )}
 
-        <div>
-          <p className="font-medium text-white">{project.creator?.name}</p>
+        <div className="min-w-0">
+          <p className="font-medium text-white text-sm sm:text-base truncate">
+            {project.creator?.name}
+          </p>
           <p className="text-xs text-gray-400">CSE</p>
         </div>
 
       </div>
 
       {/* DESCRIPTION */}
-      <p className="text-gray-300 text-sm">
+      <p className="text-gray-300 text-sm leading-relaxed">
         {project.description}
       </p>
 
@@ -66,7 +65,7 @@ export default function ProjectCard({ project, refresh }) {
       </div>
 
       {/* TEAM INFO */}
-      <div className="flex items-center gap-3 text-sm text-gray-400">
+      <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-sm text-gray-400">
         <span>👥 {project.teamSize.current}/{project.teamSize.needed}</span>
 
         <span className="bg-indigo-500/20 text-indigo-400 px-3 py-1 rounded-full text-xs">
@@ -75,7 +74,7 @@ export default function ProjectCard({ project, refresh }) {
       </div>
 
       {/* ACTIONS */}
-      <div className="border-t border-white/10 pt-4 flex gap-4">
+      <div className="border-t border-white/10 pt-4 flex flex-col sm:flex-row gap-3">
 
         {isMember ? (
           <button className="flex-1 bg-green-500/20 text-green-400 py-2 rounded-xl">
@@ -100,13 +99,13 @@ export default function ProjectCard({ project, refresh }) {
         ) : (
           <button
             onClick={() => setShowJoin(true)}
-            className="flex-1 bg-indigo-500 hover:bg-indigo-600 text-white py-2 rounded-xl shadow-[0_0_15px_rgba(99,102,241,0.3)]"
+            className="flex-1 bg-indigo-500 hover:bg-indigo-600 text-white py-2 rounded-xl shadow-[0_0_15px_rgba(99,102,241,0.3)] transition"
           >
             Join Project
           </button>
         )}
 
-        <button className="flex-1 bg-white/10 text-gray-300 py-2 rounded-xl hover:bg-white/20">
+        <button className="flex-1 bg-white/10 text-gray-300 py-2 rounded-xl hover:bg-white/20 transition">
           Message
         </button>
 

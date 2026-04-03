@@ -272,23 +272,23 @@ import { useParams } from "react-router-dom"
 import api from "../api/axios"
 import { jwtDecode } from "jwt-decode"
 
-export default function UserProfile(){
+export default function UserProfile() {
 
   const { id } = useParams()
 
-  const [user,setUser] = useState(null)
-  const [posts,setPosts] = useState([])
-  const [projects,setProjects] = useState([])
-  const [isFollowing,setIsFollowing] = useState(false)
-  const [activeTab,setActiveTab] = useState("posts")
-  const [loading,setLoading] = useState(false)
+  const [user, setUser] = useState(null)
+  const [posts, setPosts] = useState([])
+  const [projects, setProjects] = useState([])
+  const [isFollowing, setIsFollowing] = useState(false)
+  const [activeTab, setActiveTab] = useState("posts")
+  const [loading, setLoading] = useState(false)
 
   const token = localStorage.getItem("token")
   const decoded = token ? jwtDecode(token) : null
   const currentUserId = decoded?.id || decoded?._id
 
-  const loadUser = async ()=>{
-    try{
+  const loadUser = async () => {
+    try {
       const res = await api.get(`/users/${id}`)
       setUser(res.data)
 
@@ -298,51 +298,51 @@ export default function UserProfile(){
         )
       )
 
-    }catch(err){
+    } catch (err) {
       console.error(err)
     }
   }
 
-  const loadData = async ()=>{
-    try{
+  const loadData = async () => {
+    try {
       const postRes = await api.get(`/posts/user/${id}`)
       setPosts(postRes.data)
 
       const projectRes = await api.get(`/projects/user/${id}`)
       setProjects(projectRes.data)
 
-    }catch(err){
+    } catch (err) {
       console.error(err)
     }
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     loadUser()
     loadData()
-  },[id])
+  }, [id])
 
-  const handleFollow = async ()=>{
-    try{
+  const handleFollow = async () => {
+    try {
       setLoading(true)
 
-      if(isFollowing){
+      if (isFollowing) {
         await api.post(`/users/${id}/unfollow`)
-      }else{
+      } else {
         await api.post(`/users/${id}/follow`)
       }
 
       await loadUser()
 
-    }catch(err){
+    } catch (err) {
       console.error(err)
-    }finally{
+    } finally {
       setLoading(false)
     }
   }
 
-  if(!user) return null
+  if (!user) return null
 
-  return(
+  return (
     <div className="space-y-6">
 
       {/* PROFILE CARD */}
@@ -378,7 +378,19 @@ export default function UserProfile(){
               {user.bio}
             </p>
           )}
-
+          {/* SKILLS */}
+          {user.skills && user.skills.length > 0 && (
+            <div className="mt-4 flex flex-wrap gap-2">
+              {user.skills.map((skill, index) => (
+                <span
+                  key={index}
+                  className="px-3 py-1 text-sm bg-indigo-500/20 text-indigo-300 rounded-full border border-indigo-500/30"
+                >
+                  {skill}
+                </span>
+              ))}
+            </div>
+          )}
           {/* STATS */}
           <div className="flex gap-8 mt-4 text-gray-300">
 
@@ -401,15 +413,15 @@ export default function UserProfile(){
               disabled={loading}
               className={`mt-4 px-4 py-2 rounded-xl text-white transition shadow-[0_0_15px_rgba(99,102,241,0.3)]
               ${isFollowing
-                ? "bg-white/10 text-gray-300 hover:bg-white/20"
-                : "bg-indigo-500 hover:bg-indigo-600"}
+                  ? "bg-white/10 text-gray-300 hover:bg-white/20"
+                  : "bg-indigo-500 hover:bg-indigo-600"}
               ${loading ? "opacity-50" : ""}`}
             >
               {loading
                 ? "Please wait..."
                 : isFollowing
-                ? "Unfollow"
-                : "Follow"}
+                  ? "Unfollow"
+                  : "Follow"}
             </button>
           )}
 
@@ -420,15 +432,14 @@ export default function UserProfile(){
       {/* TABS */}
       <div className="flex gap-4 glass p-2 rounded-2xl">
 
-        {["posts","projects"].map(tab=>(
+        {["posts", "projects"].map(tab => (
           <button
             key={tab}
-            onClick={()=>setActiveTab(tab)}
-            className={`flex-1 py-2 rounded-xl capitalize transition ${
-              activeTab===tab
+            onClick={() => setActiveTab(tab)}
+            className={`flex-1 py-2 rounded-xl capitalize transition ${activeTab === tab
                 ? "bg-indigo-500/20 text-white shadow-[0_0_15px_rgba(99,102,241,0.3)]"
                 : "text-gray-400 hover:bg-white/10"
-            }`}
+              }`}
           >
             {tab} ({tab === "posts" ? posts.length : projects.length})
           </button>
