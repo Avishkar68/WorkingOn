@@ -141,7 +141,7 @@ export default function Register(){
           {/* DROPDOWNS */}
           <div className="grid grid-cols-2 gap-4">
 
-            <div>
+            {/* <div>
               <label className="label">Branch</label>
               <select
                 className="input"
@@ -152,9 +152,28 @@ export default function Register(){
                 <option>Computer Science and Engineering</option>
                 <option>Electronics Engineering</option>
               </select>
-            </div>
+            </div> */}
 
             <div>
+  <label className="text-sm text-zinc-400 mb-1 block">Branch</label>
+
+  <select
+    className="w-full bg-zinc-900 text-white border border-zinc-700 
+               px-4 py-2 rounded-xl outline-none 
+               focus:ring-2 focus:ring-blue-500 
+               hover:bg-zinc-800 transition-all duration-200"
+    value={form.branch}
+    onChange={(e) =>
+      setForm({ ...form, branch: e.target.value })
+    }
+  >
+    <option className="bg-zinc-900">Computer Engineering</option>
+    <option className="bg-zinc-900">Computer Science and Engineering</option>
+    <option className="bg-zinc-900">Electronics Engineering</option>
+  </select>
+</div>
+
+            {/* <div>
               <label className="label">Year</label>
               <select
                 className="input"
@@ -166,8 +185,26 @@ export default function Register(){
                 <option value={3}>3rd Year</option>
                 <option value={4}>4th Year</option>
               </select>
-            </div>
+            </div> */}
+<div>
+  <label className="text-sm text-zinc-400 mb-1 block">Year</label>
 
+  <select
+    className="w-full bg-zinc-900 text-white border border-zinc-700 
+               px-4 py-2 rounded-xl outline-none 
+               focus:ring-2 focus:ring-blue-500 
+               hover:bg-zinc-800 transition-all duration-200"
+    value={form.year}
+    onChange={(e) =>
+      setForm({ ...form, year: Number(e.target.value) })
+    }
+  >
+    <option className="bg-zinc-900" value={1}>1st Year</option>
+    <option className="bg-zinc-900" value={2}>2nd Year</option>
+    <option className="bg-zinc-900" value={3}>3rd Year</option>
+    <option className="bg-zinc-900" value={4}>4th Year</option>
+  </select>
+</div>
           </div>
 
         </div>

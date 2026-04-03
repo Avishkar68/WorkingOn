@@ -32,7 +32,7 @@ export default function RightSidebar() {
     <div className="w-[280px] xl:w-[320px] p-3 sm:p-4 space-y-4 overflow-y-auto">
 
       {/* TAGS */}
-      <div className="glass rounded-2xl p-4">
+      {/* <div className="glass rounded-2xl p-4">
         <h3 className="font-semibold mb-3 text-white">Trending Tags</h3>
 
         <div className="flex flex-wrap gap-2">
@@ -45,7 +45,7 @@ export default function RightSidebar() {
             </span>
           ))}
         </div>
-      </div>
+      </div> */}
 
       {/* EVENTS */}
       <div className="glass rounded-2xl p-4">

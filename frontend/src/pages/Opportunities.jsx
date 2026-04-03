@@ -160,7 +160,7 @@ export default function Opportunities() {
           className="flex-1 bg-white/10 text-white px-4 py-2 rounded-xl outline-none"
         />
 
-        <select
+        {/* <select
           value={filter}
           onChange={(e)=>setFilter(e.target.value)}
           className="bg-white/10 text-white px-4 py-2 rounded-xl outline-none"
@@ -169,7 +169,21 @@ export default function Opportunities() {
           <option value="best">⭐ Best For Me</option>
           <option value="student">Student Posts</option>
           <option value="external">External</option>
-        </select>
+        </select> */}
+
+        <select
+  value={filter}
+  onChange={(e) => setFilter(e.target.value)}
+  className="bg-zinc-900 text-white border border-zinc-700 
+             px-4 py-2 rounded-xl outline-none 
+             focus:ring-2 focus:ring-blue-500 
+             hover:bg-zinc-800 transition-all duration-200"
+>
+  <option value="all" className="input text-white">Filters</option>
+  <option value="best" className="bg-zinc-900 text-white">⭐ Best For Me</option>
+  <option value="student" className="bg-zinc-900 text-white">Student Posts</option>
+  <option value="external" className="bg-zinc-900 text-white">External</option>
+</select>
 
       </div>
 
