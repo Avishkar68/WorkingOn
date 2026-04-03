@@ -31,8 +31,7 @@ export default function Projects(){
 
         <div>
           <h1 className="text-xl sm:text-2xl font-bold text-white flex gap-2 items-center">
-            {"</>"} Projects
-          </h1>
+“Stop thinking. Start building.”          </h1>
 
           <p className="text-gray-400 text-sm sm:text-base">
             Collaborate on exciting projects

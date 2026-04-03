@@ -31,8 +31,7 @@ export default function Events(){
 
         <div>
           <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-            📅 Upcoming Events
-          </h1>
+“Don’t miss what’s happening.”          </h1>
 
           <p className="text-gray-400">
             Workshops, hackathons, and meetups

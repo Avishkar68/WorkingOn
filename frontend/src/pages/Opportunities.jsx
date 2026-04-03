@@ -134,10 +134,9 @@ export default function Opportunities() {
 
         <div>
           <h1 className="text-2xl font-bold text-white">
-            🎒 Opportunities
-          </h1>
+“Your next big thing is here.”          </h1>
           <p className="text-gray-400">
-            Internships, hackathons, and projects
+            Internships, hackathons and much more
           </p>
         </div>
 

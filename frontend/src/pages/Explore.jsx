@@ -36,7 +36,7 @@ export default function Explore(){
       {/* HEADER */}
       <div>
         <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-          🧭 Explore
+          “There’s more going on than you think.”
         </h1>
       </div>
 

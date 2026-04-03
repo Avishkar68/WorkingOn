@@ -1,3 +1,5 @@
+import { Heart, MessageCircle, Share2, Trash2 } from "lucide-react"
+
 export default function SearchPostCard({post}){
 
   const formatDate = (date)=>{
@@ -60,12 +62,15 @@ export default function SearchPostCard({post}){
       {/* ACTIONS */}
       <div className="flex justify-between border-t border-white/10 pt-3 text-sm text-gray-400">
 
-        <span className="hover:text-indigo-400 transition">
-          ❤️ {post.likeCount || 0}
+        <span className="hover:text-indigo-400 transition flex gap-2">
+          <Heart
+              size={18}
+            /> {post.likeCount || 0}
         </span>
 
-        <span className="hover:text-indigo-400 transition">
-          💬 {post.commentCount || 0}
+        <span className="hover:text-indigo-400 transition flex gap-2">
+          
+            <MessageCircle size={18} />Comment {post.commentCount || 0}
         </span>
 
         <span className="hover:text-indigo-400 cursor-pointer transition">
