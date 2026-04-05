@@ -21,7 +21,7 @@ import searchRoutes from "./routes/searchRoutes.js";
 import exploreRoutes from "./routes/exploreRoutes.js";
 import academicRoutes from "./routes/academicRoutes.js";
 import { scrapeInternshala } from "./controllers/opportunityScraper.js";
-
+import communityRoutes from "./routes/communityRoutes.js";
 dotenv.config();
 
 const app = express();
@@ -50,6 +50,7 @@ app.use("/api/comments", commentRoutes);
 app.use("/api/search", searchRoutes);
 app.use("/api/explore", exploreRoutes);
 app.use("/api/academic", academicRoutes );
+app.use("/api/communities", communityRoutes);
 
 const PORT = process.env.PORT || 4000;
 

@@ -22,6 +22,10 @@ import EventDetail from "./pages/EventDetail"
 import OpportunityDetail from "./pages/OpportunityDetail"
 import Opportunity from "./pages/try/Opportunity"
 
+// ⭐ NEW IMPORTS
+import CommunityPage from "./pages/CommunityPage"
+import CreateCommunity from "./pages/CreateCommunity"
+
 function App() {
 
   return (
@@ -30,14 +34,14 @@ function App() {
 
       <Routes>
 
-        {/* PUBLIC ROUTES */}
-
+        {/* ================= PUBLIC ROUTES ================= */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
 
-        {/* PROTECTED ROUTES */}
+        {/* ================= PROTECTED ROUTES ================= */}
 
+        {/* HOME */}
         <Route
           path="/"
           element={
@@ -48,6 +52,32 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        {/* ⭐ COMMUNITY PAGE */}
+        <Route
+          path="/community/:id"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <CommunityPage />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* ⭐ CREATE COMMUNITY */}
+        <Route
+          path="/create-community"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <CreateCommunity />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* ================= EXISTING ROUTES ================= */}
 
         <Route path="/opportunities" element={<Layout><Opportunities /></Layout>} />
         <Route path="/academic-help" element={<Layout><AcademicHelp /></Layout>} />
@@ -60,9 +90,10 @@ function App() {
         <Route path="/settings" element={<Layout><Settings /></Layout>} />
         <Route path="/admin" element={<Layout><AdminPanel /></Layout>} />
         <Route path="/user/:id" element={<Layout><UserProfile /></Layout>} />
+
         <Route path="/events/:id" element={<Layout><EventDetail /></Layout>} />
-<Route path="/opportunities/:id" element={<Layout><OpportunityDetail /></Layout>} />
-<Route path="/opportunity" element={<Layout><Opportunity /></Layout>} />
+        <Route path="/opportunities/:id" element={<Layout><OpportunityDetail /></Layout>} />
+        <Route path="/opportunity" element={<Layout><Opportunity /></Layout>} />
 
       </Routes>
 

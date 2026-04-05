@@ -1,20 +1,30 @@
 import { useState } from "react"
 import api from "../../api/axios"
 
-export default function CreatePostModal({ close, refreshFeed }) {
+export default function CreatePostModal({ close, refreshFeed, communityId }) {
 
   const [content, setContent] = useState("")
   const [file, setFile] = useState(null)
   const [tags, setTags] = useState("")
+  const [loading, setLoading] = useState(false)
 
   const submitPost = async () => {
+    if (!content.trim()) return
+
     try {
+      setLoading(true)
+
       const formData = new FormData()
 
       formData.append("content", content)
       formData.append("tags", tags)
       formData.append("image", file)
       formData.append("isAnonymous", false)
+
+      // ⭐ COMMUNITY SUPPORT
+      if (communityId) {
+        formData.append("communityId", communityId)
+      }
 
       await api.post("/posts", formData, {
         headers: { "Content-Type": "multipart/form-data" }
@@ -25,6 +35,8 @@ export default function CreatePostModal({ close, refreshFeed }) {
 
     } catch (err) {
       console.error(err)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -41,6 +53,7 @@ export default function CreatePostModal({ close, refreshFeed }) {
           <h2 className="text-xl font-semibold tracking-wide">
             Create a Post
           </h2>
+
           <button
             onClick={close}
             className="text-gray-400 hover:text-white text-lg"
@@ -61,7 +74,9 @@ export default function CreatePostModal({ close, refreshFeed }) {
 
         {/* FILE UPLOAD */}
         <div className="space-y-2">
-          <label className="text-sm text-gray-400">Add Image</label>
+          <label className="text-sm text-gray-400">
+            Add Image
+          </label>
 
           <input
             type="file"
@@ -82,7 +97,9 @@ export default function CreatePostModal({ close, refreshFeed }) {
 
         {/* TAGS */}
         <div className="space-y-2">
-          <label className="text-sm text-gray-400">Tags</label>
+          <label className="text-sm text-gray-400">
+            Tags
+          </label>
 
           <input
             placeholder="React, Node, AI"
@@ -94,14 +111,18 @@ export default function CreatePostModal({ close, refreshFeed }) {
 
           {/* TAG CHIPS */}
           <div className="flex flex-wrap gap-2">
-            {tags.split(",").map(tag => tag.trim()).filter(Boolean).map(tag => (
-              <span
-                key={tag}
-                className="bg-white/10 text-gray-300 px-3 py-1 rounded-full text-xs border border-white/10"
-              >
-                #{tag}
-              </span>
-            ))}
+            {tags
+              .split(",")
+              .map(tag => tag.trim())
+              .filter(Boolean)
+              .map(tag => (
+                <span
+                  key={tag}
+                  className="bg-white/10 text-gray-300 px-3 py-1 rounded-full text-xs border border-white/10"
+                >
+                  #{tag}
+                </span>
+              ))}
           </div>
         </div>
 
@@ -117,10 +138,11 @@ export default function CreatePostModal({ close, refreshFeed }) {
 
           <button
             onClick={submitPost}
+            disabled={loading}
             className="px-5 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-600 text-white 
-            shadow-[0_0_15px_rgba(99,102,241,0.4)] hover:scale-105 transition"
+            shadow-[0_0_15px_rgba(99,102,241,0.4)] hover:scale-105 transition disabled:opacity-50"
           >
-            Post 🚀
+            {loading ? "Posting..." : "Post 🚀"}
           </button>
 
         </div>

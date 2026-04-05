@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-
+import Community from "./Community.js";
 const postSchema = new mongoose.Schema(
 {
   author: {
@@ -14,7 +14,11 @@ const postSchema = new mongoose.Schema(
     minlength: 1,
     maxlength: 5000
   },
-
+  community: {
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "Community",
+  required: true
+  },
   image: {
     type: String
   },
