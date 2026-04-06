@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
 import NotificationCard from "../components/notifications/NotificationCard";
+import PageShell from "../components/layout/PageShell";
+import { AnimatePresence, motion } from "framer-motion";
 
 const Notifications = () => {
 
@@ -118,29 +120,25 @@ const Notifications = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6">
-
-      {/* HEADER */}
-      <div className="flex items-center justify-between mb-6">
-
-       <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-  🔔 Notifications
-</h1>
-
-<button
-  onClick={markAllRead}
-  className="px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl shadow-[0_0_15px_rgba(99,102,241,0.4)] text-sm"
->
-  Mark all as read
-</button>
-
-      </div>
+    <PageShell
+      eyebrow="Inbox"
+      title="Notifications"
+      subtitle="Track updates, requests, and activity from your workspace."
+      actions={
+        <button
+          onClick={markAllRead}
+          className="btn-primary px-4 py-2 rounded-xl text-sm font-medium"
+        >
+          Mark all as read
+        </button>
+      }
+    >
 
       {/* LIST */}
       <div className="flex flex-col gap-4">
 
         {notifications.length === 0 ? (
-          <p className="text-gray-500 text-center">
+          <p className="text-slate-500 text-center">
             No notifications yet
           </p>
         ) : (
@@ -160,8 +158,15 @@ const Notifications = () => {
       </div>
 
       {/* 🔥 CONTACT MODAL */}
+      <AnimatePresence>
       {selectedRequest && (
-        <div className="glass p-6 rounded-2xl w-[400px] space-y-4 text-white">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 6 }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 backdrop-blur-sm p-4"
+        >
+<div className="glass-pro p-6 rounded-2xl w-full max-w-[420px] space-y-4 text-white">
 
   <h2 className="text-lg font-semibold">
     Share Contact Info
@@ -171,7 +176,7 @@ const Notifications = () => {
     placeholder="WhatsApp / Email"
     value={contact}
     onChange={(e) => setContact(e.target.value)}
-    className="w-full p-3 rounded-lg bg-white/5 border border-white/10 text-gray-300 outline-none"
+    className="input"
   />
 
   <div className="flex justify-end gap-3">
@@ -181,7 +186,7 @@ const Notifications = () => {
         setSelectedRequest(null);
         setContact("");
       }}
-      className="px-4 py-2 rounded bg-white/10 text-gray-300"
+      className="btn-secondary px-4 py-2 rounded-lg"
     >
       Cancel
     </button>
@@ -189,17 +194,18 @@ const Notifications = () => {
     <button
       onClick={handleAccept}
       disabled={loadingId === selectedRequest._id}
-      className="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-lg"
+      className="btn-primary px-4 py-2 rounded-lg"
     >
       {loadingId === selectedRequest._id ? "Sending..." : "Accept & Send"}
     </button>
 
   </div>
-
 </div>
+        </motion.div>
       )}
+      </AnimatePresence>
 
-    </div>
+    </PageShell>
   );
 };
 

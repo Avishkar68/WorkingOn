@@ -1,5 +1,6 @@
 import { useState } from "react"
 import api from "../api/axios"
+import PageShell from "../components/layout/PageShell"
 
 import SearchPostCard from "../components/search/SearchPostCard"
 import SearchUserCard from "../components/search/SearchUserCard"
@@ -28,30 +29,34 @@ export default function Search(){
 
   return(
 
-    <div className="space-y-6">
+    <PageShell
+      eyebrow="Lookup"
+      title="Search"
+      subtitle="Find people, posts, and topics quickly."
+    >
 
       {/* SEARCH BAR */}
-      <div className="glass rounded-2xl p-3">
+      <div className="glass rounded-2xl p-3 border border-white/10">
         <input
           type="text"
           placeholder="Search posts, users..."
           value={query}
           onChange={(e)=>search(e.target.value)}
-          className="w-full bg-transparent outline-none text-gray-300 placeholder-gray-500"
+          className="input bg-transparent border-0 shadow-none px-2"
         />
       </div>
 
       {/* TABS */}
       {results && (
 
-        <div className="glass rounded-2xl p-2 flex gap-2">
+        <div className="glass rounded-2xl p-2 flex gap-2 border border-white/10">
 
           <button
             onClick={()=>setActiveTab("posts")}
             className={`px-4 py-2 rounded-xl text-sm transition ${
               activeTab==="posts"
-                ? "bg-indigo-500 text-white shadow-[0_0_10px_rgba(99,102,241,0.4)]"
-                : "text-gray-400 hover:bg-white/10"
+                ? "bg-indigo-500/90 text-white border border-indigo-400/40"
+                : "text-slate-400 hover:bg-white/8"
             }`}
           >
             Posts ({results.posts?.length || 0})
@@ -61,8 +66,8 @@ export default function Search(){
             onClick={()=>setActiveTab("users")}
             className={`px-4 py-2 rounded-xl text-sm transition ${
               activeTab==="users"
-                ? "bg-indigo-500 text-white shadow-[0_0_10px_rgba(99,102,241,0.4)]"
-                : "text-gray-400 hover:bg-white/10"
+                ? "bg-indigo-500/90 text-white border border-indigo-400/40"
+                : "text-slate-400 hover:bg-white/8"
             }`}
           >
             Users ({results.users?.length || 0})
@@ -72,8 +77,8 @@ export default function Search(){
             onClick={()=>setActiveTab("tags")}
             className={`px-4 py-2 rounded-xl text-sm transition ${
               activeTab==="tags"
-                ? "bg-indigo-500 text-white shadow-[0_0_10px_rgba(99,102,241,0.4)]"
-                : "text-gray-400 hover:bg-white/10"
+                ? "bg-indigo-500/90 text-white border border-indigo-400/40"
+                : "text-slate-400 hover:bg-white/8"
             }`}
           >
             Tags
@@ -90,7 +95,7 @@ export default function Search(){
         <div className="space-y-6">
 
           {results.posts?.length === 0 ? (
-            <p className="text-gray-400">No posts found</p>
+            <p className="text-slate-400">No posts found</p>
           ) : (
             results.posts.map(post => (
               <SearchPostCard key={post._id} post={post} />
@@ -105,7 +110,7 @@ export default function Search(){
         <div className="space-y-4">
 
           {results.users?.length === 0 ? (
-            <p className="text-gray-400">No users found</p>
+            <p className="text-slate-400">No users found</p>
           ) : (
             results.users.map(user => (
               <SearchUserCard key={user._id} user={user} />
@@ -115,6 +120,6 @@ export default function Search(){
         </div>
       )}
 
-    </div>
+    </PageShell>
   )
 }

@@ -10,9 +10,10 @@ export default function Layout({ children }) {
   const [open,setOpen] = useState(false)
 
   return (
-    <div className="flex h-screen bg-[#0b0b17] overflow-hidden">
+    <div className="h-screen overflow-hidden bg-transparent px-3 pb-3 pt-3 sm:px-4">
+      <div className="mx-auto flex h-full w-full max-w-[1600px] gap-3">
       {/* DESKTOP SIDEBAR */}
-      <div className="hidden lg:block w-[250px]">
+      <div className="hidden lg:block w-[280px] shrink-0">
         <Sidebar />
       </div>
 
@@ -29,7 +30,7 @@ export default function Layout({ children }) {
               transition={{ duration: 0.24 }}
             />
             <motion.div
-              className="fixed z-50 top-0 left-0 h-full w-[250px] lg:hidden"
+              className="fixed z-50 top-0 left-0 h-full w-[280px] p-3 lg:hidden"
               initial={{ x: -32, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: -32, opacity: 0 }}
@@ -42,15 +43,15 @@ export default function Layout({ children }) {
       </AnimatePresence>
 
       {/* MAIN */}
-      <div className="flex-1 flex flex-col">
+      <div className="min-w-0 flex-1 flex flex-col">
 
         <Topbar openSidebar={()=>setOpen(true)} />
 
-        <div className="flex flex-1 overflow-hidden">
+        <div className="flex flex-1 overflow-hidden gap-3 pt-3">
 
           {/* CENTER */}
           <motion.main
-            className="flex-1 w-full max-w-[700px] mx-auto p-4 sm:p-6 overflow-y-auto space-y-6 scrollbar-hide"
+            className="flex-1 min-w-0 rounded-2xl glass p-4 sm:p-6 overflow-y-auto space-y-6 scrollbar-hide"
             variants={fadeInUp}
             initial="hidden"
             animate="visible"
@@ -59,11 +60,12 @@ export default function Layout({ children }) {
           </motion.main>
 
           {/* RIGHT SIDEBAR */}
-          <div className="hidden lg:block">
+          <div className="hidden xl:block shrink-0 min-h-0 h-full">
             <RightSidebar />
           </div>
 
         </div>
+      </div>
       </div>
     </div>
   )

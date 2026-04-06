@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
-import { Bell, Menu } from "lucide-react"
-import { useNavigate } from "react-router-dom"
+import { Bell, Command, Menu, Plus } from "lucide-react"
+import { useLocation, useNavigate } from "react-router-dom"
 import { jwtDecode } from "jwt-decode"
 import { AnimatePresence, motion } from "framer-motion"
 import api from "../../api/axios"
@@ -18,6 +18,21 @@ export default function Topbar({ openSidebar }) {
   const [user,setUser] = useState(null)
 
   const navigate = useNavigate()
+  const location = useLocation()
+
+  const titleMap = {
+    "/": "Dashboard",
+    "/projects": "Projects",
+    "/events": "Events",
+    "/opportunities": "Opportunities",
+    "/explore": "Explore",
+    "/search": "Search",
+    "/notifications": "Notifications",
+    "/settings": "Settings",
+    "/profile": "Profile"
+  }
+
+  const currentTitle = titleMap[location.pathname] || "Workspace"
 
   const loadUser = async ()=>{
     try{
@@ -41,33 +56,44 @@ export default function Topbar({ openSidebar }) {
 
   return (
     <>
-      <div className="flex items-center justify-between px-4 sm:px-6 py-3 sticky top-0 z-10 glass">
+      <div className="sticky top-0 z-20 glass rounded-2xl px-4 sm:px-5 py-3 flex items-center justify-between">
 
-        {/* LEFT - MOBILE MENU */}
-        <div className="flex items-center gap-3">
-          <Menu 
-            className="text-white cursor-pointer lg:hidden"
-            onClick={openSidebar}
-          />
-        </div>
+{/* LEFT */}
+<div className="flex items-center gap-3 min-w-0">
+  <Menu
+    className="text-white cursor-pointer lg:hidden"
+    onClick={openSidebar}
+  />
+  <div className="min-w-0">
+    <p className="text-xs uppercase tracking-widest text-slate-400">Workspace</p>
+    <h1 className="text-sm sm:text-base font-semibold text-slate-100 truncate">
+      {currentTitle}
+    </h1>
+  </div>
+</div>
 
-        {/* RIGHT */}
-        <div className="flex items-center gap-3 sm:gap-4">
+{/* RIGHT */}
+<div className="flex items-center gap-3 sm:gap-4">
+          {/*<button className="hidden md:flex items-center gap-2 rounded-xl border border-white/10 bg-white/4 px-3 py-2 text-xs text-slate-400 hover:text-slate-200 hover:border-white/20">
+            <Command size={14} />
+            Search
+          </button>*/}
 
           {/* CREATE BUTTON */}
           <motion.button
             onClick={()=>setShowMenu(true)}
-            whileHover={{ scale: 1.04 }}
+            whileHover={{ scale: 1.02 }}
             whileTap={buttonTap}
-            className="interactive-button bg-indigo-500/80 hover:bg-indigo-500 text-white px-3 sm:px-4 py-2 rounded-xl text-sm sm:text-base shadow-[0_0_20px_rgba(99,102,241,0.3)]"
+            className="btn-primary inline-flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-sm"
           >
-            + Create
+            <Plus size={14} />
+            Create
           </motion.button>
 
           {/* NOTIFICATION */}
           <motion.div whileHover={{ scale: 1.06 }} whileTap={buttonTap}>
             <Bell
-            className="cursor-pointer text-gray-300 icon-interactive"
+            className="cursor-pointer text-slate-300 icon-interactive"
             onClick={()=>navigate("/notifications")}
           />
           </motion.div>
@@ -80,10 +106,10 @@ export default function Topbar({ openSidebar }) {
             {user?.profileImage ? (
               <img
                 src={user.profileImage}
-                className="w-8 h-8 rounded-full object-cover"
+                className="w-9 h-9 rounded-full object-cover border border-white/10"
               />
             ) : (
-              <div className="w-8 h-8 bg-indigo-500 text-white flex items-center justify-center rounded-full">
+              <div className="w-9 h-9 bg-indigo-500 text-white flex items-center justify-center rounded-full border border-indigo-300/30">
                 {user?.name?.[0] || "A"}
               </div>
             )}
@@ -96,7 +122,7 @@ export default function Topbar({ openSidebar }) {
       <AnimatePresence>
       {showMenu && (
         <motion.div
-          className="fixed inset-0 z-[999] flex items-center justify-center bg-black/50 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -105,7 +131,7 @@ export default function Topbar({ openSidebar }) {
 
           {/* MODAL BOX */}
           <motion.div
-            className="glass p-6 rounded-2xl w-[90%] max-w-[320px] text-white space-y-3 shadow-2xl"
+            className="glass-pro p-6 rounded-2xl w-[90%] max-w-[340px] text-white space-y-3 shadow-2xl"
             initial={{ opacity: 0, y: 14, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.98 }}
@@ -123,7 +149,7 @@ export default function Topbar({ openSidebar }) {
                 }}
                 whileHover={{ x: 4 }}
                 whileTap={buttonTap}
-                className="w-full text-left px-4 py-2 hover:bg-white/10 rounded-lg transition"
+                className="w-full text-left px-4 py-2.5 hover:bg-white/10 border border-transparent hover:border-white/10 rounded-xl transition"
               >
                 Create {item}
               </motion.button>
@@ -131,7 +157,7 @@ export default function Topbar({ openSidebar }) {
 
             <button
               onClick={()=>setShowMenu(false)}
-              className="w-full text-sm text-gray-400 mt-2"
+              className="w-full text-sm text-slate-400 mt-2"
             >
               Cancel
             </button>

@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react"
 import api from "../api/axios"
+import { motion } from "framer-motion"
+import { staggerContainer } from "../lib/motion"
 
 import ProjectCard from "../components/project/ProjectCard"
 import CreateProjectModal from "../components/project/CreateProjectModal"
+import PageShell from "../components/layout/PageShell"
 
 export default function Projects(){
 
@@ -24,31 +27,22 @@ export default function Projects(){
 
   return(
 
-    <div className="space-y-6 px-3 sm:px-5 md:px-8">
-
-      {/* HEADER */}
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
-
-        <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-white flex gap-2 items-center">
-“Stop thinking. Start building.”          </h1>
-
-          <p className="text-gray-400 text-sm sm:text-base">
-            Collaborate on exciting projects
-          </p>
-        </div>
-
+    <PageShell
+      eyebrow="Collaboration"
+      title="Projects"
+      subtitle="Build products together and find teammates with matching skills."
+      actions={
         <button
           onClick={()=>setShowCreate(true)}
-          className="w-full sm:w-auto bg-indigo-500 hover:bg-indigo-600 text-white px-5 py-2 rounded-xl shadow-[0_0_20px_rgba(99,102,241,0.3)] transition"
+          className="w-full sm:w-auto btn-primary px-4 py-2 rounded-xl text-sm font-medium"
         >
           Create Project
         </button>
-
-      </div>
+      }
+    >
 
       {/* LIST */}
-      <div className="space-y-5 sm:space-y-6">
+      <motion.div className="space-y-4" variants={staggerContainer} initial="hidden" animate="visible">
 
         {projects.length > 0 ? (
           projects.map(project => (
@@ -59,12 +53,12 @@ export default function Projects(){
             />
           ))
         ) : (
-          <div className="text-center text-gray-400 py-10">
+          <div className="text-center text-slate-400 py-10">
             No projects found
           </div>
         )}
 
-      </div>
+      </motion.div>
 
       {/* MODAL */}
       {showCreate &&
@@ -74,7 +68,7 @@ export default function Projects(){
         />
       }
 
-    </div>
+    </PageShell>
 
   )
 }

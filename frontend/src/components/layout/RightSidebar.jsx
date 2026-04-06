@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import api from "../../api/axios"
 import { useNavigate } from "react-router-dom"
 import { motion } from "framer-motion"
-import { fadeInUp, staggerContainer } from "../../lib/motion"
+import { fadeInUp } from "../../lib/motion"
 
 export default function RightSidebar() {
 
@@ -16,7 +16,8 @@ export default function RightSidebar() {
     return (
       <motion.section
         className="card-hover glass rounded-2xl p-4"
-        variants={fadeInUp}
+        whileHover={{ y: -2 }}
+        transition={{ duration: 0.18 }}
       >
         <div className="flex items-start justify-between gap-3 mb-3">
           <div className="min-w-0">
@@ -98,8 +99,8 @@ export default function RightSidebar() {
 
   return (
     <motion.div
-      className="w-[280px] xl:w-[320px] px-3 sm:px-4 py-4 space-y-4 overflow-y-auto h-[calc(100vh-64px)] sticky top-16 scrollbar-hide"
-      variants={staggerContainer}
+      className="w-[280px] xl:w-[320px] h-full min-h-0 max-h-full px-3 py-4 space-y-4 overflow-y-auto scrollbar-hide"
+      variants={fadeInUp}
       initial="hidden"
       animate="visible"
     >

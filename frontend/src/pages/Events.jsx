@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react"
 import api from "../api/axios"
+import { motion } from "framer-motion"
+import { staggerContainer } from "../lib/motion"
 
 import EventCard from "../components/events/EventCard"
 import CreateEventModal from "../components/events/CreateEventModal"
+import PageShell from "../components/layout/PageShell"
 
 export default function Events(){
 
@@ -24,37 +27,28 @@ export default function Events(){
 
   return(
 
-    <div className="space-y-6">
-
-      {/* HEADER */}
-      <div className="flex justify-between items-center">
-
-        <div>
-          <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-“Don’t miss what’s happening.”          </h1>
-
-          <p className="text-gray-400">
-            Workshops, hackathons, and meetups
-          </p>
-        </div>
-
+    <PageShell
+      eyebrow="Calendar"
+      title="Events"
+      subtitle="Discover workshops, competitions, and meetups across your network."
+      actions={
         <button
           onClick={()=>setShowCreate(true)}
-          className="bg-indigo-500 hover:bg-indigo-600 text-white px-5 py-2 rounded-xl shadow-[0_0_20px_rgba(99,102,241,0.3)]"
+          className="btn-primary text-sm font-medium px-4 py-2 rounded-xl"
         >
           Create Event
         </button>
-
-      </div>
+      }
+    >
 
       {/* EVENTS */}
-      <div className="space-y-6">
+      <motion.div className="space-y-4" variants={staggerContainer} initial="hidden" animate="visible">
 
         {events.map(event => (
           <EventCard key={event._id} event={event} />
         ))}
 
-      </div>
+      </motion.div>
 
       {showCreate &&
         <CreateEventModal
@@ -63,7 +57,7 @@ export default function Events(){
         />
       }
 
-    </div>
+    </PageShell>
 
   )
 }
