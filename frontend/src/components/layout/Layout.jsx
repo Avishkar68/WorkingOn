@@ -36,9 +36,9 @@ export default function Layout({ children }) {
         <div className="flex flex-1 overflow-hidden">
 
           {/* CENTER */}
-          <main className="flex-1 w-full max-w-[700px] mx-auto p-4 sm:p-6 overflow-y-auto space-y-6">
-            {children}
-          </main>
+          <main className="flex-1 w-full max-w-[700px] mx-auto p-4 sm:p-6 overflow-y-auto space-y-6 scrollbar-hide">
+  {children}
+</main>
 
           {/* RIGHT SIDEBAR */}
           <div className="hidden lg:block">
