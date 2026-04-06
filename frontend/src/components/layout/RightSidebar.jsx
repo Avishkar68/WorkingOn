@@ -109,8 +109,8 @@ export default function RightSidebar() {
       <Section
         title="Your Communities"
         subtitle="Jump back into the spaces you’ve joined."
-        actionLabel="Explore"
-        onAction={() => navigate("/explore")}
+        actionLabel="View all"
+        onAction={() => navigate("/communities")}
       >
         {myCommunities.length === 0 ? (
           <div className="rounded-xl border border-dashed border-white/10 bg-white/2 px-3 py-3">
@@ -122,7 +122,7 @@ export default function RightSidebar() {
             </p>
           </div>
         ) : (
-          myCommunities.slice(0, 6).map(c => (
+          myCommunities.slice(0, 5).map(c => (
             <ListItem
               key={c._id}
               title={c.name}

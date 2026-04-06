@@ -29,6 +29,7 @@ import { pageTransition, pageVariants } from "./lib/motion"
 // ⭐ NEW IMPORTS
 import CommunityPage from "./pages/CommunityPage"
 import CreateCommunity from "./pages/CreateCommunity"
+import CommunitiesPage from "./pages/CommunitiesPage"
 
 function App() {
   return (
@@ -128,6 +129,19 @@ function AnimatedRoutes() {
                 <ProtectedRoute>
                   <Layout>
                     <CreateCommunity />
+                  </Layout>
+                </ProtectedRoute>
+              </RouteFrame>
+            }
+          />
+
+          <Route
+            path="/communities"
+            element={
+              <RouteFrame>
+                <ProtectedRoute>
+                  <Layout>
+                    <CommunitiesPage />
                   </Layout>
                 </ProtectedRoute>
               </RouteFrame>

@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
+import { useLocation } from "react-router-dom"
 import Sidebar from "./Sidebar"
 import Topbar from "./Topbar"
 import RightSidebar from "./RightSidebar"
@@ -8,6 +9,8 @@ import { fadeInUp } from "../../lib/motion"
 export default function Layout({ children }) {
 
   const [open,setOpen] = useState(false)
+  const location = useLocation()
+  const hideRightSidebar = location.pathname === "/communities"
 
   return (
     <div className="h-screen overflow-hidden bg-transparent px-3 pb-3 pt-3 sm:px-4">
@@ -60,9 +63,11 @@ export default function Layout({ children }) {
           </motion.main>
 
           {/* RIGHT SIDEBAR */}
-          <div className="hidden xl:block shrink-0 min-h-0 h-full">
-            <RightSidebar />
-          </div>
+          {!hideRightSidebar && (
+            <div className="hidden xl:block shrink-0 min-h-0 h-full">
+              <RightSidebar />
+            </div>
+          )}
 
         </div>
       </div>
