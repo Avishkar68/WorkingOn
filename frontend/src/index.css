@@ -26,10 +26,11 @@ body {
   
   /* reusable glass */
   .glass {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    transition: background-color 280ms ease, border-color 280ms ease, box-shadow 320ms ease, transform 280ms ease;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: background-color 260ms ease, border-color 260ms ease, box-shadow 300ms ease, transform 260ms ease;
   }
   
   /* glow effect */
@@ -93,8 +94,26 @@ body {
   }
 
   .card-hover:hover {
-    border-color: rgba(129, 140, 248, 0.22);
+  border-color: rgba(129, 140, 248, 0.3);
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.15);
+  transform: translateY(-2px);
   }
+
+.glass-card {
+  position: relative;
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: border-color 300ms ease, box-shadow 300ms ease, transform 300ms ease, background-color 300ms ease;
+}
+
+.glass-card:hover {
+  border-color: rgba(129, 140, 248, 0.3);
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.15);
+  transform: translateY(-2px);
+}
 
   .nav-link::after {
     content: "";

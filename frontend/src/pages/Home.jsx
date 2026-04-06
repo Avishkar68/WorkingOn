@@ -286,7 +286,7 @@ export default function Home() {
               key={c._id}
               variants={item}
               onClick={() => navigate(`/community/${c._id}`)}
-              className="group relative card-hover glass rounded-2xl p-6 cursor-pointer border border-white/10 transition-all duration-300 flex flex-col min-h-[220px] justify-between overflow-hidden"
+              className="group relative glass-card p-6 cursor-pointer flex flex-col min-h-[220px] justify-between overflow-hidden"
             >
               {/* MEMBER COUNT */}
               <div className="absolute top-5 right-5 flex items-center gap-1.5 bg-slate-900/70 backdrop-blur-xl border border-white/10 px-3 py-1.5 rounded-full z-20">

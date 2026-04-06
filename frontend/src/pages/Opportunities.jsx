@@ -196,12 +196,12 @@ export default function Opportunities() {
             <motion.div
               key={op._id}
               variants={fadeInUp}
-              className={`relative p-6 rounded-2xl space-y-4 transition overflow-hidden
-              ${
-                isUserPost
-                  ? "glass border border-amber-300/30 shadow-[0_8px_25px_rgba(245,158,11,0.12)]"
-                  : "glass border border-white/10"
-              }`}
+              className={`relative p-6 rounded-2xl space-y-4 transition-all duration-300 overflow-hidden hover:-translate-y-[2px]
+                ${
+                  isUserPost
+                    ? "bg-white/[0.02] border border-amber-300/30 hover:border-amber-400/50 hover:shadow-[0_0_25px_rgba(251,191,36,0.25)]"
+                    : "bg-white/[0.02] border border-white/10 hover:border-indigo-400/30 hover:shadow-[0_0_20px_rgba(99,102,241,0.15)]"
+                }`}
             >
 
               {/* BADGES */}
@@ -212,7 +212,7 @@ export default function Opportunities() {
                     ⭐ Student
                   </span>
                 ) : (
-                  <span className="text-xs bg-white/8 text-slate-300 px-2 py-1 rounded-full">
+                  <span className="text-xs bg-transparent border border-white/10 text-slate-300 px-2 py-1 rounded-full">
                     🌐 External
                   </span>
                 )}
@@ -245,7 +245,7 @@ export default function Opportunities() {
                 {op.tags?.map(tag=>(
                   <span
                     key={tag}
-                    className="text-xs px-3 py-1 rounded-full bg-white/6 border border-white/10 text-slate-300"
+                    className="text-xs px-3 py-1 rounded-full bg-transparent border border-white/10 text-slate-300"
                   >
                     {tag}
                   </span>

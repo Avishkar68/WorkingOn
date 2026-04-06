@@ -47,7 +47,7 @@ export default function CommunitiesPage() {
 
   return (
     <div className="h-full min-h-0">
-      <div className="h-full min-h-[68vh] rounded-2xl border border-white/10 bg-white/2 overflow-hidden">
+      <div className="h-full min-h-[68vh] rounded-2xl border border-white/10 bg-transparent backdrop-blur-md overflow-hidden">
         <div className="grid h-full min-h-0 grid-cols-1 lg:grid-cols-[320px_minmax(0,1fr)]">
           {/* LEFT PANEL */}
           <aside className="min-h-0 border-white/10 border-b lg:border-b-0 lg:border-r bg-transparent">
@@ -72,8 +72,8 @@ export default function CommunitiesPage() {
                       whileHover={{ x: 2 }}
                       className={`mb-2 w-full rounded-xl border px-3 py-3 text-left transition ${
                         isActive
-                          ? "border-indigo-400/40 bg-indigo-500/14"
-                          : "border-white/10 bg-white/3 hover:bg-white/6"
+                          ? "border-indigo-400/40 bg-indigo-500/10 shadow-[0_0_20px_rgba(99,102,241,0.12)]"
+                          : "border-white/10 bg-transparent hover:border-indigo-400/30 hover:shadow-[0_0_20px_rgba(99,102,241,0.15)]"
                       }`}
                     >
                       <p className={`truncate text-sm font-medium ${isActive ? "text-indigo-100" : "text-slate-100"}`}>
@@ -115,7 +115,7 @@ export default function CommunitiesPage() {
                   exit={{ opacity: 0, y: -4, transition: { duration: 0.16 } }}
                   className="h-full min-h-0 overflow-y-auto scrollbar-hide p-4 sm:p-5 space-y-4"
                 >
-                  <div className="rounded-xl border border-white/10 bg-white/3 p-4">
+                  <div className="rounded-xl border border-white/10 bg-transparent p-4">
                     <h2 className="text-lg font-semibold text-slate-100">{selectedCommunity.name}</h2>
                     <p className="mt-1 text-sm text-slate-400">{selectedCommunity.description || "No description provided."}</p>
                   </div>

@@ -14,8 +14,8 @@ const NotificationCard = ({
 
   return (
     <motion.div
-      className={`glass p-4 rounded-2xl flex items-center justify-between transition hover:shadow-[0_0_20px_rgba(99,102,241,0.2)]
-      ${!notification.read ? "border border-indigo-500/30" : ""}`}
+      className={`glass-card p-4 flex items-center justify-between transition
+      ${!notification.read ? "border-indigo-500/30" : ""}`}
       variants={fadeInUp}
       initial="hidden"
       whileInView="visible"

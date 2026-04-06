@@ -15,10 +15,7 @@ export default function SearchUserCard({ user }) {
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
       whileHover={cardHover}
-      className="card-hover glass rounded-2xl p-4 flex items-center gap-4 cursor-pointer 
-      transition-all duration-200
-      hover:shadow-[0_0_25px_rgba(99,102,241,0.25)]
-      hover:bg-white/5"
+      className="glass-card p-4 flex items-center gap-4 cursor-pointer transition-all duration-300"
     >
 
       {/* AVATAR */}

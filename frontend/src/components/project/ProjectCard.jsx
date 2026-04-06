@@ -19,7 +19,7 @@ export default function ProjectCard({ project, refresh }) {
 
   return (
     <motion.div
-      className="card-hover glass p-4 sm:p-6 rounded-2xl space-y-4"
+      className="glass-card p-4 sm:p-6 space-y-4"
       variants={fadeInUp}
       initial="hidden"
       whileInView="visible"
@@ -66,7 +66,7 @@ export default function ProjectCard({ project, refresh }) {
         {project.techStack?.map(tag => (
           <span
             key={tag}
-            className="bg-white/10 px-3 py-1 rounded-full text-xs text-gray-300"
+            className="bg-transparent border border-white/10 px-3 py-1 rounded-full text-xs text-gray-300"
           >
             {tag}
           </span>
@@ -118,7 +118,7 @@ export default function ProjectCard({ project, refresh }) {
 
         <motion.button
           whileTap={buttonTap}
-          className="flex-1 bg-white/10 text-gray-300 py-2 rounded-xl hover:bg-white/20 transition"
+          className="flex-1 border border-white/10 bg-transparent text-gray-300 py-2 rounded-xl hover:border-indigo-400/30 hover:shadow-[0_0_20px_rgba(99,102,241,0.15)] transition-all duration-300"
         >
           Message
         </motion.button>

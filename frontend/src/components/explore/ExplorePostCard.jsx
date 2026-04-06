@@ -86,7 +86,7 @@ export default function ExplorePostCard({ post }) {
 
   return (
 
-    <div className="glass rounded-2xl p-6 space-y-4 hover:shadow-[0_0_25px_rgba(99,102,241,0.2)] transition">
+    <div className="glass-card p-6 space-y-4">
 
       {/* HEADER */}
       <div
@@ -119,7 +119,7 @@ export default function ExplorePostCard({ post }) {
       </div>
 
       {/* CONTENT */}
-      <p className="text-gray-300 text-sm leading-relaxed break-words">
+      <p className="text-gray-300 text-sm leading-relaxed wrap-break-word">
         {post.content}
       </p>
 
@@ -136,7 +136,7 @@ export default function ExplorePostCard({ post }) {
         {post.tags?.slice(0,6).map((tag) => (
           <span
             key={tag}
-            className="bg-white/10 text-xs px-3 py-1 rounded-full text-gray-300"
+            className="bg-transparent border border-white/10 text-xs px-3 py-1 rounded-full text-gray-300"
           >
             #{tag}
           </span>

@@ -23,7 +23,7 @@ export default function EventCard({event}){
   return(
 
     <motion.div
-      className="card-hover glass rounded-2xl overflow-hidden"
+      className="glass-card overflow-hidden"
       variants={fadeInUp}
       initial="hidden"
       whileInView="visible"
@@ -66,7 +66,7 @@ export default function EventCard({event}){
           {event.tags?.map(tag => (
             <span
               key={tag}
-              className="bg-white/10 px-3 py-1 rounded-full text-xs text-gray-300"
+              className="bg-transparent border border-white/10 px-3 py-1 rounded-full text-xs text-gray-300"
             >
               {tag}
             </span>

@@ -15,7 +15,7 @@ export default function RightSidebar() {
   const Section = ({ title, subtitle, actionLabel, onAction, children }) => {
     return (
       <motion.section
-        className="card-hover glass rounded-2xl p-4"
+        className="glass-card p-4"
         whileHover={{ y: -2 }}
         transition={{ duration: 0.18 }}
       >
@@ -54,7 +54,7 @@ export default function RightSidebar() {
       <button
         type="button"
         onClick={onClick}
-        className="w-full text-left group rounded-xl border border-white/5 bg-white/3 hover:bg-white/6 hover:border-white/10 transition px-3 py-2.5"
+        className="w-full text-left group rounded-xl border border-white/10 bg-transparent hover:border-indigo-400/30 hover:shadow-[0_0_20px_rgba(99,102,241,0.15)] transition-all duration-300 px-3 py-2.5"
       >
         <p className="text-sm font-medium text-white truncate group-hover:text-white">
           {title}
@@ -113,7 +113,7 @@ export default function RightSidebar() {
         onAction={() => navigate("/communities")}
       >
         {myCommunities.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-white/10 bg-white/2 px-3 py-3">
+          <div className="rounded-xl border border-dashed border-white/10 bg-transparent px-3 py-3">
             <p className="text-gray-300 text-sm">
               You haven’t joined any communities yet.
             </p>
@@ -141,7 +141,7 @@ export default function RightSidebar() {
         onAction={() => navigate("/events")}
       >
         {events.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-white/10 bg-white/2 px-3 py-3">
+          <div className="rounded-xl border border-dashed border-white/10 bg-transparent px-3 py-3">
             <p className="text-gray-300 text-sm">No upcoming events right now.</p>
             <p className="text-gray-400 text-xs mt-1">Check back soon.</p>
           </div>
@@ -165,7 +165,7 @@ export default function RightSidebar() {
         onAction={() => navigate("/opportunities")}
       >
         {opportunities.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-white/10 bg-white/2 px-3 py-3">
+          <div className="rounded-xl border border-dashed border-white/10 bg-transparent px-3 py-3">
             <p className="text-gray-300 text-sm">No opportunities right now.</p>
             <p className="text-gray-400 text-xs mt-1">
               New listings will appear here.

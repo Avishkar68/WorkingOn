@@ -11,7 +11,7 @@ export default function SearchPostCard({post}){
   return(
 
     <motion.div
-      className="card-hover glass rounded-2xl p-6 space-y-4"
+      className="glass-card p-6 space-y-4"
       variants={fadeInUp}
       initial="hidden"
       whileInView="visible"
@@ -39,7 +39,7 @@ export default function SearchPostCard({post}){
       </div>
 
       {/* CONTENT */}
-      <p className="text-gray-300 text-sm break-words">
+      <p className="text-gray-300 text-sm wrap-break-word">
         {post.content}
       </p>
 
@@ -56,7 +56,7 @@ export default function SearchPostCard({post}){
         {post.tags?.slice(0,6).map(tag => (
           <span
             key={tag}
-            className="bg-white/10 px-3 py-1 text-xs rounded-full text-gray-300"
+            className="bg-transparent border border-white/10 px-3 py-1 text-xs rounded-full text-gray-300"
           >
             #{tag}
           </span>

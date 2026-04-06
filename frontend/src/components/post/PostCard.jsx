@@ -109,7 +109,7 @@ export default function PostCard({ post, refreshFeed }) {
   return (
 
     <motion.div
-      className="card-hover glass rounded-2xl p-5 space-y-4"
+      className="glass-card p-5 space-y-4"
       variants={fadeInUp}
       initial="hidden"
       whileInView="visible"
@@ -164,7 +164,7 @@ export default function PostCard({ post, refreshFeed }) {
         {post.tags?.map(tag => (
           <span
             key={tag}
-            className="bg-white/10 text-xs px-3 py-1 rounded-full text-gray-300"
+            className="bg-transparent border border-white/10 text-xs px-3 py-1 rounded-full text-gray-300"
           >
             #{tag}
           </span>
