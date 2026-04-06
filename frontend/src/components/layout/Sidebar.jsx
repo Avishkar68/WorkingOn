@@ -1,8 +1,4 @@
 import { NavLink } from "react-router-dom"
-import {
-  Home, Briefcase, BookOpen, Code, Calendar,
-  Compass, Search, User, Bell, Settings, Shield
-} from "lucide-react"
 export default function Sidebar({ close }) {
 
   const link =

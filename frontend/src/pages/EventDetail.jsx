@@ -8,18 +8,18 @@ export default function EventDetail(){
   const { id } = useParams()
   const [event,setEvent] = useState(null)
 
-  const loadEvent = async ()=>{
-    try{
-      const res = await api.get(`/events/${id}`)
-      setEvent(res.data)
-    }catch(err){
-      console.error(err)
-    }
-  }
-
   useEffect(()=>{
+    const loadEvent = async ()=>{
+      try{
+        const res = await api.get(`/events/${id}`)
+        setEvent(res.data)
+      }catch(err){
+        console.error(err)
+      }
+    }
+
     loadEvent()
-  },[])
+  },[id])
 
   if(!event){
     return (

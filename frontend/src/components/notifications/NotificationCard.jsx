@@ -1,4 +1,3 @@
-import React from "react"
 import { motion } from "framer-motion"
 import { buttonTap, cardHover, fadeInUp } from "../../lib/motion"
 

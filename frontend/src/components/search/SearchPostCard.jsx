@@ -1,4 +1,4 @@
-import { Heart, MessageCircle, Share2, Trash2 } from "lucide-react"
+import { Heart, MessageCircle } from "lucide-react"
 import { motion } from "framer-motion"
 import { cardHover, fadeInUp } from "../../lib/motion"
 

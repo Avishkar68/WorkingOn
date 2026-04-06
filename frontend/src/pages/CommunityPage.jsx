@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import api from "../api/axios"
 
@@ -14,7 +14,7 @@ export default function CommunityPage(){
   const [loading,setLoading] = useState(true)
   const [openModal,setOpenModal] = useState(false)
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try{
       const [postsRes, communityRes] = await Promise.all([
         api.get(`/posts/community/${id}`),
@@ -28,11 +28,11 @@ export default function CommunityPage(){
       console.error(err)
     }
     setLoading(false)
-  }
+  }, [id])
 
   useEffect(()=>{
     fetchData()
-  },[id])
+  },[fetchData])
 
   if(loading){
     return <p className="text-gray-400 text-center mt-10">Loading...</p>

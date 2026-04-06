@@ -267,7 +267,7 @@
 // }
 
 
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import api from "../api/axios"
 import { jwtDecode } from "jwt-decode"
@@ -287,7 +287,7 @@ export default function UserProfile() {
   const decoded = token ? jwtDecode(token) : null
   const currentUserId = decoded?.id || decoded?._id
 
-  const loadUser = async () => {
+  const loadUser = useCallback(async () => {
     try {
       const res = await api.get(`/users/${id}`)
       setUser(res.data)
@@ -301,9 +301,9 @@ export default function UserProfile() {
     } catch (err) {
       console.error(err)
     }
-  }
+  }, [id, currentUserId])
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       const postRes = await api.get(`/posts/user/${id}`)
       setPosts(postRes.data)
@@ -314,12 +314,12 @@ export default function UserProfile() {
     } catch (err) {
       console.error(err)
     }
-  }
+  }, [id])
 
   useEffect(() => {
     loadUser()
     loadData()
-  }, [id])
+  }, [loadUser, loadData])
 
   const handleFollow = async () => {
     try {

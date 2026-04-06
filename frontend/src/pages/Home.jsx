@@ -20,7 +20,9 @@ export default function Home() {
     try {
       const decoded = jwtDecode(token)
       userId = decoded.id || decoded._id
-    } catch {}
+    } catch {
+      userId = null
+    }
   }
 
   const fetchCommunities = async () => {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import api from "../../api/axios"
 import { useNavigate } from "react-router-dom"
 
@@ -10,7 +10,7 @@ export default function CommentSection({ postId }) {
 
   const navigate = useNavigate()
 
-  const loadComments = async () => {
+  const loadComments = useCallback(async () => {
     try {
       const res = await api.get(`/comments/${postId}`)
       setComments(res.data)
@@ -18,7 +18,7 @@ export default function CommentSection({ postId }) {
       console.error(err)
     }
     setLoading(false)
-  }
+  }, [postId])
 
   const addComment = async () => {
     if (!content.trim()) return
@@ -34,7 +34,7 @@ export default function CommentSection({ postId }) {
 
   useEffect(()=>{
     loadComments()
-  },[])
+  },[loadComments])
 
   if (loading){
     return <p className="text-sm text-gray-400">Loading...</p>

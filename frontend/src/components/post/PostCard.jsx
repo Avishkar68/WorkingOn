@@ -22,7 +22,9 @@ export default function PostCard({ post, refreshFeed }) {
     try{
       const decoded = jwtDecode(token)
       currentUserId = decoded.id || decoded._id
-    }catch{}
+    }catch{
+      currentUserId = null
+    }
   }
 
   // ✅ LOCAL LIKE STATE
@@ -79,7 +81,7 @@ export default function PostCard({ post, refreshFeed }) {
   // 🔗 SHARE
   const sharePost = async () => {
 
-    const url = `${window.location.origin}/post/${post._id}`
+    const url = `${window.location.origin}/posts/${post._id}`
 
     try{
       await navigator.clipboard.writeText(url)

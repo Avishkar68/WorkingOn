@@ -7,18 +7,18 @@ export default function OpportunityDetail(){
   const { id } = useParams()
   const [op,setOp] = useState(null)
 
-  const load = async ()=>{
-    try{
-      const res = await api.get(`/opportunities/${id}`)
-      setOp(res.data)
-    }catch(err){
-      console.error(err)
-    }
-  }
-
   useEffect(()=>{
+    const load = async ()=>{
+      try{
+        const res = await api.get(`/opportunities/${id}`)
+        setOp(res.data)
+      }catch(err){
+        console.error(err)
+      }
+    }
+
     load()
-  },[])
+  },[id])
 
   if(!op){
     return <div className="text-gray-400">Loading...</div>

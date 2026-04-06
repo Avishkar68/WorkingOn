@@ -1,8 +1,6 @@
-import React from 'react';
-
 export default function WelcomeModal({ close, openCreatePost }) {
   return (
-    <div className="fixed h-sc inset-0 flex items-center justify-center z-50 bg-black/80 backdrop-blur-md transition-all">
+    <div className="fixed h-screen inset-0 flex items-center justify-center z-50 bg-black/80 backdrop-blur-md transition-all">
       
       {/* Container with a subtle border gradient for that 'premium' look */}
       <div className="relative p-[1px] rounded-3xl bg-gradient-to-b from-white/20 to-transparent animate-in fade-in zoom-in duration-300">
@@ -33,14 +31,16 @@ export default function WelcomeModal({ close, openCreatePost }) {
           <div className="flex flex-col gap-4">
             <button
               onClick={() => {
-                close();
-                openCreatePost();
+                close()
+                if (typeof openCreatePost === "function") {
+                  openCreatePost()
+                }
               }}
               className="group relative w-full overflow-hidden rounded-xl bg-white px-8 py-4 font-semibold text-black transition-all hover:scale-[1.02] active:scale-[0.98]"
             >
               {/* Shimmer Effect */}
               <div className="absolute inset-0 flex h-full w-full justify-center [transform:skew(-12deg)]">
-                <div className="relative h-full w-8 bg-white/30 blur-md animate-[shimmer_2s_infinite]"></div>
+                <div className="relative h-full w-8 bg-white/30 blur-md animate-shine"></div>
               </div>
               
               <span className="relative flex items-center justify-center gap-2 cursor-pointer ">
@@ -62,12 +62,6 @@ export default function WelcomeModal({ close, openCreatePost }) {
         </div>
       </div>
 
-      <style jsx>{`
-        @keyframes shimmer {
-          0% { transform: translateX(-150%) skew(-12deg); }
-          100% { transform: translateX(150%) skew(-12deg); }
-        }
-      `}</style>
     </div>
   );
 }

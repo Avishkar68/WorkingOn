@@ -22,6 +22,7 @@ import AdminPanel from "./pages/AdminPanel"
 import UserProfile from "./pages/UserProfile"
 import EventDetail from "./pages/EventDetail"
 import OpportunityDetail from "./pages/OpportunityDetail"
+import PostDetail from "./pages/PostDetail"
 import Opportunity from "./pages/try/Opportunity"
 import { pageTransition, pageVariants } from "./lib/motion"
 
@@ -145,6 +146,7 @@ function AnimatedRoutes() {
           <Route path="/settings" element={<RouteFrame><Layout><Settings /></Layout></RouteFrame>} />
           <Route path="/admin" element={<RouteFrame><Layout><AdminPanel /></Layout></RouteFrame>} />
           <Route path="/user/:id" element={<RouteFrame><Layout><UserProfile /></Layout></RouteFrame>} />
+          <Route path="/posts/:id" element={<RouteFrame><Layout><PostDetail /></Layout></RouteFrame>} />
           <Route path="/events/:id" element={<RouteFrame><Layout><EventDetail /></Layout></RouteFrame>} />
           <Route path="/opportunities/:id" element={<RouteFrame><Layout><OpportunityDetail /></Layout></RouteFrame>} />
           <Route path="/opportunity" element={<RouteFrame><Layout><Opportunity /></Layout></RouteFrame>} />

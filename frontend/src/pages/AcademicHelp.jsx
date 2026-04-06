@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "react"
 import api from "../api/axios";
 
 export default function AcademicHelp() {
@@ -7,25 +7,40 @@ export default function AcademicHelp() {
   const [desc, setDesc] = useState("");
 
   const load = async () => {
-    const res = await api.get("/academic");
-    setPosts(res.data);
-  };
+    try {
+      const res = await api.get("/academic")
+      setPosts(Array.isArray(res.data) ? res.data : [])
+    } catch (err) {
+      console.error(err)
+      setPosts([])
+    }
+  }
 
   useEffect(() => {
-    load();
-  }, []);
+    load()
+  }, [])
 
   const create = async () => {
-    await api.post("/academic", { title, description: desc });
-    setTitle("");
-    setDesc("");
-    load();
-  };
+    if (!title.trim() || !desc.trim()) return
+
+    try {
+      await api.post("/academic", { title, description: desc })
+      setTitle("")
+      setDesc("")
+      load()
+    } catch (err) {
+      console.error(err)
+    }
+  }
 
   const reply = async (id, text) => {
-    await api.post(`/academic/${id}/reply`, { text });
-    load();
-  };
+    try {
+      await api.post(`/academic/${id}/reply`, { text })
+      load()
+    } catch (err) {
+      console.error(err)
+    }
+  }
 
   return (
     <div className="space-y-6">
@@ -79,7 +94,7 @@ export default function AcademicHelp() {
 
           {/* REPLIES */}
           <div className="pl-4 border-l border-white/10 space-y-2">
-            {p.replies.map((r) => (
+            {(Array.isArray(p.replies) ? p.replies : []).map((r) => (
               <div
                 key={r._id}
                 className="text-sm text-gray-300 bg-white/5 px-3 py-2 rounded-lg"

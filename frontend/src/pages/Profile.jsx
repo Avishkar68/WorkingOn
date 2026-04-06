@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import api from "../api/axios";
+import { useNavigate } from "react-router-dom";
 
 import EditProfileModal from "../components/profile/EditProfileModal";
 import PostCard from "../components/post/PostCard";
@@ -8,6 +9,7 @@ import ProjectCard from "../components/project/ProjectCard";
 import EventCard from "../components/events/EventCard";
 
 export default function Profile() {
+  const navigate = useNavigate();
   const [profile, setProfile] = useState(null);
   const [userId, setUserId] = useState(null);
 
@@ -267,12 +269,12 @@ export default function Profile() {
 
       {/* FOLLOWERS MODAL */}
       {showFollowers && (
-        <Modal title="Followers" users={profile.followers} close={() => setShowFollowers(false)} />
+        <Modal title="Followers" users={profile.followers} close={() => setShowFollowers(false)} navigate={navigate} />
       )}
 
       {/* FOLLOWING MODAL */}
       {showFollowing && (
-        <Modal title="Following" users={profile.following} close={() => setShowFollowing(false)} />
+        <Modal title="Following" users={profile.following} close={() => setShowFollowing(false)} navigate={navigate} />
       )}
 
       {showEdit && (
@@ -283,7 +285,9 @@ export default function Profile() {
   );
 }
 
-function Modal({ title, users, close }) {
+function Modal({ title, users, close, navigate }) {
+  const safeUsers = Array.isArray(users) ? users : [];
+
   return (
     <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
 
@@ -291,14 +295,16 @@ function Modal({ title, users, close }) {
 
         <h2 className="font-bold text-lg">{title}</h2>
 
-        {users.map(u => (
+        {safeUsers.length === 0 ? (
+          <p className="text-sm text-gray-400">No users found</p>
+        ) : safeUsers.map(u => (
           <div
             key={u._id}
             className="flex gap-3 items-center cursor-pointer hover:bg-white/10 p-2 rounded-lg"
-            onClick={() => window.location.href = `/user/${u._id}`}
+            onClick={() => navigate(`/user/${u._id}`)}
           >
             <div className="w-10 h-10 bg-indigo-500 flex items-center justify-center rounded-full">
-              {u.name[0]}
+              {u.name?.[0] || "U"}
             </div>
             {u.name}
           </div>
