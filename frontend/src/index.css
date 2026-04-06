@@ -1,13 +1,28 @@
 @import "tailwindcss";
 
+/* Hide scrollbar globally but keep scroll working */
+
+/* Chrome, Safari, Edge */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: none;
+}
+
+/* IE & old Edge */
+* {
+  -ms-overflow-style: none;
+}
+
 body {
     background: radial-gradient(circle at top left, #1a1a2e, #0f0f1a 60%);
     color: #e5e7eb;
   }
 
-  * {
-    scroll-behavior: smooth;
-  }
+ 
   
   /* reusable glass */
   .glass {
