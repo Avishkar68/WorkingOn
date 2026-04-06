@@ -4,6 +4,8 @@ import CommentSection from "./CommentSection"
 import { useNavigate } from "react-router-dom"
 import { Heart, MessageCircle, Share2, Trash2 } from "lucide-react"
 import { jwtDecode } from "jwt-decode"
+import { motion } from "framer-motion"
+import { buttonTap, cardHover, fadeInUp } from "../../lib/motion"
 
 export default function PostCard({ post, refreshFeed }) {
 
@@ -104,7 +106,14 @@ export default function PostCard({ post, refreshFeed }) {
 
   return (
 
-    <div className="glass rounded-2xl p-5 space-y-4 hover:shadow-[0_0_25px_rgba(99,102,241,0.2)] transition">
+    <motion.div
+      className="card-hover glass rounded-2xl p-5 space-y-4"
+      variants={fadeInUp}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.22 }}
+      whileHover={cardHover}
+    >
 
       {/* 👤 USER */}
       <div
@@ -166,9 +175,10 @@ export default function PostCard({ post, refreshFeed }) {
         <div className="flex gap-6">
 
           {/* ❤️ LIKE */}
-          <button
+          <motion.button
             onClick={handleLike}
             disabled={loading}
+            whileTap={buttonTap}
             className={`flex items-center gap-1 transition transform cursor-pointer ${
               isLiked
                 ? "text-red-500 scale-105"
@@ -180,39 +190,42 @@ export default function PostCard({ post, refreshFeed }) {
               fill={isLiked ? "currentColor" : "none"}
             />
             {likes.length}
-          </button>
+          </motion.button>
 
           {/* 💬 COMMENT */}
-          <button
+          <motion.button
             onClick={() => setShowComments(!showComments)}
+            whileTap={buttonTap}
             className="flex items-center gap-1 cursor-pointer hover:text-indigo-400 transition"
           >
             <MessageCircle size={18} />
             Comment
-          </button>
+          </motion.button>
 
         </div>
 
         <div className="flex gap-4">
 
           {/* 🔗 SHARE */}
-          <button
+          <motion.button
             onClick={sharePost}
             title="Share"
+            whileTap={buttonTap}
             className="hover:text-indigo-400 cursor-pointer transition"
           >
             <Share2 size={18} />
-          </button>
+          </motion.button>
 
           {/* 🗑 DELETE ONLY OWNER */}
           {isOwner && (
-            <button
+            <motion.button
               onClick={deletePost}
               title="Delete"
+              whileTap={buttonTap}
               className="hover:text-red-400 transition"
             >
               <Trash2 size={18} />
-            </button>
+            </motion.button>
           )}
 
         </div>
@@ -224,6 +237,6 @@ export default function PostCard({ post, refreshFeed }) {
         <CommentSection postId={post._id}/>
       )}
 
-    </div>
+    </motion.div>
   )
 }

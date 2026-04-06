@@ -2,12 +2,14 @@ import { useState, useEffect } from "react"
 import { Bell, Menu } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { jwtDecode } from "jwt-decode"
+import { AnimatePresence, motion } from "framer-motion"
 import api from "../../api/axios"
 
 import CreatePostModal from "../post/CreatePostModal"
 import CreateProjectModal from "../project/CreateProjectModal"
 import CreateEventModal from "../events/CreateEventModal"
 import CreateOpportunityModal from "../opportunity/CreateOpportunityModal"
+import { buttonTap } from "../../lib/motion"
 
 export default function Topbar({ openSidebar }) {
 
@@ -53,18 +55,22 @@ export default function Topbar({ openSidebar }) {
         <div className="flex items-center gap-3 sm:gap-4">
 
           {/* CREATE BUTTON */}
-          <button
+          <motion.button
             onClick={()=>setShowMenu(true)}
-            className="bg-indigo-500/80 hover:bg-indigo-500 text-white px-3 sm:px-4 py-2 rounded-xl text-sm sm:text-base shadow-[0_0_20px_rgba(99,102,241,0.3)]"
+            whileHover={{ scale: 1.04 }}
+            whileTap={buttonTap}
+            className="interactive-button bg-indigo-500/80 hover:bg-indigo-500 text-white px-3 sm:px-4 py-2 rounded-xl text-sm sm:text-base shadow-[0_0_20px_rgba(99,102,241,0.3)]"
           >
             + Create
-          </button>
+          </motion.button>
 
           {/* NOTIFICATION */}
-          <Bell
-            className="cursor-pointer text-gray-300"
+          <motion.div whileHover={{ scale: 1.06 }} whileTap={buttonTap}>
+            <Bell
+            className="cursor-pointer text-gray-300 icon-interactive"
             onClick={()=>navigate("/notifications")}
           />
+          </motion.div>
 
           {/* PROFILE */}
           <div
@@ -87,25 +93,40 @@ export default function Topbar({ openSidebar }) {
       </div>
 
       {/* CREATE MENU MODAL */}
+      <AnimatePresence>
       {showMenu && (
-        <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/50 backdrop-blur-sm">
+        <motion.div
+          className="fixed inset-0 z-[999] flex items-center justify-center bg-black/50 backdrop-blur-sm"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+        >
 
           {/* MODAL BOX */}
-          <div className="glass p-6 rounded-2xl w-[90%] max-w-[320px] text-white space-y-3 shadow-2xl animate-scaleIn">
+          <motion.div
+            className="glass p-6 rounded-2xl w-[90%] max-w-[320px] text-white space-y-3 shadow-2xl"
+            initial={{ opacity: 0, y: 14, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 8, scale: 0.98 }}
+            transition={{ duration: 0.24 }}
+          >
 
             <h2 className="font-semibold text-lg text-center">Create</h2>
 
             {["post","project","event","opportunity"].map(item=>(
-              <button
+              <motion.button
                 key={item}
                 onClick={()=>{
                   setType(item)
                   setShowMenu(false)
                 }}
+                whileHover={{ x: 4 }}
+                whileTap={buttonTap}
                 className="w-full text-left px-4 py-2 hover:bg-white/10 rounded-lg transition"
               >
                 Create {item}
-              </button>
+              </motion.button>
             ))}
 
             <button
@@ -115,9 +136,10 @@ export default function Topbar({ openSidebar }) {
               Cancel
             </button>
 
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       )}
+      </AnimatePresence>
 
       {/* MODALS */}
       {type === "post" && <CreatePostModal close={()=>setType(null)} refreshFeed={()=>window.location.reload()} />}

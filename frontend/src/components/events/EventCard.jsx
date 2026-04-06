@@ -1,3 +1,6 @@
+import { motion } from "framer-motion"
+import { buttonTap, cardHover, fadeInUp } from "../../lib/motion"
+
 export default function EventCard({event}){
 
   const formatDate = (date)=>{
@@ -19,7 +22,14 @@ export default function EventCard({event}){
 
   return(
 
-    <div className="glass rounded-2xl overflow-hidden hover:shadow-[0_0_25px_rgba(99,102,241,0.2)] transition">
+    <motion.div
+      className="card-hover glass rounded-2xl overflow-hidden"
+      variants={fadeInUp}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.2 }}
+      whileHover={cardHover}
+    >
 
       {/* IMAGE */}
       {/* <img
@@ -72,17 +82,19 @@ export default function EventCard({event}){
 
         {/* BUTTON */}
         <div className="border-t border-white/10 pt-4">
-          <button
+          <motion.button
             onClick={register}
+            whileHover={{ scale: 1.03 }}
+            whileTap={buttonTap}
             className="w-full bg-indigo-500 hover:bg-indigo-600 text-white py-3 rounded-xl shadow-[0_0_15px_rgba(99,102,241,0.3)]"
           >
             Register Interest
-          </button>
+          </motion.button>
         </div>
 
       </div>
 
-    </div>
+    </motion.div>
 
   )
 }

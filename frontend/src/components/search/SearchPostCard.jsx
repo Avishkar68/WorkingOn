@@ -1,4 +1,6 @@
 import { Heart, MessageCircle, Share2, Trash2 } from "lucide-react"
+import { motion } from "framer-motion"
+import { cardHover, fadeInUp } from "../../lib/motion"
 
 export default function SearchPostCard({post}){
 
@@ -8,7 +10,14 @@ export default function SearchPostCard({post}){
 
   return(
 
-    <div className="glass rounded-2xl p-6 space-y-4 hover:shadow-[0_0_25px_rgba(99,102,241,0.2)] transition">
+    <motion.div
+      className="card-hover glass rounded-2xl p-6 space-y-4"
+      variants={fadeInUp}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.2 }}
+      whileHover={cardHover}
+    >
 
       {/* AUTHOR */}
       <div className="flex items-center gap-3">
@@ -79,6 +88,6 @@ export default function SearchPostCard({post}){
 
       </div>
 
-    </div>
+    </motion.div>
   )
 }

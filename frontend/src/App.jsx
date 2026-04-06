@@ -1,4 +1,6 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom"
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom"
+import { AnimatePresence, motion } from "framer-motion"
+import { useEffect, useState } from "react"
 
 import Layout from "./components/layout/Layout"
 import ProtectedRoute from "./routes/ProtectedRoute"
@@ -21,83 +23,134 @@ import UserProfile from "./pages/UserProfile"
 import EventDetail from "./pages/EventDetail"
 import OpportunityDetail from "./pages/OpportunityDetail"
 import Opportunity from "./pages/try/Opportunity"
+import { pageTransition, pageVariants } from "./lib/motion"
 
 // ⭐ NEW IMPORTS
 import CommunityPage from "./pages/CommunityPage"
 import CreateCommunity from "./pages/CreateCommunity"
 
 function App() {
+  return (
+    <BrowserRouter>
+      <AnimatedRoutes />
+    </BrowserRouter>
+  )
+}
+
+function RouteFrame({ children }) {
+  return (
+    <motion.div
+      className="min-h-screen"
+      variants={pageVariants}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      transition={pageTransition}
+    >
+      {children}
+    </motion.div>
+  )
+}
+
+function RouteLoader({ pathKey }) {
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    setLoading(true)
+    const timer = setTimeout(() => setLoading(false), 260)
+    return () => clearTimeout(timer)
+  }, [pathKey])
 
   return (
-
-    <BrowserRouter>
-
-      <Routes>
-
-        {/* ================= PUBLIC ROUTES ================= */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-
-
-        {/* ================= PROTECTED ROUTES ================= */}
-
-        {/* HOME */}
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <Home />
-              </Layout>
-            </ProtectedRoute>
-          }
+    <AnimatePresence>
+      {loading && (
+        <motion.div
+          className="route-loader"
+          initial={{ opacity: 0, scaleX: 0.2 }}
+          animate={{ opacity: 1, scaleX: 1 }}
+          exit={{ opacity: 0, scaleX: 0.8 }}
+          transition={{ duration: 0.24 }}
         />
+      )}
+    </AnimatePresence>
+  )
+}
 
-        {/* ⭐ COMMUNITY PAGE */}
-        <Route
-          path="/community/:id"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <CommunityPage />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
+function AnimatedRoutes() {
+  const location = useLocation()
+  const pathKey = location.pathname
 
-        {/* ⭐ CREATE COMMUNITY */}
-        <Route
-          path="/create-community"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <CreateCommunity />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
+  return (
+    <>
+      <RouteLoader pathKey={pathKey} />
+      <AnimatePresence mode="wait">
+        <Routes location={location} key={pathKey}>
+          {/* ================= PUBLIC ROUTES ================= */}
+          <Route path="/login" element={<RouteFrame><Login /></RouteFrame>} />
+          <Route path="/register" element={<RouteFrame><Register /></RouteFrame>} />
 
-        {/* ================= EXISTING ROUTES ================= */}
+          {/* ================= PROTECTED ROUTES ================= */}
 
-        <Route path="/opportunities" element={<Layout><Opportunities /></Layout>} />
-        <Route path="/academic-help" element={<Layout><AcademicHelp /></Layout>} />
-        <Route path="/projects" element={<Layout><Projects /></Layout>} />
-        <Route path="/events" element={<Layout><Events /></Layout>} />
-        <Route path="/explore" element={<Layout><Explore /></Layout>} />
-        <Route path="/search" element={<Layout><Search /></Layout>} />
-        <Route path="/profile" element={<Layout><Profile /></Layout>} />
-        <Route path="/notifications" element={<Layout><Notifications /></Layout>} />
-        <Route path="/settings" element={<Layout><Settings /></Layout>} />
-        <Route path="/admin" element={<Layout><AdminPanel /></Layout>} />
-        <Route path="/user/:id" element={<Layout><UserProfile /></Layout>} />
+          {/* HOME */}
+          <Route
+            path="/"
+            element={
+              <RouteFrame>
+                <ProtectedRoute>
+                  <Layout>
+                    <Home />
+                  </Layout>
+                </ProtectedRoute>
+              </RouteFrame>
+            }
+          />
 
-        <Route path="/events/:id" element={<Layout><EventDetail /></Layout>} />
-        <Route path="/opportunities/:id" element={<Layout><OpportunityDetail /></Layout>} />
-        <Route path="/opportunity" element={<Layout><Opportunity /></Layout>} />
+          {/* ⭐ COMMUNITY PAGE */}
+          <Route
+            path="/community/:id"
+            element={
+              <RouteFrame>
+                <ProtectedRoute>
+                  <Layout>
+                    <CommunityPage />
+                  </Layout>
+                </ProtectedRoute>
+              </RouteFrame>
+            }
+          />
 
-      </Routes>
+          {/* ⭐ CREATE COMMUNITY */}
+          <Route
+            path="/create-community"
+            element={
+              <RouteFrame>
+                <ProtectedRoute>
+                  <Layout>
+                    <CreateCommunity />
+                  </Layout>
+                </ProtectedRoute>
+              </RouteFrame>
+            }
+          />
 
-    </BrowserRouter>
+          {/* ================= EXISTING ROUTES ================= */}
+          <Route path="/opportunities" element={<RouteFrame><Layout><Opportunities /></Layout></RouteFrame>} />
+          <Route path="/academic-help" element={<RouteFrame><Layout><AcademicHelp /></Layout></RouteFrame>} />
+          <Route path="/projects" element={<RouteFrame><Layout><Projects /></Layout></RouteFrame>} />
+          <Route path="/events" element={<RouteFrame><Layout><Events /></Layout></RouteFrame>} />
+          <Route path="/explore" element={<RouteFrame><Layout><Explore /></Layout></RouteFrame>} />
+          <Route path="/search" element={<RouteFrame><Layout><Search /></Layout></RouteFrame>} />
+          <Route path="/profile" element={<RouteFrame><Layout><Profile /></Layout></RouteFrame>} />
+          <Route path="/notifications" element={<RouteFrame><Layout><Notifications /></Layout></RouteFrame>} />
+          <Route path="/settings" element={<RouteFrame><Layout><Settings /></Layout></RouteFrame>} />
+          <Route path="/admin" element={<RouteFrame><Layout><AdminPanel /></Layout></RouteFrame>} />
+          <Route path="/user/:id" element={<RouteFrame><Layout><UserProfile /></Layout></RouteFrame>} />
+          <Route path="/events/:id" element={<RouteFrame><Layout><EventDetail /></Layout></RouteFrame>} />
+          <Route path="/opportunities/:id" element={<RouteFrame><Layout><OpportunityDetail /></Layout></RouteFrame>} />
+          <Route path="/opportunity" element={<RouteFrame><Layout><Opportunity /></Layout></RouteFrame>} />
+        </Routes>
+      </AnimatePresence>
+    </>
   )
 }
 

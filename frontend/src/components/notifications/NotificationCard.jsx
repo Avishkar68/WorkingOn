@@ -1,4 +1,6 @@
 import React from "react"
+import { motion } from "framer-motion"
+import { buttonTap, cardHover, fadeInUp } from "../../lib/motion"
 
 const NotificationCard = ({
   notification,
@@ -12,9 +14,14 @@ const NotificationCard = ({
   const isJoinRequest = notification.type === "joinRequest"
 
   return (
-    <div
+    <motion.div
       className={`glass p-4 rounded-2xl flex items-center justify-between transition hover:shadow-[0_0_20px_rgba(99,102,241,0.2)]
       ${!notification.read ? "border border-indigo-500/30" : ""}`}
+      variants={fadeInUp}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.2 }}
+      whileHover={cardHover}
     >
 
       {/* LEFT */}
@@ -75,21 +82,23 @@ const NotificationCard = ({
           {isJoinRequest && !notification.read && (
             <div className="flex gap-2 mt-3">
 
-              <button
+              <motion.button
                 disabled={loading}
                 onClick={() => onAccept(notification)}
+                whileTap={buttonTap}
                 className="px-3 py-1 rounded-lg bg-green-500/80 hover:bg-green-500 text-white text-sm disabled:opacity-50"
               >
                 Accept
-              </button>
+              </motion.button>
 
-              <button
+              <motion.button
                 disabled={loading}
                 onClick={() => onReject(notification)}
+                whileTap={buttonTap}
                 className="px-3 py-1 rounded-lg bg-red-500/80 hover:bg-red-500 text-white text-sm disabled:opacity-50"
               >
                 Reject
-              </button>
+              </motion.button>
 
             </div>
           )}
@@ -102,24 +111,26 @@ const NotificationCard = ({
       <div className="flex flex-col items-end gap-2">
 
         {!notification.read && (
-          <button
+          <motion.button
             onClick={() => onRead(notification._id)}
+            whileTap={buttonTap}
             className="text-indigo-400 text-sm hover:underline"
           >
             Mark read
-          </button>
+          </motion.button>
         )}
 
-        <button
+        <motion.button
           onClick={() => onDelete(notification._id)}
+          whileTap={buttonTap}
           className="text-red-400 hover:text-red-500 text-lg"
         >
           🗑
-        </button>
+        </motion.button>
 
       </div>
 
-    </div>
+    </motion.div>
   )
 }
 

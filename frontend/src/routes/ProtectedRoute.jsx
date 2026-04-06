@@ -1,5 +1,6 @@
 import { Navigate } from "react-router-dom"
 import { useEffect, useState } from "react"
+import { motion } from "framer-motion"
 import api from "../api/axios"
 
 export default function ProtectedRoute({ children }) {
@@ -41,8 +42,13 @@ export default function ProtectedRoute({ children }) {
 
   if (loading) {
     return (
-        <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-600"></div>
+      <div className="min-h-screen flex items-center justify-center">
+        <motion.div
+          className="skeleton-shimmer w-44 h-11 rounded-xl border border-white/10 bg-white/5"
+          initial={{ opacity: 0.5 }}
+          animate={{ opacity: 1 }}
+          transition={{ repeat: Infinity, repeatType: "mirror", duration: 0.6 }}
+        />
       </div>
     )
   }

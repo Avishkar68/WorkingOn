@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react"
 import api from "../../api/axios"
 import { useNavigate } from "react-router-dom"
+import { motion } from "framer-motion"
+import { fadeInUp, staggerContainer } from "../../lib/motion"
 
 export default function RightSidebar() {
 
@@ -40,10 +42,15 @@ export default function RightSidebar() {
   },[])
 
   return (
-    <div className="w-[280px] xl:w-[320px] p-3 sm:p-4 space-y-4 overflow-y-auto">
+    <motion.div
+      className="w-[280px] xl:w-[320px] p-3 sm:p-4 space-y-4 overflow-y-auto"
+      variants={staggerContainer}
+      initial="hidden"
+      animate="visible"
+    >
 
       {/* 🔥 YOUR COMMUNITIES */}
-      <div className="glass rounded-2xl p-4">
+      <motion.div className="card-hover glass rounded-2xl p-4" variants={fadeInUp}>
         <h3 className="font-semibold mb-3 text-white">
           Your Communities
         </h3>
@@ -65,10 +72,10 @@ export default function RightSidebar() {
             </div>
           ))
         )}
-      </div>
+      </motion.div>
 
       {/* EVENTS */}
-      <div className="glass rounded-2xl p-4">
+      <motion.div className="card-hover glass rounded-2xl p-4" variants={fadeInUp}>
         <h3 className="font-semibold mb-3 text-white">Upcoming Events</h3>
 
         {events.length === 0 ? (
@@ -89,10 +96,10 @@ export default function RightSidebar() {
             </div>
           ))
         )}
-      </div>
+      </motion.div>
 
       {/* OPPORTUNITIES */}
-      <div className="glass rounded-2xl p-4">
+      <motion.div className="card-hover glass rounded-2xl p-4" variants={fadeInUp}>
         <h3 className="font-semibold mb-3 text-white">Recent Opportunities</h3>
 
         {opportunities.length === 0 ? (
@@ -113,8 +120,8 @@ export default function RightSidebar() {
             </div>
           ))
         )}
-      </div>
+      </motion.div>
 
-    </div>
+    </motion.div>
   )
 }

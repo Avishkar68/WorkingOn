@@ -1,5 +1,7 @@
 import { useState } from "react"
 import JoinProjectModal from "./JoinProjectModal"
+import { motion } from "framer-motion"
+import { buttonTap, cardHover, fadeInUp } from "../../lib/motion"
 
 export default function ProjectCard({ project, refresh }) {
 
@@ -16,7 +18,14 @@ export default function ProjectCard({ project, refresh }) {
   )
 
   return (
-    <div className="glass p-4 sm:p-6 rounded-2xl space-y-4 hover:shadow-[0_0_25px_rgba(99,102,241,0.2)] transition">
+    <motion.div
+      className="card-hover glass p-4 sm:p-6 rounded-2xl space-y-4"
+      variants={fadeInUp}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.2 }}
+      whileHover={cardHover}
+    >
 
       {/* TITLE */}
       <h2 className="text-base sm:text-lg font-semibold text-white">
@@ -97,17 +106,22 @@ export default function ProjectCard({ project, refresh }) {
           </button>
 
         ) : (
-          <button
+          <motion.button
             onClick={() => setShowJoin(true)}
+            whileHover={{ scale: 1.03 }}
+            whileTap={buttonTap}
             className="flex-1 bg-indigo-500 hover:bg-indigo-600 text-white py-2 rounded-xl shadow-[0_0_15px_rgba(99,102,241,0.3)] transition"
           >
             Join Project
-          </button>
+          </motion.button>
         )}
 
-        <button className="flex-1 bg-white/10 text-gray-300 py-2 rounded-xl hover:bg-white/20 transition">
+        <motion.button
+          whileTap={buttonTap}
+          className="flex-1 bg-white/10 text-gray-300 py-2 rounded-xl hover:bg-white/20 transition"
+        >
           Message
-        </button>
+        </motion.button>
 
       </div>
 
@@ -120,6 +134,6 @@ export default function ProjectCard({ project, refresh }) {
         />
       )}
 
-    </div>
+    </motion.div>
   )
 }
