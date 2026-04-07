@@ -2,6 +2,7 @@ import Post from "../models/Post.js";
 import User from "../models/User.js";
 import Community from "../models/Community.js";
 import { createNotification } from "../services/notificationService.js";
+import { markPostCreated } from "./streakController.js";
 import uploadImage from "../utils/uploadImage.js";
 
 // ✅ CREATE POST (WITH COMMUNITY)
@@ -34,6 +35,8 @@ export const createPost = async (req, res) => {
       image: imageUrl,
       isAnonymous
     });
+
+    await markPostCreated(req.user._id);
 
     res.status(201).json(post);
 

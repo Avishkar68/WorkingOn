@@ -10,6 +10,7 @@ import {
   Search,
   Settings,
   ShieldCheck,
+  Trophy,
   User
 } from "lucide-react"
 
@@ -27,6 +28,7 @@ export default function Sidebar({ close }) {
     { to: "/projects", label: "Projects", icon: FolderKanban },
     { to: "/events", label: "Events", icon: Calendar },
     { to: "/explore", label: "Explore", icon: Compass },
+    { to: "/leaderboard", label: "Leaderboard", icon: Trophy },
     { to: "/search", label: "Search", icon: Search }
   ]
 

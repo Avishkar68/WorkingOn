@@ -3,6 +3,7 @@ import api from "../../api/axios"
 import { useNavigate } from "react-router-dom"
 import { motion } from "framer-motion"
 import { fadeInUp } from "../../lib/motion"
+import StreakCard from "./StreakCard"
 
 export default function RightSidebar() {
 
@@ -99,11 +100,13 @@ export default function RightSidebar() {
 
   return (
     <motion.div
-      className="w-[280px] xl:w-[320px] h-full min-h-0 max-h-full px-3 py-4 space-y-4 overflow-y-auto scrollbar-hide"
+      className="w-72 xl:w-80 h-full min-h-0 max-h-full px-3 py-4 space-y-4 overflow-y-auto scrollbar-hide"
       variants={fadeInUp}
       initial="hidden"
       animate="visible"
     >
+
+      <StreakCard />
 
       {/* 🔥 YOUR COMMUNITIES */}
       <Section

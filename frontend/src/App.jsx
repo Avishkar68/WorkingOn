@@ -24,6 +24,8 @@ import EventDetail from "./pages/EventDetail"
 import OpportunityDetail from "./pages/OpportunityDetail"
 import PostDetail from "./pages/PostDetail"
 import Opportunity from "./pages/try/Opportunity"
+import ChallengePage from "./pages/ChallengePage"
+import Leaderboard from "./pages/Leaderboard"
 import { pageTransition, pageVariants } from "./lib/motion"
 
 // ⭐ NEW IMPORTS
@@ -159,6 +161,8 @@ function AnimatedRoutes() {
           <Route path="/notifications" element={<RouteFrame><Layout><Notifications /></Layout></RouteFrame>} />
           <Route path="/settings" element={<RouteFrame><Layout><Settings /></Layout></RouteFrame>} />
           <Route path="/admin" element={<RouteFrame><Layout><AdminPanel /></Layout></RouteFrame>} />
+          <Route path="/challenge" element={<RouteFrame><Layout><ChallengePage /></Layout></RouteFrame>} />
+          <Route path="/leaderboard" element={<RouteFrame><Layout><Leaderboard /></Layout></RouteFrame>} />
           <Route path="/user/:id" element={<RouteFrame><Layout><UserProfile /></Layout></RouteFrame>} />
           <Route path="/posts/:id" element={<RouteFrame><Layout><PostDetail /></Layout></RouteFrame>} />
           <Route path="/events/:id" element={<RouteFrame><Layout><EventDetail /></Layout></RouteFrame>} />

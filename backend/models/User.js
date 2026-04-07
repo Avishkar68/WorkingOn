@@ -87,7 +87,33 @@ const userSchema = new mongoose.Schema(
 
   resetToken: String,
 
-  resetTokenExpiry: Date
+  resetTokenExpiry: Date,
+
+  streakCount: {
+    type: Number,
+    default: 0
+  },
+
+  lastActiveDate: {
+    type: Date
+  },
+
+  dailyTasksCompleted: {
+    quizCompleted: {
+      type: Boolean,
+      default: false
+    },
+    postCreated: {
+      type: Boolean,
+      default: false
+    }
+  },
+
+  streakHistory: [
+    {
+      type: Date
+    }
+  ]
 },
 {
   timestamps: true

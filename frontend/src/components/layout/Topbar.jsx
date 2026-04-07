@@ -9,11 +9,15 @@ import CreatePostModal from "../post/CreatePostModal"
 import CreateProjectModal from "../project/CreateProjectModal"
 import CreateEventModal from "../events/CreateEventModal"
 import CreateOpportunityModal from "../opportunity/CreateOpportunityModal"
+import ChallengeModal from "../dialogueboxes/ChallengeModal"
 import { buttonTap } from "../../lib/motion"
 
 export default function Topbar({ openSidebar }) {
 
   const [showMenu,setShowMenu] = useState(false)
+  const [showChallengeModal, setShowChallengeModal] = useState(false)
+  const [challenge, setChallenge] = useState(null)
+  const [leaderboardPreview, setLeaderboardPreview] = useState([])
   const [type,setType] = useState(null)
   const [user,setUser] = useState(null)
 
@@ -27,6 +31,8 @@ export default function Topbar({ openSidebar }) {
     "/opportunities": "Opportunities",
     "/explore": "Explore",
     "/search": "Search",
+    "/leaderboard": "Leaderboard",
+    "/challenge": "Challenge",
     "/notifications": "Notifications",
     "/settings": "Settings",
     "/profile": "Profile"
@@ -50,8 +56,30 @@ export default function Topbar({ openSidebar }) {
     }
   }
 
+  const loadChallengePreview = async () => {
+    try {
+      const [{ data: today }, { data: leaderboard }] = await Promise.all([
+        api.get("/challenge/today"),
+        api.get("/streak/leaderboard")
+      ])
+      setChallenge(today)
+      setLeaderboardPreview(leaderboard.slice(0, 3))
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
   useEffect(()=>{
     loadUser()
+
+    const todayKey = new Date().toISOString().split("T")[0]
+    const shownKey = `challengeModalShown:${todayKey}`
+
+    if (!localStorage.getItem(shownKey)) {
+      loadChallengePreview()
+      setShowChallengeModal(true)
+      localStorage.setItem(shownKey, "true")
+    }
   },[])
 
   return (
@@ -88,6 +116,15 @@ export default function Topbar({ openSidebar }) {
           >
             <Plus size={14} />
             Create
+          </motion.button>
+
+          <motion.button
+            onClick={() => setShowChallengeModal(true)}
+            whileHover={{ scale: 1.02 }}
+            whileTap={buttonTap}
+            className="hidden md:inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/4 px-3 py-2 text-xs text-slate-300 hover:text-slate-100 hover:border-indigo-400 transition"
+          >
+            Challenge
           </motion.button>
 
           {/* NOTIFICATION */}
@@ -131,7 +168,7 @@ export default function Topbar({ openSidebar }) {
 
           {/* MODAL BOX */}
           <motion.div
-            className="glass-pro p-6 rounded-2xl w-[90%] max-w-[340px] text-white space-y-3 shadow-2xl"
+            className="glass-pro p-6 rounded-2xl w-[90%] max-w-85 text-white space-y-3 shadow-2xl"
             initial={{ opacity: 0, y: 14, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.98 }}
@@ -172,6 +209,16 @@ export default function Topbar({ openSidebar }) {
       {type === "project" && <CreateProjectModal close={()=>setType(null)} refresh={()=>window.location.reload()} />}
       {type === "event" && <CreateEventModal close={()=>setType(null)} refresh={()=>window.location.reload()} />}
       {type === "opportunity" && <CreateOpportunityModal close={()=>setType(null)} refresh={()=>window.location.reload()} />}
+      <ChallengeModal
+        open={showChallengeModal}
+        close={() => setShowChallengeModal(false)}
+        leaderboard={leaderboardPreview}
+        challenge={challenge}
+        onStart={() => {
+          setShowChallengeModal(false)
+          navigate("/challenge")
+        }}
+      />
     </>
   )
 }
