@@ -122,7 +122,7 @@ export default function Topbar({ openSidebar }) {
             onClick={() => setShowChallengeModal(true)}
             whileHover={{ scale: 1.02 }}
             whileTap={buttonTap}
-            className="hidden md:inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/4 px-3 py-2 text-xs text-slate-300 hover:text-slate-100 hover:border-indigo-400 transition"
+            className="hidden md:inline-flex items-center gap-2 rounded-xl btn-secondary px-4 py-2 text-xs font-semibold transition"
           >
             Challenge
           </motion.button>

@@ -54,9 +54,8 @@ export default function Leaderboard() {
                 </div>
 
                 <div className={`
-                  relative overflow-hidden rounded-[2rem] border ${theme.border} bg-white/[0.03] backdrop-blur-md p-5
-                  transition-all duration-300 hover:bg-white/[0.05]
-                  ${isFirst ? "min-h-[320px] md:scale-105 border-amber-500/40 z-10" : "min-h-[280px]"}
+                  relative overflow-hidden glass-card p-5
+                  ${isFirst ? "min-h-[320px] md:scale-105 z-10 border-amber-500/40" : "min-h-[280px] border-white/5"}
                   ${theme.glow} shadow-2xl
                 `}>
                   {/* Subtle Top Light Glow */}

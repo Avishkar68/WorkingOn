@@ -13,8 +13,8 @@ export default function Layout({ children }) {
   const hideRightSidebar = location.pathname === "/communities"
 
   return (
-    <div className="h-screen overflow-hidden bg-transparent px-3 pb-3 pt-3 sm:px-4">
-      <div className="mx-auto flex h-full w-full max-w-[1600px] gap-3">
+    <div className="h-screen overflow-hidden bg-transparent p-4 sm:p-6 lg:p-8">
+      <div className="mx-auto flex h-full w-full max-w-[1600px] gap-4 lg:gap-6">
       {/* DESKTOP SIDEBAR */}
       <div className="hidden lg:block w-[280px] shrink-0">
         <Sidebar />
@@ -50,11 +50,11 @@ export default function Layout({ children }) {
 
         <Topbar openSidebar={()=>setOpen(true)} />
 
-        <div className="flex flex-1 overflow-hidden gap-3 pt-3">
+        <div className="flex flex-1 overflow-hidden gap-4 lg:gap-6 pt-4 lg:pt-6">
 
           {/* CENTER */}
           <motion.main
-            className="flex-1 min-w-0 rounded-2xl glass p-4 sm:p-6 overflow-y-auto space-y-6 scrollbar-hide"
+            className="flex-1 min-w-0 rounded-[2rem] glass p-6 lg:p-8 overflow-y-auto space-y-8 scrollbar-hide"
             variants={fadeInUp}
             initial="hidden"
             animate="visible"

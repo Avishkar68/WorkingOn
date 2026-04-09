@@ -289,15 +289,13 @@ export default function Home() {
               className="group relative glass-card p-6 cursor-pointer flex flex-col min-h-[220px] justify-between overflow-hidden"
             >
               {/* MEMBER COUNT */}
-              <div className="absolute top-5 right-5 flex items-center gap-1.5 bg-slate-900/70 backdrop-blur-xl border border-white/10 px-3 py-1.5 rounded-full z-20">
-                <Users size={12} className="text-indigo-300" />
-                <span className="text-[11px] font-semibold text-slate-200 tracking-wide">
-                  {c.members?.length || 0}
-                </span>
+              <div className="absolute top-4 right-4 pill-badge z-20 shadow-sm border-white/5 bg-black/40 backdrop-blur-md">
+                <Users size={12} className="text-indigo-400 mr-1.5" />
+                <span>{c.members?.length || 0}</span>
               </div>
 
               {/* CONTENT */}
-              <div className="relative z-10 space-y-3">
+              <div className="relative z-10 space-y-3 mt-2">
                 <h2 className="text-xl sm:text-2xl font-semibold text-slate-100 group-hover:text-indigo-300 transition-colors tracking-tight leading-snug">
                   {c.name}
                 </h2>

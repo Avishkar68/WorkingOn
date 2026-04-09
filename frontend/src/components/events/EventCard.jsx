@@ -66,7 +66,7 @@ export default function EventCard({event}){
           {event.tags?.map(tag => (
             <span
               key={tag}
-              className="bg-transparent border border-white/10 px-3 py-1 rounded-full text-xs text-gray-300"
+              className="pill-badge"
             >
               {tag}
             </span>
@@ -86,7 +86,7 @@ export default function EventCard({event}){
             onClick={register}
             whileHover={{ scale: 1.03 }}
             whileTap={buttonTap}
-            className="w-full bg-indigo-500 hover:bg-indigo-600 text-white py-3 rounded-xl shadow-[0_0_15px_rgba(99,102,241,0.3)]"
+            className="w-full btn-primary font-semibold text-sm py-3 rounded-xl"
           >
             Register Interest
           </motion.button>

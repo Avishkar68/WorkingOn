@@ -68,7 +68,7 @@ export default function StreakCard() {
   const streakDoneToday = status?.dailyTasksCompleted?.quizCompleted && status?.dailyTasksCompleted?.postCreated;
 
   return (
-    <div className="bg-[#0f172a]/40 backdrop-blur-xl rounded-[2rem] p-4 border border-white/5 overflow-hidden">
+    <div className="glass-card p-5 overflow-hidden">
       {/* Header Section */}
       <div className="flex items-center justify-between mb-6 px-1">
         <div>

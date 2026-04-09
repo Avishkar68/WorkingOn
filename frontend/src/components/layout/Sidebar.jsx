@@ -16,10 +16,10 @@ import {
 
 export default function Sidebar({ close }) {
   const link =
-    "flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-300 hover:text-slate-100 hover:bg-white/4 border border-transparent hover:border-white/10 transition"
+    "flex items-center gap-3 px-3 py-2.5 rounded-xl text-zinc-400 hover:text-zinc-100 hover:bg-white/5 transition-all duration-200 font-medium"
 
   const active =
-    "flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-indigo-500/14 text-indigo-100 border border-indigo-400/30 shadow-[0_8px_18px_rgba(79,70,229,0.16)]"
+    "flex items-center gap-3 px-3 py-2.5 rounded-xl bg-indigo-500/10 text-indigo-200 shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)] border border-indigo-500/20 transition-all duration-200 font-medium"
 
   const primaryLinks = [
     { to: "/", label: "Home", icon: Home },

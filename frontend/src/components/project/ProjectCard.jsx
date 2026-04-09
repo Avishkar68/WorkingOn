@@ -66,18 +66,17 @@ export default function ProjectCard({ project, refresh }) {
         {project.techStack?.map(tag => (
           <span
             key={tag}
-            className="bg-transparent border border-white/10 px-3 py-1 rounded-full text-xs text-gray-300"
+            className="pill-badge"
           >
             {tag}
           </span>
         ))}
       </div>
 
-      {/* TEAM INFO */}
-      <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-sm text-gray-400">
+      <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-sm text-slate-400 font-medium">
         <span>👥 {project.teamSize.current}/{project.teamSize.needed}</span>
 
-        <span className="bg-indigo-500/20 text-indigo-400 px-3 py-1 rounded-full text-xs">
+        <span className="pill-badge bg-indigo-500/10 text-indigo-400 border-indigo-500/20">
           in-progress
         </span>
       </div>
@@ -101,7 +100,7 @@ export default function ProjectCard({ project, refresh }) {
           </button>
 
         ) : request?.status === "rejected" ? (
-          <button className="flex-1 bg-red-500/20 text-red-400 py-2 rounded-xl">
+          <button className="flex-1 bg-red-500/20 text-red-400 py-2 rounded-xl text-sm font-semibold">
             Rejected
           </button>
 
@@ -110,7 +109,7 @@ export default function ProjectCard({ project, refresh }) {
             onClick={() => setShowJoin(true)}
             whileHover={{ scale: 1.03 }}
             whileTap={buttonTap}
-            className="flex-1 bg-indigo-500 hover:bg-indigo-600 text-white py-2 rounded-xl shadow-[0_0_15px_rgba(99,102,241,0.3)] transition"
+            className="flex-1 btn-primary py-2 rounded-xl text-sm font-semibold"
           >
             Join Project
           </motion.button>
@@ -118,7 +117,7 @@ export default function ProjectCard({ project, refresh }) {
 
         <motion.button
           whileTap={buttonTap}
-          className="flex-1 border border-white/10 bg-transparent text-gray-300 py-2 rounded-xl hover:border-indigo-400/30 hover:shadow-[0_0_20px_rgba(99,102,241,0.15)] transition-all duration-300"
+          className="flex-1 btn-secondary py-2 rounded-xl text-sm font-semibold"
         >
           Message
         </motion.button>
