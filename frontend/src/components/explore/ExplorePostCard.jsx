@@ -137,6 +137,8 @@ export default function ExplorePostCard({ post }) {
           <span
             key={tag}
             className="bg-transparent border border-white/10 text-xs px-3 py-1 rounded-full text-gray-300"
+                                      style={{ backgroundColor: "#2DD4BF10", color: "#2DD4BF" }}
+
           >
             #{tag}
           </span>

@@ -1,21 +1,19 @@
-import { useState } from "react"
-import JoinProjectModal from "./JoinProjectModal"
-import { motion } from "framer-motion"
-import { buttonTap, cardHover, fadeInUp } from "../../lib/motion"
+import { useState } from "react";
+import JoinProjectModal from "./JoinProjectModal";
+import { motion } from "framer-motion";
+import { buttonTap, cardHover, fadeInUp } from "../../lib/motion";
+import { Users } from "lucide-react";
 
 export default function ProjectCard({ project, refresh }) {
+  const [showJoin, setShowJoin] = useState(false);
 
-  const [showJoin, setShowJoin] = useState(false)
-
-  const currentUserId = localStorage.getItem("userId")
+  const currentUserId = localStorage.getItem("userId");
 
   const request = project.joinRequests?.find(
-    r => r.user?._id === currentUserId
-  )
+    (r) => r.user?._id === currentUserId,
+  );
 
-  const isMember = project.members?.some(
-    m => m._id === currentUserId
-  )
+  const isMember = project.members?.some((m) => m._id === currentUserId);
 
   return (
     <motion.div
@@ -26,7 +24,6 @@ export default function ProjectCard({ project, refresh }) {
       viewport={{ once: true, amount: 0.2 }}
       whileHover={cardHover}
     >
-
       {/* TITLE */}
       <h2 className="text-base sm:text-lg font-semibold text-white">
         {project.title}
@@ -34,7 +31,6 @@ export default function ProjectCard({ project, refresh }) {
 
       {/* CREATOR */}
       <div className="flex items-center gap-3">
-
         {project.creator?.profileImage ? (
           <img
             src={project.creator.profileImage}
@@ -51,9 +47,8 @@ export default function ProjectCard({ project, refresh }) {
           <p className="font-medium text-white text-sm sm:text-base truncate">
             {project.creator?.name}
           </p>
-          <p className="text-xs text-gray-400">CSE</p>
+          <p className="text-xs text-indigo-200">CSE</p>
         </div>
-
       </div>
 
       {/* DESCRIPTION */}
@@ -63,10 +58,11 @@ export default function ProjectCard({ project, refresh }) {
 
       {/* TECH STACK */}
       <div className="flex gap-2 flex-wrap">
-        {project.techStack?.map(tag => (
+        {project.techStack?.map((tag) => (
           <span
             key={tag}
             className="pill-badge"
+            style={{ backgroundColor: "#2DD4BF10", color: "#2DD4BF" }}
           >
             {tag}
           </span>
@@ -74,36 +70,37 @@ export default function ProjectCard({ project, refresh }) {
       </div>
 
       <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-sm text-slate-400 font-medium">
-        <span>👥 {project.teamSize.current}/{project.teamSize.needed}</span>
+        <span className="flex items-center gap-2">
+          <Users size={14} className="text-[#2DD4BF]" />
+          {project.teamSize.current}/{project.teamSize.needed}
+        </span>
 
-        <span className="pill-badge bg-indigo-500/10 text-indigo-400 border-indigo-500/20">
+        <span
+          className="pill-badge bg-indigo-500/10 text-indigo-200 border-indigo-500/20"
+          style={{ backgroundColor: "#2DD4BF05", color: "#2DD4BF" }}
+        >
           in-progress
         </span>
       </div>
 
       {/* ACTIONS */}
       <div className="border-t border-white/10 pt-4 flex flex-col sm:flex-row gap-3">
-
         {isMember ? (
           <button className="flex-1 bg-green-500/20 text-green-400 py-2 rounded-xl">
             Joined
           </button>
-
         ) : request?.status === "pending" ? (
           <button className="flex-1 bg-yellow-500/20 text-yellow-400 py-2 rounded-xl">
             Pending
           </button>
-
         ) : request?.status === "accepted" ? (
           <button className="flex-1 bg-green-500/20 text-green-400 py-2 rounded-xl">
             Accepted
           </button>
-
         ) : request?.status === "rejected" ? (
           <button className="flex-1 bg-red-500/20 text-red-400 py-2 rounded-xl text-sm font-semibold">
             Rejected
           </button>
-
         ) : (
           <motion.button
             onClick={() => setShowJoin(true)}
@@ -121,7 +118,6 @@ export default function ProjectCard({ project, refresh }) {
         >
           Message
         </motion.button>
-
       </div>
 
       {/* MODAL */}
@@ -132,7 +128,6 @@ export default function ProjectCard({ project, refresh }) {
           refresh={refresh}
         />
       )}
-
     </motion.div>
-  )
+  );
 }

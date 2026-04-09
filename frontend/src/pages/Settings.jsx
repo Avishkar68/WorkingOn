@@ -70,7 +70,7 @@ export default function Settings() {
     <div className="max-w-3xl mx-auto p-6 space-y-6">
 
       <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-        ⚙ Settings
+        Settings
       </h1>
 
       {/* ACCOUNT INFO */}
@@ -118,7 +118,7 @@ export default function Settings() {
       <div className="glass p-6 rounded-2xl space-y-4">
 
         <h2 className="font-semibold text-white">
-          🔒 Change Password
+          Change Password
         </h2>
 
         <form onSubmit={updatePassword} className="space-y-3">
@@ -159,7 +159,7 @@ export default function Settings() {
       <div className="glass p-6 rounded-2xl space-y-4">
 
         <h2 className="font-semibold text-white">
-          👁 Privacy
+          Privacy
         </h2>
 
         <div className="space-y-2 text-gray-300">
@@ -199,7 +199,7 @@ export default function Settings() {
       <div className="glass p-6 rounded-2xl space-y-4">
 
         <h2 className="font-semibold text-white">
-          🔔 Notifications
+          Notifications
         </h2>
 
         <div className="space-y-2 text-gray-300">

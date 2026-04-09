@@ -5,6 +5,7 @@ import CreateOpportunityModal from "../components/opportunity/CreateOpportunityM
 import { motion } from "framer-motion"
 import { fadeInUp, staggerContainer } from "../lib/motion"
 import PageShell from "../components/layout/PageShell"
+import { CalendarDays, IndianRupee, Hourglass } from "lucide-react";
 
 const EXTERNAL_USER_ID = "000000000000000000000001"
 
@@ -245,7 +246,9 @@ export default function Opportunities() {
                 {op.tags?.map(tag=>(
                   <span
                     key={tag}
-                    className="pill-badge"
+                    className="pill-badge "
+                          style={{ backgroundColor: "#2DD4BF10", color: "#2DD4BF" }}
+
                   >
                     {tag}
                   </span>
@@ -253,11 +256,27 @@ export default function Opportunities() {
               </div>
 
               {/* INFO */}
-              <div className="flex gap-4 text-sm flex-wrap relative z-10 text-slate-400">
-                {op.stipend && <span>💰 {op.stipend}</span>}
-                {op.duration && <span>⏳ {op.duration}</span>}
-                <span>📅 {daysLeft(op.deadline)}</span>
-              </div>
+             <div className="flex gap-4 text-sm flex-wrap relative z-10 text-slate-400">
+  
+  {op.stipend && (
+    <span className="flex items-center gap-1">
+      {op.stipend}
+    </span>
+  )}
+
+  {op.duration && (
+    <span className="flex items-center gap-1">
+      <Hourglass size={14} className="text-yellow-400" />
+      {op.duration}
+    </span>
+  )}
+
+  <span className="flex gap-2 items-center">
+    <CalendarDays size={16} className="text-[#2DD4BF]" />
+    {daysLeft(op.deadline)}
+  </span>
+
+</div>
 
               {/* APPLY */}
               <a

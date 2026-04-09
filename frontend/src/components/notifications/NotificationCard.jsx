@@ -1,5 +1,6 @@
 import { motion } from "framer-motion"
 import { buttonTap, cardHover, fadeInUp } from "../../lib/motion"
+import { Trash2 } from "lucide-react";
 
 const NotificationCard = ({
   notification,
@@ -124,7 +125,8 @@ const NotificationCard = ({
           whileTap={buttonTap}
           className="text-red-400 hover:text-red-500 text-lg"
         >
-          🗑
+            <Trash2 size={18} />
+
         </motion.button>
 
       </div>

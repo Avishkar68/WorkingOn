@@ -33,7 +33,7 @@ export default function Sidebar({ close }) {
   ]
 
   const accountLinks = [
-    { to: "/profile", label: "Profile", icon: User },
+    // { to: "/profile", label: "Profile", icon: User },
     { to: "/notifications", label: "Notifications", icon: Bell },
     { to: "/settings", label: "Settings", icon: Settings },
     { to: "/admin", label: "Admin Panel", icon: ShieldCheck }

@@ -1,5 +1,6 @@
 import { motion } from "framer-motion"
 import { buttonTap, cardHover, fadeInUp } from "../../lib/motion"
+import { CalendarDays, MapPin, Users } from "lucide-react";
 
 export default function EventCard({event}){
 
@@ -75,10 +76,23 @@ export default function EventCard({event}){
 
         {/* INFO */}
         <div className="text-gray-400 text-sm space-y-1">
-          <p>📅 {formatDate(event.date)}</p>
-          <p>📍 {event.location}</p>
-          <p>👥 {event.registeredUsers?.length || 0} attending</p>
-        </div>
+  
+  <p className="flex items-center gap-2">
+    <CalendarDays size={14} className="text-[#2DD4BF]" />
+    {formatDate(event.date)}
+  </p>
+
+  <p className="flex items-center gap-2">
+    <MapPin size={14} className="text-rose-400" />
+    {event.location}
+  </p>
+
+  <p className="flex items-center gap-2">
+    <Users size={14} className="text-blue-400" />
+    {event.registeredUsers?.length || 0} attending
+  </p>
+
+</div>
 
         {/* BUTTON */}
         <div className="border-t border-white/10 pt-4">
