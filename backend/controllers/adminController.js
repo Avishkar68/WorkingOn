@@ -3,6 +3,8 @@ import Post from "../models/Post.js";
 import Project from "../models/Project.js";
 import Event from "../models/Event.js";
 import Opportunity from "../models/Opportunity.js";
+import Community from "../models/Community.js";
+
 export const getAdminStats = async (req, res) => {
 
     const totalUsers = await User.countDocuments();
@@ -15,13 +17,38 @@ export const getAdminStats = async (req, res) => {
       status: "reported"
     });
   
+    // 💥 7-Day User Growth Aggregation
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+    const userGrowthRaw = await User.aggregate([
+      { $match: { createdAt: { $gte: sevenDaysAgo } } },
+      {
+        $group: {
+          _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+          users: { $sum: 1 }
+        }
+      },
+      { $sort: { _id: 1 } }
+    ]);
+    
+    const daysMap = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    const userGrowth = userGrowthRaw.map(item => {
+      const d = new Date(item._id);
+      return {
+        day: daysMap[d.getDay()],
+        users: item.users
+      }
+    });
+
     res.json({
       totalUsers,
       totalPosts,
       totalProjects,
       totalEvents,
       totalOpportunities,
-      reportedPosts
+      reportedPosts,
+      userGrowth
     });
   
   };
@@ -88,9 +115,51 @@ export const getAdminStats = async (req, res) => {
   
   };
   export const getAllUsers = async (req, res) => {
-
     const users = await User.find().select("-password");
-  
     res.json(users);
-  
+  };
+
+  export const deleteUserAdmin = async (req, res) => {
+    try {
+      await User.findByIdAndDelete(req.params.id);
+      res.json({ message: "User permanently deleted." });
+    } catch (err) {
+      res.status(500).json({ message: "Action failed" });
+    }
+  };
+
+  export const deleteCommunityAdmin = async (req, res) => {
+    try {
+      await Community.findByIdAndDelete(req.params.id);
+      res.json({ message: "Community permanently deleted." });
+    } catch (err) {
+      res.status(500).json({ message: "Action failed" });
+    }
+  };
+
+  export const deleteEventAdmin = async (req, res) => {
+    try {
+      await Event.findByIdAndDelete(req.params.id);
+      res.json({ message: "Event permanently deleted." });
+    } catch (err) {
+      res.status(500).json({ message: "Action failed" });
+    }
+  };
+
+  export const deleteProjectAdmin = async (req, res) => {
+    try {
+      await Project.findByIdAndDelete(req.params.id);
+      res.json({ message: "Project permanently deleted." });
+    } catch (err) {
+      res.status(500).json({ message: "Action failed" });
+    }
+  };
+
+  export const deleteOpportunityAdmin = async (req, res) => {
+    try {
+      await Opportunity.findByIdAndDelete(req.params.id);
+      res.json({ message: "Opportunity permanently deleted." });
+    } catch (err) {
+      res.status(500).json({ message: "Action failed" });
+    }
   };

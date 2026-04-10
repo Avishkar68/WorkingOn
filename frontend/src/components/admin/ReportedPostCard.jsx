@@ -1,11 +1,16 @@
 import api from "../../api/axios";
 import toast from "react-hot-toast";
 
-const ReportedPostCard = ({ post }) => {
+const ReportedPostCard = ({ post, onRefresh }) => {
 
   const deletePost = async () => {
-    await api.delete(`/admin/post/${post._id}`);
-    window.location.reload();
+    try {
+      await api.delete(`/admin/post/${post._id}`);
+      toast.success("Post deleted.");
+      if (onRefresh) onRefresh();
+    } catch (err) {
+      toast.error("Failed to delete post");
+    }
   };
 
   const pinPost = async () => {

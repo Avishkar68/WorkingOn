@@ -1,7 +1,7 @@
 import api from "../../api/axios";
 import toast from "react-hot-toast";
 
-const UserRow = ({ user }) => {
+const UserRow = ({ user, onRefresh }) => {
 
   const toggleBan = async () => {
 
@@ -14,9 +14,21 @@ const UserRow = ({ user }) => {
         toast.success("User banned");
       }
 
-      window.location.reload();
+      if (onRefresh) onRefresh();
     } catch(err) {
       toast.error("Action failed");
+    }
+  };
+
+  const deleteUser = async () => {
+    if (!window.confirm(`Are you sure you want to permanently delete ${user.name}? This cannot be undone.`)) return;
+
+    try {
+      await api.delete(`/admin/user/${user._id}`);
+      toast.success("User permanently deleted!");
+      if (onRefresh) onRefresh();
+    } catch (err) {
+      toast.error("Failed to delete user");
     }
   };
 
@@ -58,6 +70,13 @@ const UserRow = ({ user }) => {
           className="px-3 py-1 bg-white/10 hover:bg-white/20 rounded text-gray-300"
         >
           {user.isBanned ? "Unban" : "Ban"}
+        </button>
+
+        <button
+          onClick={deleteUser}
+          className="px-3 py-1 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded transition"
+        >
+          Delete
         </button>
 
       </div>

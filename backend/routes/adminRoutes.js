@@ -11,7 +11,12 @@ import {
   banUser,
   unbanUser,
   pinPost,
-  getAllUsers
+  getAllUsers,
+  deleteUserAdmin,
+  deleteCommunityAdmin,
+  deleteEventAdmin,
+  deleteProjectAdmin,
+  deleteOpportunityAdmin,
 } from "../controllers/adminController.js";
 
 const router = express.Router();
@@ -28,5 +33,12 @@ router.post("/ban-user/:id", protect, admin, banUser);
 router.post("/unban-user/:id", protect, admin, unbanUser);
 
 router.post("/pin-post/:id", protect, admin, pinPost);
+
+// 💥 Extreme Authority / Deletion Endpoints
+router.delete("/user/:id", protect, admin, deleteUserAdmin);
+router.delete("/community/:id", protect, admin, deleteCommunityAdmin);
+router.delete("/event/:id", protect, admin, deleteEventAdmin);
+router.delete("/project/:id", protect, admin, deleteProjectAdmin);
+router.delete("/opportunity/:id", protect, admin, deleteOpportunityAdmin);
 
 export default router;
