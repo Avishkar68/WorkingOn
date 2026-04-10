@@ -3,6 +3,7 @@ import api from "../api/axios";
 import NotificationCard from "../components/notifications/NotificationCard";
 import PageShell from "../components/layout/PageShell";
 import { AnimatePresence, motion } from "framer-motion";
+import toast from "react-hot-toast";
 
 const Notifications = () => {
 
@@ -49,6 +50,7 @@ const Notifications = () => {
       setNotifications(prev =>
         prev.map(n => ({ ...n, read: true }))
       );
+      toast.success("All notifications marked as read!");
 
     } catch (err) {
       console.error(err);
@@ -63,9 +65,11 @@ const Notifications = () => {
       setNotifications(prev =>
         prev.filter(n => n._id !== id)
       );
+      toast.success("Notification deleted");
 
     } catch (err) {
       console.error(err);
+      toast.error("Failed to delete notification");
     }
   };
 
@@ -85,6 +89,7 @@ const Notifications = () => {
       // mark notification read
       await api.put(`/notifications/${selectedRequest._id}/read`);
 
+      toast.success("Request accepted and contact shared!");
       setSelectedRequest(null);
       setContact("");
 
@@ -92,6 +97,7 @@ const Notifications = () => {
 
     } catch (err) {
       console.error(err.response?.data || err.message);
+      toast.error("Failed to accept request");
     } finally {
       setLoadingId(null);
     }
@@ -110,10 +116,12 @@ const Notifications = () => {
       // mark read
       await api.put(`/notifications/${notification._id}/read`);
 
+      toast.success("Request rejected");
       loadNotifications();
 
     } catch (err) {
       console.error(err.response?.data || err.message);
+      toast.error("Failed to reject request");
     } finally {
       setLoadingId(null);
     }

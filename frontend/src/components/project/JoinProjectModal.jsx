@@ -1,5 +1,7 @@
 import { useState } from "react"
+import { createPortal } from "react-dom"
 import api from "../../api/axios"
+import toast from "react-hot-toast"
 
 export default function JoinProjectModal({projectId,close,refresh}){
 
@@ -8,14 +10,16 @@ export default function JoinProjectModal({projectId,close,refresh}){
   const sendRequest = async ()=>{
     try{
       await api.post(`/projects/${projectId}/join`,{ message })
+      toast.success("Request sent successfully!")
       refresh()
       close()
     }catch(err){
       console.error(err)
+      toast.error("Failed to send request")
     }
   }
 
-  return(
+  return createPortal(
 
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
 
@@ -53,7 +57,7 @@ export default function JoinProjectModal({projectId,close,refresh}){
 
       </div>
 
-    </div>
-
+    </div>,
+    document.body
   )
 }

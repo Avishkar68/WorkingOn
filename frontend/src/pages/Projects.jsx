@@ -23,6 +23,8 @@ export default function Projects(){
 
   useEffect(()=>{
     loadProjects()
+    window.addEventListener("global-refresh", loadProjects)
+    return () => window.removeEventListener("global-refresh", loadProjects)
   },[])
 
   return(

@@ -32,6 +32,8 @@ export default function CommunityPage() {
 
   useEffect(() => {
     fetchData()
+    window.addEventListener("global-refresh", fetchData)
+    return () => window.removeEventListener("global-refresh", fetchData)
   }, [fetchData])
 
   if (loading) {

@@ -1,5 +1,7 @@
 import { useState } from "react"
+import { createPortal } from "react-dom"
 import api from "../../api/axios"
+import toast from "react-hot-toast"
 
 export default function CreateOpportunityModal({ close, refresh }) {
 
@@ -23,12 +25,12 @@ export default function CreateOpportunityModal({ close, refresh }) {
 
   const createOpportunity = async () => {
     if (!title || !company || !description || !deadline) {
-      alert("Please fill all fields")
+      toast.error("Please fill all fields")
       return
     }
 
     if (!registrationLink) {
-      alert("Please add application link")
+      toast.error("Please add application link")
       return
     }
 
@@ -45,15 +47,17 @@ export default function CreateOpportunityModal({ close, refresh }) {
         registrationLink
       })
 
+      toast.success("Opportunity posted successfully!")
       refresh()
       close()
 
     } catch (err) {
       console.error(err)
+      toast.error("Failed to post opportunity")
     }
   }
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
 
       <div className="w-[520px] rounded-2xl p-6 text-white space-y-5 
@@ -187,6 +191,7 @@ export default function CreateOpportunityModal({ close, refresh }) {
 
       </div>
 
-    </div>
+    </div>,
+    document.body
   )
 }

@@ -1,5 +1,7 @@
 import { useState } from "react"
+import { createPortal } from "react-dom"
 import api from "../../api/axios"
+import toast from "react-hot-toast"
 
 export default function CreateProjectModal({ close, refresh }) {
 
@@ -30,15 +32,17 @@ export default function CreateProjectModal({ close, refresh }) {
         tags: techStack
       })
 
+      toast.success("Project created successfully!")
       refresh()
       close()
 
     } catch (err) {
       console.error(err)
+      toast.error("Failed to create project")
     }
   }
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
 
       <div className="w-[520px] rounded-2xl p-6 text-white space-y-5 
@@ -161,6 +165,7 @@ export default function CreateProjectModal({ close, refresh }) {
         </div>
 
       </div>
-    </div>
+    </div>,
+    document.body
   )
 }

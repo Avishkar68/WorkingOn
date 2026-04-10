@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import api from "../api/axios";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 import EditProfileModal from "../components/profile/EditProfileModal";
 import PostCard from "../components/post/PostCard";
@@ -53,6 +54,8 @@ export default function Profile() {
 
   useEffect(() => {
     loadAll();
+    window.addEventListener("global-refresh", loadAll)
+    return () => window.removeEventListener("global-refresh", loadAll)
   }, []);
 
   const handleDelete = async (type, id) => {
@@ -60,9 +63,11 @@ export default function Profile() {
 
     try {
       await api.delete(`/${type}/${id}`);
+      toast.success("Item deleted successfully!");
       loadAll();
     } catch (err) {
       console.error(err);
+      toast.error("Failed to delete item");
     }
   };
 

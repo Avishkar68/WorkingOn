@@ -1,4 +1,5 @@
 import api from "../../api/axios";
+import toast from "react-hot-toast";
 
 const ReportedPostCard = ({ post }) => {
 
@@ -9,7 +10,7 @@ const ReportedPostCard = ({ post }) => {
 
   const pinPost = async () => {
     await api.post(`/admin/pin-post/${post._id}`);
-    alert("Post pinned");
+    toast.success("Post pinned successfully!");
   };
 
   return (

@@ -83,6 +83,8 @@ export default function Opportunities() {
 
   useEffect(()=>{
     loadData()
+    window.addEventListener("global-refresh", loadData)
+    return () => window.removeEventListener("global-refresh", loadData)
   },[])
 
   const daysLeft = (deadline)=>{

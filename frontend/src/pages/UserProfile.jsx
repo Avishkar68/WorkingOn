@@ -271,6 +271,7 @@ import { useCallback, useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import api from "../api/axios"
 import { jwtDecode } from "jwt-decode"
+import toast from "react-hot-toast"
 
 export default function UserProfile() {
 
@@ -327,14 +328,17 @@ export default function UserProfile() {
 
       if (isFollowing) {
         await api.post(`/users/${id}/unfollow`)
+        toast.success("Unfollowed successfully")
       } else {
         await api.post(`/users/${id}/follow`)
+        toast.success("Followed successfully")
       }
 
       await loadUser()
 
     } catch (err) {
       console.error(err)
+      toast.error("Action failed")
     } finally {
       setLoading(false)
     }

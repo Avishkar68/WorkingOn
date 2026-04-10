@@ -6,6 +6,7 @@ import { Heart, MessageCircle, Share2, Trash2 } from "lucide-react"
 import { jwtDecode } from "jwt-decode"
 import { motion } from "framer-motion"
 import { buttonTap, cardHover, fadeInUp } from "../../lib/motion"
+import toast from "react-hot-toast"
 
 export default function PostCard({ post, refreshFeed }) {
 
@@ -85,7 +86,7 @@ export default function PostCard({ post, refreshFeed }) {
 
     try{
       await navigator.clipboard.writeText(url)
-      alert("Link copied!")
+      toast.success("Link copied to clipboard!")
     }catch{
       window.open(url,"_blank")
     }
@@ -100,9 +101,11 @@ export default function PostCard({ post, refreshFeed }) {
 
     try{
       await api.delete(`/posts/${post._id}`)
+      toast.success("Post deleted!")
       refreshFeed()
     }catch(err){
       console.error(err)
+      toast.error("Failed to delete post")
     }
   }
 

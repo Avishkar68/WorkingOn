@@ -200,7 +200,9 @@
 // }
 
 import { useState } from "react"
+import { createPortal } from "react-dom"
 import api from "../../api/axios"
+import toast from "react-hot-toast"
 
 export default function CreateEventModal({ close, refresh }) {
 
@@ -228,14 +230,16 @@ export default function CreateEventModal({ close, refresh }) {
   const createEvent = async () => {
 
     if (!title || !description || !date || !location || !eventType) {
-      alert("Please fill all required fields")
+      toast.error("Please fill all required fields")
       return
     }
 
     if (!registrationLink) {
-      alert("Please add registration link")
+      toast.error("Please add registration link")
       return
     }
+
+    const loadToast = toast.loading("Publishing event...")
 
     try {
 
@@ -256,17 +260,19 @@ export default function CreateEventModal({ close, refresh }) {
         headers: { "Content-Type": "multipart/form-data" }
       })
 
+      toast.success("Event created successfully!", { id: loadToast })
       refresh()
       close()
 
     } catch (err) {
       console.error(err)
+      toast.error("Failed to create event", { id: loadToast })
     }
   }
 
   const eventTypes = ["workshop", "hackathon", "seminar", "competition"]
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
 
       <div className="w-[540px] max-h-[90vh] overflow-y-auto rounded-2xl p-6 text-white space-y-5
@@ -439,6 +445,7 @@ export default function CreateEventModal({ close, refresh }) {
         </div>
 
       </div>
-    </div>
+    </div>,
+    document.body
   )
 }

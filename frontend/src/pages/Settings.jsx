@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import api from "../api/axios"
 import { useNavigate } from "react-router-dom"
+import toast from "react-hot-toast"
 
 export default function Settings() {
 
@@ -37,7 +38,7 @@ export default function Settings() {
     e.preventDefault()
 
     if (newPassword !== confirmPassword) {
-      alert("Passwords do not match")
+      toast.error("Passwords do not match")
       return
     }
 
@@ -47,14 +48,14 @@ export default function Settings() {
         newPassword
       })
 
-      alert("Password updated")
+      toast.success("Password updated successfully")
 
       setCurrentPassword("")
       setNewPassword("")
       setConfirmPassword("")
 
     } catch (err) {
-      alert(err.response?.data?.message || "Error")
+      toast.error(err.response?.data?.message || "Failed to update password")
     }
   }
 

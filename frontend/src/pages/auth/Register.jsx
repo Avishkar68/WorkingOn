@@ -1,6 +1,7 @@
 import { useState } from "react"
 import api from "../../api/axios"
 import { useNavigate } from "react-router-dom"
+import toast from "react-hot-toast"
 
 export default function Register(){
 
@@ -44,7 +45,7 @@ export default function Register(){
       navigate("/")
 
     }catch(err){
-      alert(err?.response?.data?.message || "Registration failed")
+      toast.error(err?.response?.data?.message || "Registration failed")
     }
 
     setLoading(false)

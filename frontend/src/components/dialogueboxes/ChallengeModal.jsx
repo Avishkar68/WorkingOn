@@ -1,10 +1,11 @@
 import { motion } from "framer-motion";
 import { Award, Sparkles } from "lucide-react";
+import { createPortal } from "react-dom";
 
 export default function ChallengeModal({ open, close, leaderboard, challenge, onStart }) {
   if (!open) return null;
 
-  return (
+  return createPortal(
     <motion.div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/65 backdrop-blur-sm"
       initial={{ opacity: 0 }}
@@ -83,6 +84,7 @@ export default function ChallengeModal({ open, close, leaderboard, challenge, on
           </div>
         </div>
       </motion.div>
-    </motion.div>
+    </motion.div>,
+    document.body
   );
 }

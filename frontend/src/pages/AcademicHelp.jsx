@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import api from "../api/axios";
+import toast from "react-hot-toast"
 
 export default function AcademicHelp() {
   const [posts, setPosts] = useState([]);
@@ -28,8 +29,10 @@ export default function AcademicHelp() {
       setTitle("")
       setDesc("")
       load()
+      toast.success("Post created successfully!")
     } catch (err) {
       console.error(err)
+      toast.error("Failed to create post")
     }
   }
 
@@ -37,8 +40,10 @@ export default function AcademicHelp() {
     try {
       await api.post(`/academic/${id}/reply`, { text })
       load()
+      toast.success("Reply posted!")
     } catch (err) {
       console.error(err)
+      toast.error("Failed to post reply")
     }
   }
 

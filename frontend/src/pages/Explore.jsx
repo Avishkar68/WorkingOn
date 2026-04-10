@@ -33,6 +33,8 @@ export default function Explore() {
 
   useEffect(() => {
     loadPosts()
+    window.addEventListener("global-refresh", loadPosts)
+    return () => window.removeEventListener("global-refresh", loadPosts)
   }, [])
 
   return (

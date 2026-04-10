@@ -23,6 +23,8 @@ export default function Events(){
 
   useEffect(()=>{
     loadEvents()
+    window.addEventListener("global-refresh", loadEvents)
+    return () => window.removeEventListener("global-refresh", loadEvents)
   },[])
 
   return(

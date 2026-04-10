@@ -1,6 +1,7 @@
 import { useState } from "react"
 import api from "../api/axios"
 import { useNavigate } from "react-router-dom"
+import toast from "react-hot-toast"
 
 export default function CreateCommunity(){
 
@@ -9,11 +10,18 @@ export default function CreateCommunity(){
   const navigate = useNavigate()
 
   const handleCreate = async () => {
+    if (!name || !description) {
+      toast.error("Please fill all fields")
+      return
+    }
+    
     try{
       await api.post("/communities", { name, description })
+      toast.success("Community created successfully!")
       navigate("/")
     }catch(err){
       console.error(err)
+      toast.error("Failed to create community")
     }
   }
 

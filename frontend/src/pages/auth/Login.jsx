@@ -1,6 +1,7 @@
 import { useState } from "react"
 import api from "../../api/axios"
 import { useNavigate } from "react-router-dom"
+import toast from "react-hot-toast"
 
 export default function Login() {
 
@@ -26,7 +27,7 @@ export default function Login() {
       navigate("/")
 
     }catch{
-      alert("Invalid credentials")
+      toast.error("Invalid credentials")
     }
 
     setLoading(false)

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
-  Users, Flame, Trophy, Target, MessageSquare, Briefcase, 
+  Users, Flame, Trophy, Target, MessageSquare, Briefcase,
   ArrowRight, Globe, Sparkles, CheckCircle2, XCircle, ArrowUpRight, Terminal
 } from "lucide-react";
 
@@ -130,7 +130,7 @@ export default function LandingPage() {
                     <p className="text-xs text-gray-500 mt-2">Solve two-sum array optimization.</p>
                   </div>
                 </div>
-                
+
                 <div className="p-4 rounded-xl border border-white/5 flex gap-4">
                   <div className="w-10 h-10 rounded bg-gradient-to-br from-indigo-500/20 to-indigo-500/5 flex items-center justify-center shrink-0 border border-indigo-500/20">
                     <MessageSquare className="w-4 h-4 text-indigo-400" />
@@ -240,9 +240,9 @@ export default function LandingPage() {
             <Target className="w-8 h-8 text-brand-400 mb-4 relative z-10" />
             <h3 className="text-2xl font-bold mb-2 relative z-10">Daily Challenge</h3>
             <p className="text-gray-400 font-medium text-sm mb-6 relative z-10">Win your day. New challenge every 24 hours. Code, logic, or campus trivia.</p>
-            
+
             <div className="p-4 bg-[#0a0e14] border border-white/5 rounded-xl font-mono text-xs text-gray-400 relative z-10">
-              <span className="text-brand-400">def</span> <span className="text-blue-300">solve_today</span>(): <br/>
+              <span className="text-brand-400">def</span> <span className="text-blue-300">solve_today</span>(): <br />
               &nbsp;&nbsp;return <span className="text-green-300">"streak_maintained"</span>
             </div>
           </div>
@@ -259,7 +259,7 @@ export default function LandingPage() {
               <div className="flex-1 w-full bg-[#06090e] border border-white/10 rounded-2xl p-4 shadow-inner relative overflow-hidden">
                 <div className="absolute top-1/2 left-4 w-10 h-10 rounded-full border border-indigo-500/50 bg-indigo-500/10 flex items-center justify-center -translate-y-1/2 z-10"><MessageSquare className="w-4 h-4 text-indigo-400" /></div>
                 <div className="absolute top-1/2 right-4 w-10 h-10 rounded-full border border-brand-500/50 bg-brand-500/10 flex items-center justify-center -translate-y-1/2 z-10"><Terminal className="w-4 h-4 text-brand-400" /></div>
-                
+
                 {/* Connecting Line */}
                 <svg className="absolute inset-0 w-full h-full pointer-events-none stroke-indigo-500/30 group-hover:stroke-indigo-500/60 transition-colors" fill="none" strokeWidth="2" strokeDasharray="4 4">
                   <path d="M 40 50 Q 100 100 250 50" />
@@ -311,12 +311,12 @@ export default function LandingPage() {
       </section>
 
       {/* Massive Aggressive CTA */}
-      <section className="py-32 relative z-10 px-6">
+      <section className="py-12 relative z-10 px-6">
         <motion.div
-           initial={{ opacity: 0, y: 40 }}
-           whileInView={{ opacity: 1, y: 0 }}
-           viewport={{ once: true }}
-           className="max-w-4xl mx-auto p-12 md:p-20 rounded-[3rem] glass-pro text-center relative overflow-hidden border border-brand-500/30 shadow-[0_30px_100px_-15px_rgba(20,184,166,0.25)]"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="max-w-4xl mx-auto p-12 md:p-10 rounded-[3rem] glass-pro text-center relative overflow-hidden border border-brand-500/30 shadow-[0_30px_100px_-15px_rgba(20,184,166,0.25)]"
         >
           <div className="absolute inset-0 bg-gradient-to-br from-brand-600/20 via-[#0b1015] to-indigo-600/20"></div>
 

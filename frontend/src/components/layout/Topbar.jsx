@@ -205,10 +205,10 @@ export default function Topbar({ openSidebar }) {
       </AnimatePresence>
 
       {/* MODALS */}
-      {type === "post" && <CreatePostModal close={()=>setType(null)} refreshFeed={()=>window.location.reload()} />}
-      {type === "project" && <CreateProjectModal close={()=>setType(null)} refresh={()=>window.location.reload()} />}
-      {type === "event" && <CreateEventModal close={()=>setType(null)} refresh={()=>window.location.reload()} />}
-      {type === "opportunity" && <CreateOpportunityModal close={()=>setType(null)} refresh={()=>window.location.reload()} />}
+      {type === "post" && <CreatePostModal close={()=>setType(null)} refreshFeed={()=>window.dispatchEvent(new Event("global-refresh"))} />}
+      {type === "project" && <CreateProjectModal close={()=>setType(null)} refresh={()=>window.dispatchEvent(new Event("global-refresh"))} />}
+      {type === "event" && <CreateEventModal close={()=>setType(null)} refresh={()=>window.dispatchEvent(new Event("global-refresh"))} />}
+      {type === "opportunity" && <CreateOpportunityModal close={()=>setType(null)} refresh={()=>window.dispatchEvent(new Event("global-refresh"))} />}
       <ChallengeModal
         open={showChallengeModal}
         close={() => setShowChallengeModal(false)}

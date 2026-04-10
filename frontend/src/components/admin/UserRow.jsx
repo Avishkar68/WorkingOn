@@ -1,16 +1,23 @@
 import api from "../../api/axios";
+import toast from "react-hot-toast";
 
 const UserRow = ({ user }) => {
 
   const toggleBan = async () => {
 
-    if(user.isBanned){
-      await api.post(`/admin/unban-user/${user._id}`);
-    }else{
-      await api.post(`/admin/ban-user/${user._id}`);
-    }
+    try {
+      if(user.isBanned){
+        await api.post(`/admin/unban-user/${user._id}`);
+        toast.success("User unbanned");
+      }else{
+        await api.post(`/admin/ban-user/${user._id}`);
+        toast.success("User banned");
+      }
 
-    window.location.reload();
+      window.location.reload();
+    } catch(err) {
+      toast.error("Action failed");
+    }
   };
 
   return (

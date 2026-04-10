@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react"
 import api from "../../api/axios"
 import { useNavigate } from "react-router-dom"
+import toast from "react-hot-toast"
 
 export default function CommentSection({ postId }) {
 
@@ -25,10 +26,12 @@ export default function CommentSection({ postId }) {
 
     try {
       await api.post("/comments",{ postId, content })
+      toast.success("Comment added!")
       setContent("")
       loadComments()
     } catch (err) {
       console.error(err)
+      toast.error("Failed to add comment")
     }
   }
 

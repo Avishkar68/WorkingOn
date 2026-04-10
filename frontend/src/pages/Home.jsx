@@ -170,6 +170,7 @@ import api from "../api/axios"
 import { jwtDecode } from "jwt-decode"
 import { ArrowUpRight, Plus, Users } from "lucide-react"
 import { motion } from "framer-motion"
+import toast from "react-hot-toast"
 
 import WelcomeModal from "../components/dialogueboxes/WelcomeModal"
 import PageShell from "../components/layout/PageShell"
@@ -235,9 +236,11 @@ export default function Home() {
     e.stopPropagation()
     try {
       await api.post(`/communities/${id}/join`)
+      toast.success("Joined community successfully!")
       fetchCommunities()
     } catch (err) {
       console.error(err)
+      toast.error("Failed to join community")
     }
   }
 

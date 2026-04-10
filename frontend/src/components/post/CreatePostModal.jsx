@@ -1,5 +1,7 @@
 import { useState } from "react"
+import { createPortal } from "react-dom"
 import api from "../../api/axios"
+import toast from "react-hot-toast"
 
 export default function CreatePostModal({ close, refreshFeed, communityId }) {
 
@@ -30,17 +32,19 @@ export default function CreatePostModal({ close, refreshFeed, communityId }) {
         headers: { "Content-Type": "multipart/form-data" }
       })
 
+      toast.success("Post published successfully!")
       refreshFeed()
       close()
 
     } catch (err) {
       console.error(err)
+      toast.error("Failed to publish post")
     } finally {
       setLoading(false)
     }
   }
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50">
 
       {/* GLASS MODAL */}
@@ -148,6 +152,7 @@ export default function CreatePostModal({ close, refreshFeed, communityId }) {
         </div>
 
       </div>
-    </div>
+    </div>,
+    document.body
   )
 }

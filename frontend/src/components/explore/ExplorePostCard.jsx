@@ -4,6 +4,7 @@ import { Heart, MessageCircle, Share2 } from "lucide-react"
 import { jwtDecode } from "jwt-decode"
 import api from "../../api/axios"
 import CommentSection from "../post/CommentSection"
+import toast from "react-hot-toast"
 
 export default function ExplorePostCard({ post }) {
 
@@ -78,7 +79,7 @@ export default function ExplorePostCard({ post }) {
 
     try{
       await navigator.clipboard.writeText(url)
-      alert("Link copied!")
+      toast.success("Link copied to clipboard!")
     }catch{
       window.open(url,"_blank")
     }

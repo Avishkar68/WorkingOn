@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import PageShell from "../components/layout/PageShell";
+import toast from "react-hot-toast";
 
 export default function ChallengePage() {
   const [challenge, setChallenge] = useState(null);
@@ -40,15 +41,22 @@ export default function ChallengePage() {
       const res = await api.post("/challenge/complete", { answer });
       const status = await fetchStatus();
       window.dispatchEvent(new Event("streak-status-updated"));
-      setMessage(res.data.message || "Challenge completed!");
+      
+      let successMsg = res.data.message || "Challenge completed!";
       if (res.data.streakUpdated) {
-        setMessage("Challenge complete! Your streak has been updated.");
+        successMsg = "Challenge complete! Your streak has been updated.";
       } else if (status?.dailyTasksCompleted?.quizCompleted) {
-        setMessage("Quiz marked complete. Upload a post to finish today's streak.");
+        successMsg = "Quiz marked complete. Upload a post to finish today's streak.";
       }
+      
+      setMessage(successMsg);
+      toast.success("Challenge completed!");
+
     } catch (err) {
       console.error(err);
-      setMessage(err.response?.data?.message || "Unable to submit challenge.");
+      const errorMsg = err.response?.data?.message || "Unable to submit challenge.";
+      setMessage(errorMsg);
+      toast.error(errorMsg);
     } finally {
       setLoading(false);
     }
