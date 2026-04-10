@@ -22,7 +22,7 @@ export default function CreatePostModal({ close, refreshFeed, communityId }) {
       formData.append("isAnonymous", false)
 
       // ⭐ COMMUNITY SUPPORT
-      if (communityId) {
+      if (communityId && communityId !== "normal") {
         formData.append("communityId", communityId)
       }
 

@@ -4,6 +4,7 @@ import Community from "../models/Community.js";
 import { createNotification } from "../services/notificationService.js";
 import { markPostCreated } from "./streakController.js";
 import uploadImage from "../utils/uploadImage.js";
+import mongoose from "mongoose";
 
 // ✅ CREATE POST (WITH COMMUNITY)
 export const createPost = async (req, res) => {
@@ -11,14 +12,20 @@ export const createPost = async (req, res) => {
     const { content, tags, isAnonymous, communityId } = req.body;
 
     // 🔥 VALIDATION
-    if (!content || !communityId) {
-      return res.status(400).json({ message: "Content & community required" });
+    if (!content) {
+      return res.status(400).json({ message: "Content is required" });
     }
 
     // ✅ CHECK COMMUNITY EXISTS
-    const community = await Community.findById(communityId);
-    if (!community) {
-      return res.status(404).json({ message: "Community not found" });
+    let community = null;
+
+
+    if (communityId && mongoose.Types.ObjectId.isValid(communityId)) {
+      community = await Community.findById(communityId);
+
+      if (!community) {
+        return res.status(404).json({ message: "Community not found" });
+      }
     }
 
     let imageUrl = "";
@@ -31,7 +38,7 @@ export const createPost = async (req, res) => {
       author: req.user._id,
       content,
       tags,
-      community: communityId,
+      community: community?._id || null,  // ✅ SAFE
       image: imageUrl,
       isAnonymous
     });

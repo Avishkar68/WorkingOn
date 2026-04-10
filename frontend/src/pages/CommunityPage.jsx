@@ -5,17 +5,17 @@ import api from "../api/axios"
 import PostCard from "../components/post/PostCard"
 import CreatePostModal from "../components/post/CreatePostModal"
 
-export default function CommunityPage(){
+export default function CommunityPage() {
 
   const { id } = useParams()
 
-  const [posts,setPosts] = useState([])
-  const [community,setCommunity] = useState(null)
-  const [loading,setLoading] = useState(true)
-  const [openModal,setOpenModal] = useState(false)
+  const [posts, setPosts] = useState([])
+  const [community, setCommunity] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [openModal, setOpenModal] = useState(false)
 
   const fetchData = useCallback(async () => {
-    try{
+    try {
       const [postsRes, communityRes] = await Promise.all([
         api.get(`/posts/community/${id}`),
         api.get(`/communities/${id}`)
@@ -24,17 +24,17 @@ export default function CommunityPage(){
       setPosts(postsRes.data)
       setCommunity(communityRes.data)
 
-    }catch(err){
+    } catch (err) {
       console.error(err)
     }
     setLoading(false)
   }, [id])
 
-  useEffect(()=>{
+  useEffect(() => {
     fetchData()
-  },[fetchData])
+  }, [fetchData])
 
-  if(loading){
+  if (loading) {
     return <p className="text-gray-400 text-center mt-10">Loading...</p>
   }
 
@@ -53,7 +53,7 @@ export default function CommunityPage(){
 
       {/* CREATE POST */}
       <div
-        onClick={()=>setOpenModal(true)}
+        onClick={() => setOpenModal(true)}
         className="glass rounded-2xl p-4 cursor-pointer"
       >
         <p className="text-gray-400">
@@ -63,9 +63,9 @@ export default function CommunityPage(){
 
       {openModal && (
         <CreatePostModal
-          close={()=>setOpenModal(false)}
+          close={() => setOpenModal(false)}
           refreshFeed={fetchData}
-          communityId={id}
+          communityId={id || "normal"}   // ✅ fallback here
         />
       )}
 

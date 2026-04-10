@@ -75,10 +75,12 @@ export default function StreakCard() {
           <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Your Streak</p>
           <div className="flex items-baseline gap-1 mt-1">
             <h2 className="text-3xl font-bold text-white tracking-tight">
-              {loading ? "..." : status?.streakCount || 0}
+              {loading ? "..." : status?.streakCount || 0} <span className="text-xl">Day Streak</span>
             </h2>
-            <span className="text-xs font-medium text-slate-400">days</span>
+
           </div>
+          <span className="text-xs font-medium text-slate-400">Don't break it today!</span>
+
         </div>
         <div className="relative">
           <div className="absolute inset-0 bg-orange-500/20 blur-xl rounded-full" />
@@ -99,7 +101,7 @@ export default function StreakCard() {
 
         {/* Labels */}
         <div className="grid grid-cols-7 gap-1 mb-2">
-          {['S','M','T','W','T','F','S'].map((l, i) => (
+          {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((l, i) => (
             <div key={i} className="text-center text-[9px] font-black text-slate-600">{l}</div>
           ))}
         </div>
@@ -108,7 +110,7 @@ export default function StreakCard() {
         <div className="grid grid-cols-7 gap-y-1.5 gap-x-1">
           {calendarGrid.flat().map((day, idx) => {
             if (!day) return <div key={idx} className="h-7" />;
-            
+
             const dateKey = normalizeDayKey(new Date(new Date().getFullYear(), new Date().getMonth(), day));
             const isCompleted = completedDates.has(dateKey);
             const isToday = todayKey === dateKey;
@@ -140,7 +142,7 @@ export default function StreakCard() {
           <h3 className="text-xs font-bold text-slate-300 uppercase tracking-tight">Daily Progress</h3>
           {streakDoneToday && <span className="text-[10px] text-emerald-400 font-bold">READY</span>}
         </div>
-        
+
         <div className="space-y-2">
           {[
             { label: "Daily Challenge", done: status?.dailyTasksCompleted?.quizCompleted },

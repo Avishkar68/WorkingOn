@@ -6,33 +6,36 @@ import { staggerContainer } from "../lib/motion"
 import ExplorePostCard from "../components/explore/ExplorePostCard"
 import PageShell from "../components/layout/PageShell"
 
-export default function Explore(){
+export default function Explore() {
 
-  const [posts,setPosts] = useState([])
-  const [tags,setTags] = useState([])
+  const [posts, setPosts] = useState([])
+  const [tags, setTags] = useState([])
 
-  const loadPosts = async ()=>{
-    try{
+  const loadPosts = async () => {
+    try {
       const res = await api.get("/explore/posts")
 
-      setPosts(res.data)
+      // ✅ FILTER ONLY GLOBAL POSTS
+      const globalPosts = res.data.filter(post => !post.community)
 
-      // FIX: safe tag extraction
-      const allTags = res.data.flatMap(p => p.tags || [])
-      const uniqueTags = [...new Set(allTags)].slice(0, 15) // limit for UI
+      setPosts(globalPosts)
+
+      // tags from filtered posts only
+      const allTags = globalPosts.flatMap(p => p.tags || [])
+      const uniqueTags = [...new Set(allTags)].slice(0, 15)
 
       setTags(uniqueTags)
 
-    }catch(err){
+    } catch (err) {
       console.error(err)
     }
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     loadPosts()
-  },[])
+  }, [])
 
-  return(
+  return (
 
     <PageShell
       eyebrow="Discovery"
