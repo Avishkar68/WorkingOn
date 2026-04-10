@@ -243,10 +243,10 @@ export default function Home() {
 
   useEffect(() => {
     fetchCommunities()
-    const isFirstVisit = localStorage.getItem("firstVisit")
-    if (!isFirstVisit) {
+    const showWelcome = localStorage.getItem("showWelcomeModal")
+    if (showWelcome === "true") {
       setShowWelcome(true)
-      localStorage.setItem("firstVisit", "true")
+      localStorage.removeItem("showWelcomeModal")
     }
   }, [])
 

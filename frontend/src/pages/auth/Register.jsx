@@ -34,11 +34,14 @@ export default function Register(){
         formData.append("profileImage",file)
       }
 
-      await api.post("/auth/register",formData,{
+      const res = await api.post("/auth/register",formData,{
         headers:{ "Content-Type":"multipart/form-data" }
       })
 
-      navigate("/login")
+      localStorage.setItem("token", res.data.token)
+      localStorage.setItem("showWelcomeModal", "true")
+
+      navigate("/")
 
     }catch(err){
       alert(err?.response?.data?.message || "Registration failed")
