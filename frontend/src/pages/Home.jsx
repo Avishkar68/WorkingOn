@@ -174,6 +174,7 @@ import toast from "react-hot-toast"
 
 import WelcomeModal from "../components/dialogueboxes/WelcomeModal"
 import PageShell from "../components/layout/PageShell"
+import Skeleton from "../components/ui/Skeleton"
 
 export default function Home() {
   const [communities, setCommunities] = useState([])
@@ -254,7 +255,26 @@ export default function Home() {
   }, [])
 
   if (loading) {
-    return <p className="text-gray-400 text-center mt-10 animate-pulse">Loading...</p>
+    return (
+      <PageShell eyebrow="Communities" title="Explore communities" subtitle="Join focused spaces and collaborate with people in your domain.">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          {[1, 2, 3, 4].map(i => (
+            <div key={i} className="glass-card p-6 flex flex-col min-h-[220px] justify-between">
+              <Skeleton className="absolute top-4 right-4 w-12 h-6 rounded-full" />
+              <div className="space-y-3 mt-2">
+                <Skeleton className="w-3/4 h-8" />
+                <Skeleton className="w-full h-4" />
+                <Skeleton className="w-5/6 h-4" />
+              </div>
+              <div className="flex items-center justify-between mt-auto pt-5 border-t border-white/10">
+                <Skeleton className="w-24 h-8 rounded-xl" />
+                <Skeleton className="w-16 h-4" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </PageShell>
+    )
   }
 
   return (

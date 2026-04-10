@@ -4,6 +4,7 @@ import api from "../api/axios"
 
 import PostCard from "../components/post/PostCard"
 import CreatePostModal from "../components/post/CreatePostModal"
+import Skeleton from "../components/ui/Skeleton"
 
 export default function CommunityPage() {
 
@@ -37,7 +38,29 @@ export default function CommunityPage() {
   }, [fetchData])
 
   if (loading) {
-    return <p className="text-gray-400 text-center mt-10">Loading...</p>
+    return (
+      <div className="space-y-6">
+        <div className="glass p-6 rounded-2xl space-y-3">
+          <Skeleton className="w-1/3 h-8" />
+          <Skeleton className="w-2/3 h-4" />
+        </div>
+        <Skeleton className="w-full h-16 rounded-2xl" />
+        {[1, 2, 3].map(i => (
+          <div key={i} className="glass p-6 rounded-2xl space-y-4">
+            <div className="flex items-center gap-3 border-b border-white/5 pb-4">
+              <Skeleton className="w-10 h-10 rounded-full" />
+              <div className="space-y-2">
+                <Skeleton className="w-32 h-4" />
+                <Skeleton className="w-20 h-3" />
+              </div>
+            </div>
+            <Skeleton className="w-full h-4" />
+            <Skeleton className="w-5/6 h-4" />
+            <Skeleton className="w-1/2 h-4" />
+          </div>
+        ))}
+      </div>
+    )
   }
 
   return (

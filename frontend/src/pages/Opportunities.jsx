@@ -5,6 +5,7 @@ import CreateOpportunityModal from "../components/opportunity/CreateOpportunityM
 import { motion } from "framer-motion"
 import { fadeInUp, staggerContainer } from "../lib/motion"
 import PageShell from "../components/layout/PageShell"
+import Skeleton from "../components/ui/Skeleton"
 import { CalendarDays, IndianRupee, Hourglass } from "lucide-react";
 
 const EXTERNAL_USER_ID = "000000000000000000000001"
@@ -59,6 +60,7 @@ export default function Opportunities() {
   const [filter,setFilter] = useState("all")
 
   const [showModal,setShowModal] = useState(false)
+  const [loading,setLoading] = useState(true)
 
   const loadData = async () => {
     try{
@@ -79,6 +81,7 @@ export default function Opportunities() {
     }catch(err){
       console.error(err)
     }
+    setLoading(false)
   }
 
   useEffect(()=>{
@@ -190,7 +193,30 @@ export default function Opportunities() {
         animate="visible"
       >
 
-        {filtered.map(op => {
+        {loading ? (
+          [1, 2, 3].map(i => (
+            <div key={i} className="glass-card p-6 flex flex-col gap-4">
+              <div className="flex gap-2">
+                <Skeleton className="w-20 h-6 rounded-full" />
+                <Skeleton className="w-24 h-6 rounded-full" />
+              </div>
+              <div className="space-y-2">
+                <Skeleton className="w-1/3 h-6" />
+                <Skeleton className="w-1/4 h-4" />
+              </div>
+              <Skeleton className="w-full h-16" />
+              <div className="flex gap-4">
+                <Skeleton className="w-20 h-4" />
+                <Skeleton className="w-24 h-4" />
+              </div>
+              <Skeleton className="w-full h-12 rounded-xl mt-2" />
+            </div>
+          ))
+        ) : filtered.length === 0 ? (
+          <div className="text-center text-slate-400 py-10">
+            No opportunities found
+          </div>
+        ) : filtered.map(op => {
 
           const isUserPost =
             op.postedBy?._id !== EXTERNAL_USER_ID

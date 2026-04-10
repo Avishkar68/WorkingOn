@@ -5,11 +5,13 @@ import { staggerContainer } from "../lib/motion"
 
 import ExplorePostCard from "../components/explore/ExplorePostCard"
 import PageShell from "../components/layout/PageShell"
+import Skeleton from "../components/ui/Skeleton"
 
 export default function Explore() {
 
   const [posts, setPosts] = useState([])
   const [tags, setTags] = useState([])
+  const [loading, setLoading] = useState(true)
 
   const loadPosts = async () => {
     try {
@@ -29,6 +31,7 @@ export default function Explore() {
     } catch (err) {
       console.error(err)
     }
+    setLoading(false)
   }
 
   useEffect(() => {
@@ -54,7 +57,11 @@ export default function Explore() {
 
         <div className="flex flex-wrap gap-3">
 
-          {tags.length === 0 ? (
+          {loading ? (
+            Array.from({ length: 8 }).map((_, i) => (
+              <Skeleton key={i} className="w-16 h-6 rounded-full" />
+            ))
+          ) : tags.length === 0 ? (
             <p className="text-slate-400 text-sm">No trending tags yet</p>
           ) : (
             tags.map(tag => (
@@ -78,7 +85,22 @@ export default function Explore() {
           Trending Posts
         </h2>
 
-        {posts.length === 0 ? (
+        {loading ? (
+          [1, 2, 3].map(i => (
+            <div key={i} className="glass p-6 rounded-2xl space-y-4">
+              <div className="flex items-center gap-3 border-b border-white/5 pb-4">
+                <Skeleton className="w-10 h-10 rounded-full" />
+                <div className="space-y-2">
+                  <Skeleton className="w-32 h-4" />
+                  <Skeleton className="w-20 h-3" />
+                </div>
+              </div>
+              <Skeleton className="w-full h-4" />
+              <Skeleton className="w-5/6 h-4" />
+              <Skeleton className="w-1/2 h-4" />
+            </div>
+          ))
+        ) : posts.length === 0 ? (
           <p className="text-slate-400">No posts found</p>
         ) : (
           posts.map(post => (
