@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef, useCallback } from "react";
+import { Link } from "react-router-dom";
 import api from "../api/axios";
 import toast from "react-hot-toast";
 import { useSocket } from "../context/SocketContext";
@@ -295,7 +296,9 @@ export default function AcademicHelp() {
                   {activePostData.title}
                 </h2>
                 <span className="ah-chat-header-meta">
-                  {activePostData.author?.name} · {formatTime(activePostData.createdAt)} · {(activePostData.replies || []).length} replies
+                  <Link to={`/user/${activePostData.author?._id}`} className="hover:text-indigo-400 transition-colors">
+                    {activePostData.author?.name}
+                  </Link> · {formatTime(activePostData.createdAt)} · {(activePostData.replies || []).length} replies
                 </span>
               </div>
             </div>
@@ -307,9 +310,9 @@ export default function AcademicHelp() {
                 <Avatar user={activePostData.author} />
                 <div className="ah-msg-body">
                   <div className="ah-msg-meta">
-                    <span className="ah-msg-name">
+                    <Link to={`/user/${activePostData.author?._id}`} className="ah-msg-name hover:text-indigo-400 transition-colors">
                       {activePostData.author?.name || "Anonymous"}
-                    </span>
+                    </Link>
                     <span className="ah-msg-time">
                       {formatTime(activePostData.createdAt)}
                     </span>
@@ -346,9 +349,9 @@ export default function AcademicHelp() {
                     <Avatar user={r.user} />
                     <div className="ah-msg-body">
                       <div className="ah-msg-meta">
-                        <span className="ah-msg-name">
+                        <Link to={`/user/${r.user?._id}`} className="ah-msg-name hover:text-indigo-400 transition-colors">
                           {r.user?.name || "Anonymous"}
-                        </span>
+                        </Link>
                         <span className="ah-msg-time">
                           {formatTime(r.createdAt)}
                         </span>
@@ -373,19 +376,22 @@ export default function AcademicHelp() {
 
 /* ─── Avatar helper ─── */
 function Avatar({ user }) {
-  if (user?.profileImage) {
-    return (
-      <img
-        src={user.profileImage}
-        alt=""
-        className="ah-avatar-img"
-      />
-    );
-  }
-  return (
+  const content = user?.profileImage ? (
+    <img
+      src={user.profileImage}
+      alt=""
+      className="ah-avatar-img"
+    />
+  ) : (
     <div className="ah-avatar-fallback">
       {user?.name?.[0]?.toUpperCase() || "?"}
     </div>
+  );
+
+  return (
+    <Link to={`/user/${user?._id || user}`} className="ah-avatar-link hover:opacity-80 transition">
+      {content}
+    </Link>
   );
 }
 

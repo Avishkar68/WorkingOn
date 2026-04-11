@@ -1,7 +1,7 @@
 import { useState } from "react"
 import api from "../../api/axios"
 import CommentSection from "./CommentSection"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, Link } from "react-router-dom"
 import { Heart, MessageCircle, Share2, Trash2 } from "lucide-react"
 import { jwtDecode } from "jwt-decode"
 import { motion } from "framer-motion"
@@ -121,24 +121,23 @@ export default function PostCard({ post, refreshFeed }) {
     >
 
       {/* 👤 USER */}
-      <div
-        onClick={() => navigate(`/user/${post.author?._id}`)}
-        className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition"
+      <Link
+        to={`/user/${post.author?._id}`}
+        className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition group/author"
       >
-
         {post.author?.profileImage ? (
           <img
             src={post.author.profileImage}
-            className="w-10 h-10 rounded-full object-cover"
+            className="w-10 h-10 rounded-full object-cover border border-white/5 ring-2 ring-transparent group-hover/author:ring-indigo-500/30 transition-all"
           />
         ) : (
-          <div className="w-10 h-10 rounded-full bg-indigo-500 text-white flex items-center justify-center">
+          <div className="w-10 h-10 rounded-full bg-indigo-500 text-white flex items-center justify-center font-bold">
             {post.author?.name?.[0]}
           </div>
         )}
 
         <div>
-          <p className="font-semibold text-white">
+          <p className="font-semibold text-white group-hover/author:text-indigo-300 transition-colors">
             {post.author?.name}
           </p>
 
@@ -146,8 +145,7 @@ export default function PostCard({ post, refreshFeed }) {
             {post.author?.branch} • Year {post.author?.year}
           </p>
         </div>
-
-      </div>
+      </Link>
 
       {/* 📝 CONTENT */}
       <p className="text-gray-300 text-sm leading-relaxed">

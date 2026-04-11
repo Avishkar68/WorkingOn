@@ -1,15 +1,13 @@
-import { useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 import { motion } from "framer-motion"
 import { cardHover, fadeInUp } from "../../lib/motion"
 
 export default function SearchUserCard({ user }) {
 
-  const navigate = useNavigate()
-
   return (
 
-    <motion.div
-      onClick={() => navigate(`/user/${user._id}`)}
+    <Link to={`/user/${user._id}`}>
+      <motion.div
       variants={fadeInUp}
       initial="hidden"
       whileInView="visible"
@@ -49,6 +47,7 @@ export default function SearchUserCard({ user }) {
       </span>
 
     </motion.div>
+    </Link>
 
   )
 }

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react"
 import api from "../../api/axios"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, Link } from "react-router-dom"
 import toast from "react-hot-toast"
 
 export default function CommentSection({ postId }) {
@@ -51,20 +51,22 @@ export default function CommentSection({ postId }) {
 
         <div key={c._id} className="flex items-start gap-3">
 
-          <img
-            src={c.author?.profileImage}
-            onClick={()=>navigate(`/user/${c.author?._id}`)}
-            className="w-7 h-7 rounded-full cursor-pointer"
-          />
+          <Link to={`/user/${c.author?._id}`}>
+            <img
+              src={c.author?.profileImage}
+              className="w-7 h-7 rounded-full cursor-pointer hover:opacity-80 transition"
+              alt={c.author?.name}
+            />
+          </Link>
 
           <div className="bg-white/5 px-3 py-2 rounded-lg text-sm text-gray-300">
 
-            <span
-              onClick={()=>navigate(`/user/${c.author?._id}`)}
-              className="font-semibold text-indigo-400 cursor-pointer mr-1"
+            <Link
+              to={`/user/${c.author?._id}`}
+              className="font-semibold text-indigo-400 hover:text-indigo-300 transition-colors mr-1"
             >
               {c.author?.name}
-            </span>
+            </Link>
 
             {c.content}
 

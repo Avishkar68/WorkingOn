@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useContext } from "react"
+import { Link } from "react-router-dom"
 import { Send, User as UserIcon } from "lucide-react"
 import api from "../../api/axios"
 import { useSocket } from "../../context/SocketContext"
@@ -97,20 +98,26 @@ export default function CommunityChat({ communityId }) {
                 className={`flex items-end gap-2 ${isMe ? "flex-row-reverse" : "flex-row"}`}
               >
                 {/* AVATAR */}
-                <div className="w-8 h-8 rounded-full bg-slate-800 border border-white/10 flex items-center justify-center overflow-hidden flex-shrink-0">
+                <Link 
+                  to={isMe ? "/profile" : `/user/${msg.sender?._id || msg.sender}`}
+                  className="w-8 h-8 rounded-full bg-slate-800 border border-white/10 flex items-center justify-center overflow-hidden flex-shrink-0 hover:border-indigo-500/50 transition-colors"
+                >
                    {msg.sender?.profileImage ? (
                      <img src={msg.sender.profileImage} alt="" className="w-full h-full object-cover" />
                    ) : (
                      <UserIcon size={14} className="text-slate-500" />
                    )}
-                </div>
+                </Link>
 
                 {/* BUBBLE */}
                 <div className={`max-w-[70%] space-y-1`}>
                   {!isMe && (
-                    <span className="text-[10px] font-medium text-slate-400 ml-1">
+                    <Link 
+                      to={`/user/${msg.sender?._id || msg.sender}`}
+                      className="text-[10px] font-medium text-slate-400 ml-1 hover:text-indigo-400 transition-colors"
+                    >
                       {msg.sender?.name || "User"}
-                    </span>
+                    </Link>
                   )}
                   <div className={`px-4 py-2.5 rounded-2xl text-sm ${
                     isMe 

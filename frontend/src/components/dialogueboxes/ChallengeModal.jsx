@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Award, Sparkles } from "lucide-react";
+import { Link } from "react-router-dom";
 import { createPortal } from "react-dom";
 
 export default function ChallengeModal({ open, close, leaderboard, challenge, onStart }) {
@@ -44,10 +45,10 @@ export default function ChallengeModal({ open, close, leaderboard, challenge, on
                     <div className="flex h-12 w-12 items-center justify-center rounded-3xl bg-indigo-500/10 text-indigo-200 text-sm font-bold">
                       {idx + 1}
                     </div>
-                    <div className="min-w-0">
-                      <p className="font-semibold text-white truncate">{user.name}</p>
+                    <Link to={`/user/${user._id}`} className="min-w-0 group/card">
+                      <p className="font-semibold text-white truncate group-hover/card:text-indigo-400 transition-colors">{user.name}</p>
                       <p className="text-xs text-slate-500">{user.score} points</p>
-                    </div>
+                    </Link>
                   </div>
                 ))}
               </div>

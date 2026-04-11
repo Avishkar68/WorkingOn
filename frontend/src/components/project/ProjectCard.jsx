@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import JoinProjectModal from "./JoinProjectModal";
 import { motion } from "framer-motion";
 import { buttonTap, cardHover, fadeInUp } from "../../lib/motion";
@@ -30,26 +31,31 @@ export default function ProjectCard({ project, refresh }) {
       </h2>
 
       {/* CREATOR */}
-      <div className="flex items-center gap-3">
+      <Link 
+        to={`/user/${project.creator?._id}`}
+        className="flex items-center gap-3 group/creator"
+      >
         {project.creator?.profileImage ? (
           <img
             src={project.creator.profileImage}
             alt="creator"
-            className="w-9 h-9 sm:w-10 sm:h-10 rounded-full object-cover"
+            className="w-9 h-9 sm:w-10 sm:h-10 rounded-full object-cover border border-white/5 ring-2 ring-transparent group-hover/creator:ring-indigo-500/30 transition-all font-bold"
           />
         ) : (
-          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-indigo-500 text-white flex items-center justify-center">
+          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-indigo-500 text-white flex items-center justify-center font-bold">
             {project.creator?.name?.[0]}
           </div>
         )}
 
         <div className="min-w-0">
-          <p className="font-medium text-white text-sm sm:text-base truncate">
+          <p className="font-medium text-white text-sm sm:text-base truncate group-hover/creator:text-indigo-300 transition-colors">
             {project.creator?.name}
           </p>
-          <p className="text-xs text-indigo-200">CSE</p>
+          <p className="text-xs text-indigo-400/70 font-semibold uppercase tracking-wider">
+            {project.creator?.branch || "Student"}
+          </p>
         </div>
-      </div>
+      </Link>
 
       {/* DESCRIPTION */}
       <p className="text-gray-300 text-sm leading-relaxed">

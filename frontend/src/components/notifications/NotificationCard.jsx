@@ -1,4 +1,5 @@
 import { motion } from "framer-motion"
+import { Link } from "react-router-dom"
 import { buttonTap, cardHover, fadeInUp } from "../../lib/motion"
 import { Trash2 } from "lucide-react";
 
@@ -26,18 +27,20 @@ const NotificationCard = ({
 
       {/* LEFT */}
       <div className="flex items-center gap-4">
-
-        <img
-          src={notification.sender?.profileImage || "https://ui-avatars.com/api/?name=User"}
-          alt="avatar"
-          className="w-12 h-12 rounded-full object-cover"
-        />
+        <Link to={`/user/${notification.sender?._id}`}>
+          <img
+            src={notification.sender?.profileImage || "https://ui-avatars.com/api/?name=User"}
+            alt="avatar"
+            className="w-12 h-12 rounded-full object-cover hover:opacity-80 transition"
+          />
+        </Link>
 
         <div>
-
-          <p className="font-semibold text-white">
-            {notification.sender?.name}
-          </p>
+           <Link to={`/user/${notification.sender?._id}`} className="hover:text-indigo-400 transition-colors">
+              <p className="font-semibold text-white">
+                {notification.sender?.name}
+              </p>
+           </Link>
 
           <p className="text-gray-300 text-sm">
 

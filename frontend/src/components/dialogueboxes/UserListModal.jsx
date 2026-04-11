@@ -1,5 +1,6 @@
 import { createPortal } from "react-dom"
 import { motion, AnimatePresence } from "framer-motion"
+import { Link } from "react-router-dom"
 import { X, User as UserIcon, ArrowRight } from "lucide-react"
 
 export default function UserListModal({ isOpen, onClose, title, users, navigate }) {
@@ -47,42 +48,44 @@ export default function UserListModal({ isOpen, onClose, title, users, navigate 
                 <motion.div
                   key={user._id}
                   whileHover={{ x: 4 }}
-                  onClick={() => {
-                    navigate(`/user/${user._id}`)
-                    onClose()
-                  }}
-                  className="group flex items-center gap-4 p-3 rounded-2xl border border-transparent 
-                    hover:border-white/10 hover:bg-white/5 cursor-pointer transition-all"
+                  className="group relative"
                 >
-                  {/* AVATAR */}
-                  <div className="relative">
-                    {user.profileImage ? (
-                      <img
-                        src={user.profileImage}
-                        alt={user.name}
-                        className="w-12 h-12 rounded-full object-cover border-2 border-transparent group-hover:border-indigo-500/50 transition-all shadow-lg"
-                      />
-                    ) : (
-                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg shadow-lg">
-                        {user.name?.[0] || "U"}
-                      </div>
-                    )}
-                  </div>
+                  <Link
+                    to={`/user/${user._id}`}
+                    onClick={onClose}
+                    className="flex items-center gap-4 p-3 rounded-2xl border border-transparent 
+                      hover:border-white/10 hover:bg-white/5 cursor-pointer transition-all"
+                  >
+                    {/* AVATAR */}
+                    <div className="relative">
+                      {user.profileImage ? (
+                        <img
+                          src={user.profileImage}
+                          alt={user.name}
+                          className="w-12 h-12 rounded-full object-cover border-2 border-transparent group-hover:border-indigo-500/50 transition-all shadow-lg"
+                        />
+                      ) : (
+                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                          {user.name?.[0] || "U"}
+                        </div>
+                      )}
+                    </div>
 
-                  {/* INFO */}
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-zinc-100 group-hover:text-white transition-colors truncate">
-                      {user.name}
-                    </p>
-                    <p className="text-[11px] text-zinc-500 truncate">
-                      View full profile
-                    </p>
-                  </div>
+                    {/* INFO */}
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-zinc-100 group-hover:text-white transition-colors truncate">
+                        {user.name}
+                      </p>
+                      <p className="text-[11px] text-zinc-500 truncate">
+                        View full profile
+                      </p>
+                    </div>
 
-                  {/* ACTION */}
-                  <div className="opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all">
-                    <ArrowRight size={16} className="text-indigo-400" />
-                  </div>
+                    {/* ACTION */}
+                    <div className="opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all">
+                      <ArrowRight size={16} className="text-indigo-400" />
+                    </div>
+                  </Link>
                 </motion.div>
               ))
             )}

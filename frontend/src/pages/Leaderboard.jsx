@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import api from "../api/axios";
 import PageShell from "../components/layout/PageShell";
 import { Trophy, Sparkles, Crown, Zap } from "lucide-react";
@@ -62,11 +63,16 @@ export default function Leaderboard() {
                   <div className={`absolute top-0 left-0 right-0 h-24 bg-gradient-to-b ${isFirst ? 'from-amber-500/10' : 'from-white/5'} to-transparent opacity-50`} />
 
                   <div className="relative z-10 flex flex-col items-center text-center h-full">
-                    <div className={`mb-4 mt-2 flex h-14 w-14 items-center justify-center rounded-2xl bg-white/5 border border-white/10 ${theme.text}`}>
+                    <Link 
+                      to={`/user/${user._id}`}
+                      className={`mb-4 mt-2 flex h-14 w-14 items-center justify-center rounded-2xl bg-white/5 border border-white/10 ${theme.text} hover:scale-110 transition-transform`}
+                    >
                       <theme.icon size={isFirst ? 32 : 24} />
-                    </div>
+                    </Link>
 
-                    <h3 className="text-lg font-bold text-white truncate w-full px-2">{user.name}</h3>
+                    <Link to={`/user/${user._id}`} className="hover:text-indigo-400 transition-colors w-full px-2">
+                       <h3 className="text-lg font-bold text-white truncate">{user.name}</h3>
+                    </Link>
                     <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-4">Ranked {theme.rank}</p>
 
                     {/* Stats Pills */}
@@ -114,14 +120,16 @@ export default function Leaderboard() {
                 <div key={user._id} className="group flex items-center justify-between rounded-2xl border border-white/5 bg-white/[0.01] px-4 py-3 hover:bg-white/[0.04] transition-all">
                   <div className="flex items-center gap-4">
                     <span className="text-xs font-bold text-slate-600 w-6">#{index + 4}</span>
-                    <div>
-                      <p className="text-sm font-bold text-white">{user.name}</p>
-                      <div className="flex items-center gap-2 mt-0.5">
-                        <span className="text-[10px] text-slate-500">Streak: {user.streakCount || 0}d</span>
-                        <span className="text-[10px] text-slate-700">•</span>
-                        <span className="text-[10px] text-slate-500">{user.totalPosts || 0} posts</span>
+                    <Link to={`/user/${user._id}`} className="flex items-center gap-4 group/row">
+                      <div>
+                        <p className="text-sm font-bold text-white group-hover/row:text-indigo-400 transition-colors">{user.name}</p>
+                        <div className="flex items-center gap-2 mt-0.5">
+                          <span className="text-[10px] text-slate-500">Streak: {user.streakCount || 0}d</span>
+                          <span className="text-[10px] text-slate-700">•</span>
+                          <span className="text-[10px] text-slate-500">{user.totalPosts || 0} posts</span>
+                        </div>
                       </div>
-                    </div>
+                    </Link>
                   </div>
                   <div className="text-sm font-bold text-indigo-400">{user.score}</div>
                 </div>

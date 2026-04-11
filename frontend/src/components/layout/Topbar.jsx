@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { Bell, Command, Menu, Plus } from "lucide-react"
-import { useLocation, useNavigate } from "react-router-dom"
+import { useLocation, useNavigate, Link } from "react-router-dom"
 import { jwtDecode } from "jwt-decode"
 import { AnimatePresence, motion } from "framer-motion"
 import api from "../../api/axios"
@@ -136,21 +136,22 @@ export default function Topbar({ openSidebar }) {
           </motion.div>
 
           {/* PROFILE */}
-          <div
-            onClick={()=>navigate("/profile")}
-            className="cursor-pointer"
+          <Link
+            to="/profile"
+            className="cursor-pointer group/avatar"
           >
             {user?.profileImage ? (
               <img
                 src={user.profileImage}
-                className="w-9 h-9 rounded-full object-cover border border-white/10"
+                className="w-9 h-9 rounded-full object-cover border border-white/10 group-hover/avatar:border-indigo-500 transition-colors"
+                alt="Profile"
               />
             ) : (
-              <div className="w-9 h-9 bg-indigo-500 text-white flex items-center justify-center rounded-full border border-indigo-300/30">
+              <div className="w-9 h-9 bg-indigo-500 text-white flex items-center justify-center rounded-full border border-indigo-300/30 group-hover/avatar:border-indigo-400 font-bold transition-colors">
                 {user?.name?.[0] || "A"}
               </div>
             )}
-          </div>
+          </Link>
 
         </div>
       </div>
