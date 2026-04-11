@@ -1,6 +1,7 @@
 import { motion } from "framer-motion"
 import { buttonTap, cardHover, fadeInUp } from "../../lib/motion"
-import { CalendarDays, MapPin, Users } from "lucide-react";
+import { CalendarDays, MapPin, Users, Share2 } from "lucide-react";
+import toast from "react-hot-toast";
 
 export default function EventCard({event}){
 
@@ -20,6 +21,17 @@ export default function EventCard({event}){
       window.open(event.registrationLink,"_blank")
     }
   }
+
+  const handleShare = async (e) => {
+    e.stopPropagation();
+    const url = `${window.location.origin}/events/${event._id}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      toast.success("Link copied to clipboard!");
+    } catch {
+      toast.error("Failed to copy link");
+    }
+  };
 
   return(
 
@@ -94,15 +106,23 @@ export default function EventCard({event}){
 
 </div>
 
-        {/* BUTTON */}
-        <div className="border-t border-white/10 pt-4">
+        <div className="border-t border-white/10 pt-4 flex gap-3">
           <motion.button
             onClick={register}
             whileHover={{ scale: 1.03 }}
             whileTap={buttonTap}
-            className="w-full btn-primary font-semibold text-sm py-3 rounded-xl"
+            className="flex-1 btn-primary font-semibold text-sm py-3 rounded-xl transition-all"
           >
             Register Interest
+          </motion.button>
+
+          <motion.button
+            onClick={handleShare}
+            whileTap={buttonTap}
+            title="Share Event"
+            className="p-3 rounded-xl border border-white/10 bg-white/5 text-slate-400 hover:text-white hover:bg-white/10 transition-all flex items-center justify-center shrink-0"
+          >
+            <Share2 size={18} />
           </motion.button>
         </div>
 

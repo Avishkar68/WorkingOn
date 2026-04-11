@@ -1,5 +1,6 @@
 import { createContext, useState, useEffect } from "react"
 import api from "../api/axios"
+import SplashScreen from "../components/ui/SplashScreen"
 
 export const AuthContext = createContext()
 
@@ -24,7 +25,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={{ user, setUser }}>
-      {!loading && children}
+      {loading ? <SplashScreen /> : children}
     </AuthContext.Provider>
   )
 }

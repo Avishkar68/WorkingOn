@@ -23,6 +23,7 @@ import AdminPanel from "./pages/AdminPanel"
 import UserProfile from "./pages/UserProfile"
 import EventDetail from "./pages/EventDetail"
 import OpportunityDetail from "./pages/OpportunityDetail"
+import ProjectDetail from "./pages/ProjectDetail"
 import PostDetail from "./pages/PostDetail"
 import Opportunity from "./pages/try/Opportunity"
 import ChallengePage from "./pages/ChallengePage"
@@ -191,23 +192,38 @@ function AnimatedRoutes() {
           />
 
           {/* ================= EXISTING ROUTES ================= */}
-          <Route path="/opportunities" element={<RouteFrame><Layout><Opportunities /></Layout></RouteFrame>} />
-          <Route path="/academic-help" element={<RouteFrame><Layout><AcademicHelp /></Layout></RouteFrame>} />
-          <Route path="/projects" element={<RouteFrame><Layout><Projects /></Layout></RouteFrame>} />
-          <Route path="/events" element={<RouteFrame><Layout><Events /></Layout></RouteFrame>} />
-          <Route path="/explore" element={<RouteFrame><Layout><Explore /></Layout></RouteFrame>} />
-          <Route path="/search" element={<RouteFrame><Layout><Search /></Layout></RouteFrame>} />
-          <Route path="/profile" element={<RouteFrame><Layout><Profile /></Layout></RouteFrame>} />
-          <Route path="/notifications" element={<RouteFrame><Layout><Notifications /></Layout></RouteFrame>} />
-          <Route path="/settings" element={<RouteFrame><Layout><Settings /></Layout></RouteFrame>} />
-          <Route path="/admin" element={<RouteFrame><Layout><AdminPanel /></Layout></RouteFrame>} />
-          <Route path="/challenge" element={<RouteFrame><Layout><ChallengePage /></Layout></RouteFrame>} />
-          <Route path="/leaderboard" element={<RouteFrame><Layout><Leaderboard /></Layout></RouteFrame>} />
-          <Route path="/user/:id" element={<RouteFrame><Layout><UserProfile /></Layout></RouteFrame>} />
-          <Route path="/posts/:id" element={<RouteFrame><Layout><PostDetail /></Layout></RouteFrame>} />
-          <Route path="/events/:id" element={<RouteFrame><Layout><EventDetail /></Layout></RouteFrame>} />
-          <Route path="/opportunities/:id" element={<RouteFrame><Layout><OpportunityDetail /></Layout></RouteFrame>} />
-          <Route path="/opportunity" element={<RouteFrame><Layout><Opportunity /></Layout></RouteFrame>} />
+          {[
+            { path: "/opportunities", element: <Opportunities /> },
+            { path: "/academic-help", element: <AcademicHelp /> },
+            { path: "/projects", element: <Projects /> },
+            { path: "/events", element: <Events /> },
+            { path: "/explore", element: <Explore /> },
+            { path: "/search", element: <Search /> },
+            { path: "/profile", element: <Profile /> },
+            { path: "/notifications", element: <Notifications /> },
+            { path: "/settings", element: <Settings /> },
+            { path: "/admin", element: <AdminPanel /> },
+            { path: "/challenge", element: <ChallengePage /> },
+            { path: "/leaderboard", element: <Leaderboard /> },
+            { path: "/user/:id", element: <UserProfile /> },
+            { path: "/posts/:id", element: <PostDetail /> },
+            { path: "/events/:id", element: <EventDetail /> },
+            { path: "/projects/:id", element: <ProjectDetail /> },
+            { path: "/opportunities/:id", element: <OpportunityDetail /> },
+            { path: "/opportunity", element: <Opportunity /> }
+          ].map(({ path, element }) => (
+            <Route
+              key={path}
+              path={path}
+              element={
+                <RouteFrame>
+                  <ProtectedRoute>
+                    <Layout>{element}</Layout>
+                  </ProtectedRoute>
+                </RouteFrame>
+              }
+            />
+          ))}
         </Routes>
       </AnimatePresence>
     </>

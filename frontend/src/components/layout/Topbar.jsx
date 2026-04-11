@@ -71,12 +71,12 @@ export default function Topbar({ openSidebar }) {
 
   useEffect(()=>{
     loadUser()
+    loadChallengePreview() // ✅ Fetch preview data on mount so it's ready
 
     const todayKey = new Date().toISOString().split("T")[0]
     const shownKey = `challengeModalShown:${todayKey}`
 
     if (!localStorage.getItem(shownKey)) {
-      loadChallengePreview()
       setShowChallengeModal(true)
       localStorage.setItem(shownKey, "true")
     }
@@ -119,7 +119,10 @@ export default function Topbar({ openSidebar }) {
           </motion.button>
 
           <motion.button
-            onClick={() => setShowChallengeModal(true)}
+            onClick={() => {
+              loadChallengePreview() // ✅ Refresh data when manual button is clicked
+              setShowChallengeModal(true)
+            }}
             whileHover={{ scale: 1.02 }}
             whileTap={buttonTap}
             className="hidden md:inline-flex items-center gap-2 rounded-xl btn-secondary px-4 py-2 text-xs font-semibold transition"

@@ -6,7 +6,8 @@ import { motion } from "framer-motion"
 import { fadeInUp, staggerContainer } from "../lib/motion"
 import PageShell from "../components/layout/PageShell"
 import Skeleton from "../components/ui/Skeleton"
-import { CalendarDays, IndianRupee, Hourglass } from "lucide-react";
+import { CalendarDays, IndianRupee, Hourglass, Share2 } from "lucide-react";
+import toast from "react-hot-toast";
 
 const EXTERNAL_USER_ID = "000000000000000000000001"
 
@@ -96,6 +97,16 @@ export default function Opportunities() {
     const days = Math.ceil(diff / (1000*60*60*24))
     return days > 0 ? `${days} days left` : "Expired"
   }
+
+  const handleShare = async (opId) => {
+    const url = `${window.location.origin}/opportunities/${opId}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      toast.success("Link copied to clipboard!");
+    } catch {
+      toast.error("Failed to copy link");
+    }
+  };
 
   useEffect(()=>{
 
@@ -306,15 +317,25 @@ export default function Opportunities() {
 
 </div>
 
-              {/* APPLY */}
-              <a
-                href={op.registrationLink || op.link}
-                target="_blank"
-                rel="noreferrer"
-                className="relative z-10 block text-center py-3 rounded-xl text-sm font-medium btn-primary"
-              >
-                Apply Now
-              </a>
+              {/* APPLY & SHARE */}
+              <div className="flex gap-3 relative z-10">
+                <a
+                  href={op.registrationLink || op.link}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex-1 block text-center py-3 rounded-xl text-sm font-medium btn-primary transition-all active:scale-[0.98]"
+                >
+                  Apply Now
+                </a>
+                
+                <button
+                  onClick={() => handleShare(op._id)}
+                  className="p-3 rounded-xl border border-white/10 bg-white/5 text-slate-400 hover:text-white hover:bg-white/10 transition-all flex items-center justify-center shrink-0"
+                  title="Share Opportunity"
+                >
+                  <Share2 size={18} />
+                </button>
+              </div>
 
             </motion.div>
           )

@@ -10,7 +10,8 @@ import {
   unlikePost,
   deletePost,
   reportPost,
-  getUserPosts
+  getUserPosts,
+  getPostById
 } from "../controllers/postController.js";
 
 const router = express.Router();
@@ -23,6 +24,9 @@ router.get("/feed", protect, getFeed);
 
 // ⭐ NEW → COMMUNITY POSTS
 router.get("/community/:communityId", protect, getCommunityPosts);
+
+// ✅ GET SINGLE POST
+router.get("/:id", protect, getPostById);
 
 // ❤️ LIKE / UNLIKE
 router.post("/:id/like", protect, likePost);

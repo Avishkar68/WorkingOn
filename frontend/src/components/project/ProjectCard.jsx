@@ -3,7 +3,8 @@ import { Link } from "react-router-dom";
 import JoinProjectModal from "./JoinProjectModal";
 import { motion } from "framer-motion";
 import { buttonTap, cardHover, fadeInUp } from "../../lib/motion";
-import { Users } from "lucide-react";
+import { Users, Share2 } from "lucide-react";
+import toast from "react-hot-toast";
 
 export default function ProjectCard({ project, refresh }) {
   const [showJoin, setShowJoin] = useState(false);
@@ -15,6 +16,17 @@ export default function ProjectCard({ project, refresh }) {
   );
 
   const isMember = project.members?.some((m) => m._id === currentUserId);
+
+  const handleShare = async (e) => {
+    e.stopPropagation();
+    const url = `${window.location.origin}/projects/${project._id}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      toast.success("Link copied to clipboard!");
+    } catch {
+      toast.error("Failed to copy link");
+    }
+  };
 
   return (
     <motion.div
@@ -123,6 +135,15 @@ export default function ProjectCard({ project, refresh }) {
           className="flex-1 btn-secondary py-2 rounded-xl text-sm font-semibold"
         >
           Message
+        </motion.button>
+
+        <motion.button
+          onClick={handleShare}
+          whileTap={buttonTap}
+          title="Share Project"
+          className="p-2.5 rounded-xl border border-white/10 bg-white/5 text-slate-400 hover:text-white hover:bg-white/10 transition-all flex items-center justify-center shrink-0"
+        >
+          <Share2 size={18} />
         </motion.button>
       </div>
 
