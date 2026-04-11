@@ -1,4 +1,5 @@
 import AcademicPost from "../models/AcademicPost.js";
+import { getIO } from "../socket.js";
 
 
 // CREATE POST
@@ -11,7 +12,14 @@ export const createPost = async (req,res)=>{
     author: req.user._id
   })
 
-  res.json(post)
+  // Populate the author before emitting
+  const populated = await AcademicPost.findById(post._id)
+    .populate("author", "name profileImage")
+
+  // Emit to all connected clients
+  getIO().emit("academic:new-post", populated)
+
+  res.json(populated)
 }
 
 
@@ -39,7 +47,20 @@ export const addReply = async (req,res)=>{
 
   await post.save()
 
-  res.json({message:"Reply added"})
+  // Reload with populated fields
+  const updated = await AcademicPost.findById(req.params.id)
+    .populate("author", "name profileImage")
+    .populate("replies.user", "name profileImage")
+
+  const newReply = updated.replies[updated.replies.length - 1]
+
+  // Emit the new reply to everyone viewing this post
+  getIO().emit("academic:new-reply", {
+    postId: req.params.id,
+    reply: newReply
+  })
+
+  res.json({ message: "Reply added", reply: newReply })
 }
 
 
@@ -53,6 +74,9 @@ export const deletePost = async (req,res)=>{
   }
 
   await post.deleteOne()
+
+  // Emit deletion event
+  getIO().emit("academic:delete-post", { postId: req.params.id })
 
   res.json({message:"Deleted"})
 }

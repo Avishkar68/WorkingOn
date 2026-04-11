@@ -1,4 +1,5 @@
 import express from "express";
+import http from "http";
 import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
@@ -24,9 +25,12 @@ import challengeRoutes from "./routes/challengeRoutes.js";
 import streakRoutes from "./routes/streakRoutes.js";
 import { scrapeInternshala } from "./controllers/opportunityScraper.js";
 import communityRoutes from "./routes/communityRoutes.js";
+import { initSocket } from "./socket.js";
 dotenv.config();
 
 const app = express();
+const httpServer = http.createServer(app);
+initSocket(httpServer);
 
 connectDB();
 cron.schedule("0 9 * * *", async () => {
@@ -58,6 +62,6 @@ app.use("/api/communities", communityRoutes);
 
 const PORT = process.env.PORT || 4000;
 
-app.listen(PORT, () => {
+httpServer.listen(PORT, () => {
   console.log(`Server running on ${PORT}`);
 });

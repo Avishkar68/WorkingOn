@@ -34,10 +34,12 @@ import CommunityPage from "./pages/CommunityPage"
 import CreateCommunity from "./pages/CreateCommunity"
 import CommunitiesPage from "./pages/CommunitiesPage"
 import LandingPage from "./pages/LandingPage"
+import SocketProvider from "./context/SocketContext"
 
 function App() {
   return (
     <BrowserRouter>
+      <SocketProvider>
       <Toaster 
         position="top-right"
         toastOptions={{
@@ -67,6 +69,7 @@ function App() {
         }}
       />
       <AnimatedRoutes />
+      </SocketProvider>
     </BrowserRouter>
   )
 }

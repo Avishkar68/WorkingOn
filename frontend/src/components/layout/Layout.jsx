@@ -6,11 +6,14 @@ import Topbar from "./Topbar"
 import RightSidebar from "./RightSidebar"
 import { fadeInUp } from "../../lib/motion"
 
+const FULL_BLEED_ROUTES = ["/academic-help"]
+
 export default function Layout({ children }) {
 
   const [open,setOpen] = useState(false)
   const location = useLocation()
-  const hideRightSidebar = location.pathname === "/communities"
+  const hideRightSidebar = location.pathname === "/communities" || location.pathname === "/academic-help"
+  const isFullBleed = FULL_BLEED_ROUTES.includes(location.pathname)
 
   return (
     <div className="h-screen overflow-hidden bg-transparent p-4 sm:p-6 lg:p-8">
@@ -54,7 +57,11 @@ export default function Layout({ children }) {
 
           {/* CENTER */}
           <motion.main
-            className="flex-1 min-w-0 rounded-[2rem] glass p-6 lg:p-8 overflow-y-auto space-y-8 scrollbar-hide"
+            className={`flex-1 min-w-0 overflow-y-auto scrollbar-hide ${
+              isFullBleed
+                ? "overflow-hidden"
+                : "rounded-[2rem] glass p-6 lg:p-8 space-y-8"
+            }`}
             variants={fadeInUp}
             initial="hidden"
             animate="visible"
