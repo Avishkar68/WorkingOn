@@ -54,10 +54,10 @@ export default function CreatePostModal({ close, refreshFeed, communityId }) {
         <div className="flex justify-between items-center">
           <div>
             <h2 className="text-xl font-semibold tracking-wide flex items-center gap-2">
-              📝 Create a Post
+              Create a Post
             </h2>
             <p className="text-sm text-zinc-400">
-              Share your thoughts with the campus 🚀
+              Share your thoughts with the campus 
             </p>
           </div>
 
@@ -154,7 +154,7 @@ export default function CreatePostModal({ close, refreshFeed, communityId }) {
             className="px-5 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white 
             shadow-[0_0_15px_rgba(99,102,241,0.3)] hover:scale-105 active:scale-95 transition disabled:opacity-50"
           >
-            {loading ? "Posting..." : "Post 🚀"}
+            {loading ? "Posting..." : "Post "}
           </button>
         </div>
 

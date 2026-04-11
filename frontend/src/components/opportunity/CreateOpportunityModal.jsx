@@ -76,7 +76,7 @@ export default function CreateOpportunityModal({ close, refresh }) {
               <Briefcase size={20} className="text-indigo-400" /> Post Opportunity
             </h2>
             <p className="text-sm text-zinc-400">
-              Share internships, jobs, and openings 🚀
+              Share internships, jobs, and openings 
             </p>
           </div>
 
@@ -200,7 +200,7 @@ export default function CreateOpportunityModal({ close, refresh }) {
             className="px-5 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white 
             shadow-[0_0_15px_rgba(99,102,241,0.3)] hover:scale-105 active:scale-95 transition disabled:opacity-50"
           >
-            {loading ? "Posting..." : "Post 🚀"}
+            {loading ? "Posting..." : "Post "}
           </button>
         </div>
 

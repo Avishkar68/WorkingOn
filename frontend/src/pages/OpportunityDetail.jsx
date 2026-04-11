@@ -48,9 +48,9 @@ export default function OpportunityDetail(){
         </p>
 
         <div className="text-sm text-gray-400 space-y-1">
-          <p>💰 Stipend: {op.stipend}</p>
-          <p>⏳ Duration: {op.duration}</p>
-          <p>📅 {daysLeft(op.deadline)}</p>
+          <p>Stipend: {op.stipend}</p>
+          <p> Duration: {op.duration}</p>
+          <p> {daysLeft(op.deadline)}</p>
         </div>
 
         {/* TAGS */}
