@@ -17,6 +17,7 @@ import {
   deleteEventAdmin,
   deleteProjectAdmin,
   deleteOpportunityAdmin,
+  uploadChallenges,
 } from "../controllers/adminController.js";
 
 const router = express.Router();
@@ -40,5 +41,7 @@ router.delete("/community/:id", protect, admin, deleteCommunityAdmin);
 router.delete("/event/:id", protect, admin, deleteEventAdmin);
 router.delete("/project/:id", protect, admin, deleteProjectAdmin);
 router.delete("/opportunity/:id", protect, admin, deleteOpportunityAdmin);
+
+router.post("/challenges/upload", protect, admin, uploadChallenges);
 
 export default router;

@@ -4,6 +4,13 @@ import Project from "../models/Project.js";
 import Event from "../models/Event.js";
 import Opportunity from "../models/Opportunity.js";
 import Community from "../models/Community.js";
+import DailyChallenge from "../models/DailyChallenge.js";
+
+const normalizeDay = (value) => {
+  const date = new Date(value);
+  date.setHours(0, 0, 0, 0);
+  return date;
+};
 
 export const getAdminStats = async (req, res) => {
 
@@ -163,3 +170,34 @@ export const getAdminStats = async (req, res) => {
       res.status(500).json({ message: "Action failed" });
     }
   };
+
+export const uploadChallenges = async (req, res) => {
+  try {
+    const { challenges } = req.body;
+
+    if (!Array.isArray(challenges)) {
+      return res.status(400).json({ message: "Challenges must be an array" });
+    }
+
+    const operations = challenges.map((ch) => {
+      const normalizedDate = normalizeDay(ch.date);
+      return DailyChallenge.findOneAndUpdate(
+        { date: normalizedDate },
+        {
+          title: ch.title,
+          description: ch.description,
+          questions: ch.questions,
+          active: true
+        },
+        { upsert: true, new: true }
+      );
+    });
+
+    await Promise.all(operations);
+
+    res.json({ message: `${challenges.length} challenges uploaded/updated successfully` });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to upload challenges" });
+  }
+};

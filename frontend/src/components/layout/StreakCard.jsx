@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Sparkles, CalendarDays, CheckCircle2, Flame } from "lucide-react";
+import { Sparkles, CalendarDays, CheckCircle2, Flame, ChevronLeft, ChevronRight } from "lucide-react";
 import api from "../../api/axios";
 
 const normalizeDayKey = (date) => {
@@ -55,10 +55,19 @@ export default function StreakCard() {
     return () => window.removeEventListener("streak-status-updated", handleStreakUpdate);
   }, []);
 
+  const [currentDate, setCurrentDate] = useState(new Date());
+
   const calendarGrid = useMemo(() => {
-    const today = new Date();
-    return buildCalendar(today.getFullYear(), today.getMonth());
-  }, []);
+    return buildCalendar(currentDate.getFullYear(), currentDate.getMonth());
+  }, [currentDate]);
+
+  const goToPreviousMonth = () => {
+    setCurrentDate(prev => new Date(prev.getFullYear(), prev.getMonth() - 1, 1));
+  };
+
+  const goToNextMonth = () => {
+    setCurrentDate(prev => new Date(prev.getFullYear(), prev.getMonth() + 1, 1));
+  };
 
   const completedDates = useMemo(() => {
     return new Set((status?.streakHistory || []).map((item) => normalizeDayKey(item)));
@@ -93,9 +102,27 @@ export default function StreakCard() {
       {/* Calendar Section */}
       <div className="bg-white/[0.03] rounded-2xl p-3 border border-white/5 mb-4">
         <div className="flex items-center justify-between mb-4">
-          <span className="text-[11px] font-semibold text-slate-300 uppercase tracking-wider">
-            {new Date().toLocaleString("en-US", { month: "short", year: "numeric" })}
-          </span>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={goToPreviousMonth}
+              className="p-1 rounded-md text-slate-400 hover:text-white hover:bg-white/10 transition"
+            >
+              <ChevronLeft size={16} />
+            </button>
+            <span className="text-[11px] font-semibold text-slate-300 uppercase tracking-wider min-w-[70px] text-center">
+              {currentDate.toLocaleString("en-US", { month: "short", year: "numeric" })}
+            </span>
+            <button
+              onClick={goToNextMonth}
+              className="p-1 rounded-md text-slate-400 hover:text-white hover:bg-white/10 transition"
+              disabled={
+                currentDate.getMonth() === new Date().getMonth() &&
+                currentDate.getFullYear() === new Date().getFullYear()
+              }
+            >
+              <ChevronRight size={16} />
+            </button>
+          </div>
           <CalendarDays size={14} className="text-indigo-400 opacity-70" />
         </div>
 
@@ -111,7 +138,7 @@ export default function StreakCard() {
           {calendarGrid.flat().map((day, idx) => {
             if (!day) return <div key={idx} className="h-7" />;
 
-            const dateKey = normalizeDayKey(new Date(new Date().getFullYear(), new Date().getMonth(), day));
+            const dateKey = normalizeDayKey(new Date(currentDate.getFullYear(), currentDate.getMonth(), day));
             const isCompleted = completedDates.has(dateKey);
             const isToday = todayKey === dateKey;
 

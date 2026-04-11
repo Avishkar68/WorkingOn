@@ -165,7 +165,7 @@
 
 
 import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 import api from "../api/axios"
 import { jwtDecode } from "jwt-decode"
 import { ArrowUpRight, Plus, Users } from "lucide-react"
@@ -173,6 +173,7 @@ import { motion } from "framer-motion"
 import toast from "react-hot-toast"
 
 import WelcomeModal from "../components/dialogueboxes/WelcomeModal"
+import ChallengeSuccessModal from "../components/dialogueboxes/ChallengeSuccessModal"
 import PageShell from "../components/layout/PageShell"
 import Skeleton from "../components/ui/Skeleton"
 
@@ -180,8 +181,11 @@ export default function Home() {
   const [communities, setCommunities] = useState([])
   const [loading, setLoading] = useState(true)
   const [showWelcome, setShowWelcome] = useState(false)
+  const [showChallengeSuccess, setShowChallengeSuccess] = useState(false)
+  const [userRank, setUserRank] = useState(0)
 
   const navigate = useNavigate()
+  const location = useLocation()
 
   const token = localStorage.getItem("token")
   let userId = null
@@ -252,7 +256,15 @@ export default function Home() {
       setShowWelcome(true)
       localStorage.removeItem("showWelcomeModal")
     }
-  }, [])
+
+    // 🏆 CHECK CHALLENGE SUCCESS
+    if (location.state?.challengeSuccess) {
+      setShowChallengeSuccess(true)
+      setUserRank(location.state.rank)
+      // Clear location state so it doesn't show again on refresh
+      window.history.replaceState({}, document.title)
+    }
+  }, [location.state])
 
   if (loading) {
     return (
@@ -293,6 +305,12 @@ export default function Home() {
       }
     >
       {showWelcome && <WelcomeModal close={() => setShowWelcome(false)} />}
+      {showChallengeSuccess && (
+        <ChallengeSuccessModal 
+          rank={userRank} 
+          close={() => setShowChallengeSuccess(false)} 
+        />
+      )}
 
       {/* ✅ ANIMATED GRID */}
       <motion.div

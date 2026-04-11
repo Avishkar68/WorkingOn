@@ -50,6 +50,22 @@ export const getTodayChallenge = async (req, res) => {
 
 export const completeChallenge = async (req, res) => {
   try {
+    const { answer } = req.body;
+    const today = normalizeDay(new Date());
+
+    const challenge = await DailyChallenge.findOne({ date: today });
+
+    if (!challenge) {
+      return res.status(404).json({ message: "No challenge found for today" });
+    }
+
+    // Basic validation: check if given answer matches any question's answer field
+    const isCorrect = challenge.questions.some(q => q.answer && q.answer.toString().toLowerCase() === answer?.toString().toLowerCase());
+
+    if (!isCorrect) {
+      return res.status(400).json({ message: "Incorrect answer. Try again!" });
+    }
+
     const user = await User.findById(req.user._id);
 
     if (!user) {
@@ -58,11 +74,33 @@ export const completeChallenge = async (req, res) => {
 
     const result = await markQuizCompleted(user._id);
 
+    // 🏆 Calculate Rank
+    const leaderboard = await User.aggregate([
+      { $lookup: { from: "posts", localField: "_id", foreignField: "author", as: "posts" } },
+      { $lookup: { from: "comments", localField: "_id", foreignField: "author", as: "comments" } },
+      {
+        $addFields: {
+          score: {
+            $add: [
+              { $multiply: ["$streakCount", 10] },
+              { $size: "$posts" },
+              { $size: "$comments" }
+            ]
+          }
+        }
+      },
+      { $sort: { score: -1, streakCount: -1 } },
+      { $group: { _id: null, users: { $push: "$_id" } } }
+    ]);
+
+    const rank = leaderboard[0]?.users.findIndex(id => id.toString() === user._id.toString()) + 1 || 0;
+
     res.json({
-      message: "Quiz marked complete",
+      message: "Correct! Quiz marked complete",
       streakUpdated: result.updated,
       streakCount: result.streakCount,
-      streakHistory: result.streakHistory
+      streakHistory: result.streakHistory,
+      rank
     });
   } catch (err) {
     console.error(err);

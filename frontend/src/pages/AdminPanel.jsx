@@ -6,7 +6,8 @@ import ReportedPostCard from "../components/admin/ReportedPostCard";
 import UserRow from "../components/admin/UserRow";
 import AnalyticsPanel from "../components/admin/AnalyticsPanel";
 import ContentTable from "../components/admin/ContentTable";
-import { Server, Users, Search, ShieldAlert, LayoutDashboard, Database } from "lucide-react";
+import ChallengesManager from "../components/admin/ChallengesManager";
+import { Server, Users, Search, ShieldAlert, LayoutDashboard, Database, Trophy } from "lucide-react";
 import PageShell from "../components/layout/PageShell";
 
 const AdminPanel = () => {
@@ -76,6 +77,7 @@ const AdminPanel = () => {
           { id: "dashboard", icon: LayoutDashboard, label: "Dashboard" },
           { id: "users", icon: Users, label: "Users" },
           { id: "content", icon: Database, label: "Content" },
+          { id: "challenges", icon: Trophy, label: "Challenges" },
           { id: "reported", icon: ShieldAlert, label: "Reports" },
         ].map(tab => (
           <button
@@ -121,6 +123,11 @@ const AdminPanel = () => {
             </div>
             <ContentTable type={contentTab} data={contentData} onRefresh={loadContent} />
           </div>
+        )}
+
+        {/* CHALLENGES MANAGER */}
+        {activeTab === "challenges" && (
+          <ChallengesManager />
         )}
 
         {/* USER MANAGEMENT */}
