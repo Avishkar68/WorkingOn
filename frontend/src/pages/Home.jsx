@@ -328,7 +328,7 @@ export default function Home() {
             <motion.div
               key={c._id}
               variants={item}
-              onClick={() => navigate(`/community/${c._id}`)}
+              onClick={() => navigate("/communities", { state: { selectedCommunityId: c._id } })}
               className="group relative glass-card p-6 cursor-pointer flex flex-col min-h-[220px] justify-between overflow-hidden"
             >
               {/* MEMBER COUNT */}

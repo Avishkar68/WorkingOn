@@ -1,5 +1,7 @@
 import { useEffect, useState, useContext } from "react"
+import { useLocation } from "react-router-dom"
 import { AnimatePresence, motion } from "framer-motion"
+import toast from "react-hot-toast"
 import { MessageSquare, FileText, LayoutGrid, CheckCircle2, Users, Plus } from "lucide-react"
 import api from "../api/axios"
 import PostCard from "../components/post/PostCard"
@@ -22,6 +24,7 @@ export default function CommunitiesPage() {
   const [isPostModalOpen, setIsPostModalOpen] = useState(false)
 
   const { user } = useContext(AuthContext)
+  const location = useLocation()
 
   const loadCommunities = async () => {
     try {
@@ -54,9 +57,38 @@ export default function CommunitiesPage() {
     loadPosts(community._id)
   }
 
+  const handleJoin = async (id) => {
+    try {
+      await api.post(`/communities/${id}/join`)
+      toast.success("Joined community successfully!")
+      // Refresh to update membership status
+      await loadCommunities()
+      // Also update currently selected community object locally
+      setSelectedCommunity(prev => {
+        if (!prev || prev._id !== id) return prev
+        return { ...prev, members: [...(prev.members || []), user?._id] }
+      })
+    } catch (err) {
+      console.error(err)
+      toast.error("Failed to join community")
+    }
+  }
+
   useEffect(() => {
     loadCommunities()
   }, [])
+
+  // ✅ AUTO-SELECT FROM NAVIGATION STATE
+  useEffect(() => {
+    if (location.state?.selectedCommunityId && communities.length > 0) {
+      const target = communities.find(c => c._id === location.state.selectedCommunityId)
+      if (target) {
+        handleSelectCommunity(target)
+        // Clear state once handled
+        window.history.replaceState({}, document.title)
+      }
+    }
+  }, [location.state, communities])
 
   const filteredCommunities = communities.filter(c => {
     if (filter === "joined") return c.members?.includes(user?._id)
@@ -197,6 +229,16 @@ export default function CommunitiesPage() {
                           >
                             <Plus size={14} />
                             Create Post
+                          </button>
+                        )}
+
+                        {!isMember && (
+                          <button
+                            onClick={() => handleJoin(selectedCommunity._id)}
+                            className="flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg transition-all active:scale-95 ring-1 ring-emerald-400/20"
+                          >
+                            <Users size={14} />
+                            Join Community
                           </button>
                         )}
                         
