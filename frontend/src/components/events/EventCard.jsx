@@ -3,22 +3,22 @@ import { buttonTap, cardHover, fadeInUp } from "../../lib/motion"
 import { CalendarDays, MapPin, Users, Share2 } from "lucide-react";
 import toast from "react-hot-toast";
 
-export default function EventCard({event}){
+export default function EventCard({ event }) {
 
-  const formatDate = (date)=>{
+  const formatDate = (date) => {
     const d = new Date(date)
-    return d.toLocaleString("en-IN",{
-      month:"short",
-      day:"numeric",
-      year:"numeric",
-      hour:"numeric",
-      minute:"2-digit"
+    return d.toLocaleString("en-IN", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit"
     })
   }
 
-  const register = ()=>{
-    if(event.registrationLink){
-      window.open(event.registrationLink,"_blank")
+  const register = () => {
+    if (event.registrationLink) {
+      window.open(event.registrationLink, "_blank")
     }
   }
 
@@ -33,7 +33,7 @@ export default function EventCard({event}){
     }
   };
 
-  return(
+  return (
 
     <motion.div
       className="glass-card overflow-hidden"
@@ -49,19 +49,19 @@ export default function EventCard({event}){
         src="https://images.unsplash.com/photo-1552664730-d307ca884978"
         className="w-full h-48 object-cover"
       /> */}
-{event.image ? (
-  <img
-    src={event.image}
-    alt="event"
-    className="w-full h-48 object-cover"
-  />
-) : (
-  <img
-    src="https://images.unsplash.com/photo-1552664730-d307ca884978"
-    alt="fallback"
-    className="w-full h-48 object-cover"
-  />
-)}
+      {event.image ? (
+        <img
+          src={event.image}
+          alt="event"
+          className="w-full h-48 object-cover"
+        />
+      ) : (
+        <img
+          src="https://images.unsplash.com/photo-1552664730-d307ca884978"
+          alt="fallback"
+          className="w-full h-48 object-cover"
+        />
+      )}
       <div className="p-6 space-y-4">
 
         {/* TITLE */}
@@ -88,23 +88,23 @@ export default function EventCard({event}){
 
         {/* INFO */}
         <div className="text-gray-400 text-sm space-y-1">
-  
-  <p className="flex items-center gap-2">
-    <CalendarDays size={14} className="text-[#2DD4BF]" />
-    {formatDate(event.date)}
-  </p>
 
-  <p className="flex items-center gap-2">
-    <MapPin size={14} className="text-rose-400" />
-    {event.location}
-  </p>
+          <p className="flex items-center gap-2">
+            <CalendarDays size={14} className="text-[#2DD4BF]" />
+            {formatDate(event.date)}
+          </p>
 
-  <p className="flex items-center gap-2">
-    <Users size={14} className="text-blue-400" />
-    {event.registeredUsers?.length || 0} attending
-  </p>
+          <p className="flex items-center gap-2">
+            <MapPin size={14} className="text-rose-400" />
+            {event.location}
+          </p>
 
-</div>
+          <p className="flex items-center gap-2">
+            <Users size={14} className="text-blue-400" />
+            {event.registeredUsers?.length || 0} attending
+          </p>
+
+        </div>
 
         <div className="border-t border-white/10 pt-4 flex gap-3">
           <motion.button
