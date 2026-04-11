@@ -16,7 +16,7 @@ export default function Layout({ children }) {
   const isFullBleed = FULL_BLEED_ROUTES.includes(location.pathname)
 
   return (
-    <div className="h-screen overflow-hidden bg-transparent p-4 sm:p-6 lg:p-8">
+    <div className="h-screen overflow-hidden bg-transparent p-4 sm:p-6 lg:p-5">
       <div className="mx-auto flex h-full w-full max-w-[1600px] gap-4 lg:gap-6">
       {/* DESKTOP SIDEBAR */}
       <div className="hidden lg:block w-[280px] shrink-0">
