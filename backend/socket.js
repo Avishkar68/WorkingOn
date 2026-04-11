@@ -1,6 +1,7 @@
 import { Server } from "socket.io";
 import jwt from "jsonwebtoken";
 import User from "./models/User.js";
+import Message from "./models/Message.js";
 
 let io;
 
@@ -36,6 +37,33 @@ export const initSocket = (httpServer) => {
 
   io.on("connection", (socket) => {
     console.log(`🔌 Socket connected: ${socket.user.name} (${socket.id})`);
+
+    // 🏆 COMMUNITY CHAT LOGIC
+    socket.on("join-community", (communityId) => {
+      socket.join(`community-${communityId}`);
+      console.log(`👤 ${socket.user.name} joined community room: ${communityId}`);
+    });
+
+    socket.on("leave-community", (communityId) => {
+      socket.leave(`community-${communityId}`);
+      console.log(`👤 ${socket.user.name} left community room: ${communityId}`);
+    });
+
+    socket.on("send-community-message", async ({ communityId, content }) => {
+      try {
+        const newMessage = await Message.create({
+          sender: socket.user._id,
+          community: communityId,
+          content
+        });
+
+        const populatedMessage = await Message.findById(newMessage._id).populate("sender", "name profileImage");
+
+        io.to(`community-${communityId}`).emit("new-community-message", populatedMessage);
+      } catch (err) {
+        console.error("Failed to send community message:", err);
+      }
+    });
 
     // Join a specific academic post "room" for targeted updates
     socket.on("join-post", (postId) => {

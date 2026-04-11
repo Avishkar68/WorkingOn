@@ -1,8 +1,11 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useContext } from "react"
 import { AnimatePresence, motion } from "framer-motion"
+import { MessageSquare, FileText, LayoutGrid, CheckCircle2, Users } from "lucide-react"
 import api from "../api/axios"
 import PostCard from "../components/post/PostCard"
+import CommunityChat from "../components/community/CommunityChat"
 import { fadeInUp } from "../lib/motion"
+import { AuthContext } from "../context/AuthContext"
 
 export default function CommunitiesPage() {
   const [communities, setCommunities] = useState([])
@@ -10,6 +13,11 @@ export default function CommunitiesPage() {
   const [posts, setPosts] = useState([])
   const [loadingCommunities, setLoadingCommunities] = useState(true)
   const [loadingPosts, setLoadingPosts] = useState(false)
+  
+  const [filter, setFilter] = useState("all") // "all" | "joined"
+  const [view, setView] = useState("posts") // "posts" | "chat"
+
+  const { user } = useContext(AuthContext)
 
   const loadCommunities = async () => {
     try {
@@ -38,6 +46,7 @@ export default function CommunitiesPage() {
 
   const handleSelectCommunity = (community) => {
     setSelectedCommunity(community)
+    setView("posts")
     loadPosts(community._id)
   }
 
@@ -45,24 +54,61 @@ export default function CommunitiesPage() {
     loadCommunities()
   }, [])
 
+  const filteredCommunities = communities.filter(c => {
+    if (filter === "joined") return c.members?.includes(user?._id)
+    return true
+  })
+
+  const isMember = selectedCommunity?.members?.includes(user?._id)
+
   return (
     <div className="h-full min-h-0">
       <div className="h-full min-h-[68vh] rounded-2xl border border-white/10 bg-transparent backdrop-blur-md overflow-hidden">
         <div className="grid h-full min-h-0 grid-cols-1 lg:grid-cols-[320px_minmax(0,1fr)]">
+          
           {/* LEFT PANEL */}
           <aside className="min-h-0 border-white/10 border-b lg:border-b-0 lg:border-r bg-transparent">
-            <div className="px-4 py-4 border-b border-white/10">
-              <h1 className="text-lg font-semibold text-slate-100">Communities</h1>
-              <p className="text-xs text-slate-400 mt-1">Browse and switch between communities</p>
+            <div className="px-4 py-4 border-b border-white/10 space-y-3">
+              <div>
+                <h1 className="text-lg font-semibold text-slate-100 flex items-center gap-2">
+                   <Users size={18} className="text-indigo-400" />
+                   Communities
+                </h1>
+                <p className="text-[11px] text-slate-400 mt-0.5 uppercase tracking-wider font-medium">Switch between spaces</p>
+              </div>
+
+              {/* FILTER TOGGLE */}
+              <div className="flex p-1 bg-slate-900/50 rounded-xl border border-white/5">
+                <button
+                  onClick={() => setFilter("all")}
+                  className={`flex-1 flex items-center justify-center gap-2 py-1.5 text-xs font-semibold rounded-lg transition-all ${
+                    filter === "all" ? "bg-indigo-600 text-white shadow-lg" : "text-slate-400 hover:text-slate-200"
+                  }`}
+                >
+                  <LayoutGrid size={13} />
+                  All
+                </button>
+                <button
+                  onClick={() => setFilter("joined")}
+                  className={`flex-1 flex items-center justify-center gap-2 py-1.5 text-xs font-semibold rounded-lg transition-all ${
+                    filter === "joined" ? "bg-indigo-600 text-white shadow-lg" : "text-slate-400 hover:text-slate-200"
+                  }`}
+                >
+                  <CheckCircle2 size={13} />
+                  Joined
+                </button>
+              </div>
             </div>
 
-            <div className="h-[calc(100%-73px)] min-h-0 overflow-y-auto scrollbar-hide p-2">
+            <div className="h-[calc(100%-120px)] min-h-0 overflow-y-auto scrollbar-hide p-2">
               {loadingCommunities ? (
                 <p className="text-sm text-slate-400 px-2 py-3">Loading communities...</p>
-              ) : communities.length === 0 ? (
-                <p className="text-sm text-slate-400 px-2 py-3">No communities found.</p>
+              ) : filteredCommunities.length === 0 ? (
+                <div className="px-4 py-8 text-center">
+                  <p className="text-sm text-slate-500 italic">No {filter === "joined" ? "joined " : ""}communities found.</p>
+                </div>
               ) : (
-                communities.map((community) => {
+                filteredCommunities.map((community) => {
                   const isActive = selectedCommunity?._id === community._id
                   return (
                     <motion.button
@@ -76,11 +122,11 @@ export default function CommunitiesPage() {
                           : "border-white/10 bg-transparent hover:border-indigo-400/30 hover:shadow-[0_0_20px_rgba(99,102,241,0.15)]"
                       }`}
                     >
-                      <p className={`truncate text-sm font-medium ${isActive ? "text-indigo-100" : "text-slate-100"}`}>
+                      <p className={`truncate text-sm font-semibold ${isActive ? "text-indigo-100" : "text-slate-100"}`}>
                         {community.name}
                       </p>
-                      <p className="mt-1 truncate text-xs text-slate-400">
-                        {community.description || "No activity yet"}
+                      <p className="mt-1 truncate text-[11px] text-slate-500">
+                        {community.members?.length || 0} members · {community.description || "Active community"}
                       </p>
                     </motion.button>
                   )
@@ -90,20 +136,22 @@ export default function CommunitiesPage() {
           </aside>
 
           {/* RIGHT PANEL */}
-          <section className="min-h-0 overflow-hidden">
+          <section className="min-h-0 overflow-hidden flex flex-col">
             <AnimatePresence mode="wait">
               {!selectedCommunity ? (
                 <motion.div
                   key="placeholder"
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -4 }}
-                  transition={{ duration: 0.18 }}
-                  className="h-full min-h-[45vh] flex items-center justify-center p-6"
+                  initial={{ opacity: 0, scale: 0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.98 }}
+                  className="flex-1 flex items-center justify-center p-6"
                 >
-                  <div className="text-center">
-                    <p className="text-base font-medium text-slate-200">Select a community</p>
-                    <p className="mt-1 text-sm text-slate-400">Pick one from the left panel to view posts.</p>
+                  <div className="text-center group">
+                    <div className="mx-auto w-16 h-16 rounded-3xl bg-indigo-500/5 border border-indigo-500/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500">
+                       <LayoutGrid size={32} className="text-indigo-500/40" />
+                    </div>
+                    <p className="text-lg font-semibold text-slate-200">Select a Space</p>
+                    <p className="mt-2 text-sm text-slate-500 max-w-xs mx-auto">Pick a community from the left to explore posts and chat with members.</p>
                   </div>
                 </motion.div>
               ) : (
@@ -112,27 +160,74 @@ export default function CommunitiesPage() {
                   variants={fadeInUp}
                   initial="hidden"
                   animate="visible"
-                  exit={{ opacity: 0, y: -4, transition: { duration: 0.16 } }}
-                  className="h-full min-h-0 overflow-y-auto scrollbar-hide p-4 sm:p-5 space-y-4"
+                  exit={{ opacity: 0, y: -4 }}
+                  className="flex-1 min-h-0 flex flex-col overflow-hidden"
                 >
-                  <div className="rounded-xl border border-white/10 bg-transparent p-4">
-                    <h2 className="text-lg font-semibold text-slate-100">{selectedCommunity.name}</h2>
-                    <p className="mt-1 text-sm text-slate-400">{selectedCommunity.description || "No description provided."}</p>
+                  {/* HEADER & TOGGLE */}
+                  <div className="p-4 sm:p-5 border-b border-white/5 space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h2 className="text-xl font-bold text-slate-100">{selectedCommunity.name}</h2>
+                        <p className="mt-0.5 text-xs text-slate-500">{selectedCommunity.description || "Active discussion space."}</p>
+                      </div>
+
+                      {/* POSTS / CHAT TOGGLE */}
+                      <div className="flex p-1 bg-slate-900/60 rounded-xl border border-white/10 shrink-0">
+                        <button
+                          onClick={() => setView("posts")}
+                          className={`flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-lg transition-all ${
+                            view === "posts" ? "bg-white text-black shadow-lg" : "text-slate-400 hover:text-slate-200"
+                          }`}
+                        >
+                          <FileText size={14} />
+                          Posts
+                        </button>
+                        <button
+                          onClick={() => {
+                            if (isMember) {
+                               setView("chat")
+                            }
+                          }}
+                          className={`flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-lg transition-all ${
+                            !isMember ? "opacity-50 cursor-not-allowed" : ""
+                          } ${
+                            view === "chat" ? "bg-white text-black shadow-lg" : "text-slate-400 hover:text-slate-200"
+                          }`}
+                          title={!isMember ? "Join the community to chat" : ""}
+                        >
+                          <MessageSquare size={14} />
+                          Chat
+                        </button>
+                      </div>
+                    </div>
                   </div>
 
-                  {loadingPosts ? (
-                    <p className="text-sm text-slate-400">Loading posts...</p>
-                  ) : posts.length === 0 ? (
-                    <p className="text-sm text-slate-400">No posts in this community yet.</p>
-                  ) : (
-                    posts.map((post) => (
-                      <PostCard
-                        key={post._id}
-                        post={post}
-                        refreshFeed={() => loadPosts(selectedCommunity._id)}
-                      />
-                    ))
-                  )}
+                  {/* CONTENT AREA */}
+                  <div className="flex-1 min-h-0 overflow-y-auto scrollbar-hide p-4 sm:p-5">
+                    {view === "posts" ? (
+                      <div className="space-y-4 max-w-4xl mx-auto">
+                        {loadingPosts ? (
+                          <p className="text-sm text-slate-400">Loading posts...</p>
+                        ) : posts.length === 0 ? (
+                          <div className="py-20 text-center">
+                            <p className="text-sm text-slate-500 italic">No posts in this community yet.</p>
+                          </div>
+                        ) : (
+                          posts.map((post) => (
+                            <PostCard
+                              key={post._id}
+                              post={post}
+                              refreshFeed={() => loadPosts(selectedCommunity._id)}
+                            />
+                          ))
+                        )}
+                      </div>
+                    ) : (
+                      <div className="h-full flex flex-col max-w-4xl mx-auto">
+                        <CommunityChat communityId={selectedCommunity._id} />
+                      </div>
+                    )}
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>

@@ -25,6 +25,7 @@ import challengeRoutes from "./routes/challengeRoutes.js";
 import streakRoutes from "./routes/streakRoutes.js";
 import { scrapeInternshala } from "./controllers/opportunityScraper.js";
 import communityRoutes from "./routes/communityRoutes.js";
+import messageRoutes from "./routes/messageRoutes.js";
 import { initSocket } from "./socket.js";
 dotenv.config();
 
@@ -59,6 +60,7 @@ app.use("/api/academic", academicRoutes );
 app.use("/api/challenge", challengeRoutes);
 app.use("/api/streak", streakRoutes);
 app.use("/api/communities", communityRoutes);
+app.use("/api/messages", messageRoutes);
 
 const PORT = process.env.PORT || 4000;
 

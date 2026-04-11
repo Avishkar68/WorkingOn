@@ -35,41 +35,44 @@ import CreateCommunity from "./pages/CreateCommunity"
 import CommunitiesPage from "./pages/CommunitiesPage"
 import LandingPage from "./pages/LandingPage"
 import SocketProvider from "./context/SocketContext"
+import { AuthProvider } from "./context/AuthContext"
 
 function App() {
   return (
     <BrowserRouter>
-      <SocketProvider>
-      <Toaster 
-        position="top-right"
-        toastOptions={{
-          style: {
-            background: "rgba(9, 9, 11, 0.8)",
-            color: "#ededed",
-            border: "1px solid rgba(255, 255, 255, 0.1)",
-            backdropFilter: "blur(12px)",
-            WebkitBackdropFilter: "blur(12px)",
-            padding: "16px",
-            fontSize: "14px",
-            borderRadius: "16px",
-            boxShadow: "0 4px 30px rgba(0, 0, 0, 0.5)",
-          },
-          success: {
-            iconTheme: {
-              primary: "#14b8a6",
-              secondary: "#09090b",
-            },
-          },
-          error: {
-            iconTheme: {
-              primary: "#ef4444",
-              secondary: "#09090b",
-            },
-          },
-        }}
-      />
-      <AnimatedRoutes />
-      </SocketProvider>
+      <AuthProvider>
+        <SocketProvider>
+          <Toaster 
+            position="top-right"
+            toastOptions={{
+              style: {
+                background: "rgba(9, 9, 11, 0.8)",
+                color: "#ededed",
+                border: "1px solid rgba(255, 255, 255, 0.1)",
+                backdropFilter: "blur(12px)",
+                WebkitBackdropFilter: "blur(12px)",
+                padding: "16px",
+                fontSize: "14px",
+                borderRadius: "16px",
+                boxShadow: "0 4px 30px rgba(0, 0, 0, 0.5)",
+              },
+              success: {
+                iconTheme: {
+                  primary: "#14b8a6",
+                  secondary: "#09090b",
+                },
+              },
+              error: {
+                iconTheme: {
+                  primary: "#ef4444",
+                  secondary: "#09090b",
+                },
+              },
+            }}
+          />
+          <AnimatedRoutes />
+        </SocketProvider>
+      </AuthProvider>
     </BrowserRouter>
   )
 }
