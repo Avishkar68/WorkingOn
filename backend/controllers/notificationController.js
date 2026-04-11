@@ -40,4 +40,16 @@ export const getNotifications = async (req, res) => {
     res.json({ message: "Notification deleted" });
   
   };
-        
+
+  export const getUnreadCount = async (req, res) => {
+    try {
+      const count = await Notification.countDocuments({
+        recipient: req.user._id,
+        read: false
+      });
+      res.json({ count });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "Failed to get unread count" });
+    }
+  };

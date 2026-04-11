@@ -6,10 +6,10 @@ import Opportunity from "../models/Opportunity.js";
 import Community from "../models/Community.js";
 import DailyChallenge from "../models/DailyChallenge.js";
 
-const normalizeDay = (value) => {
-  const date = new Date(value);
-  date.setHours(0, 0, 0, 0);
-  return date;
+const getIstStartOfDay = (date = new Date()) => {
+  const istDateStr = new Date(date).toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" });
+  const [year, month, day] = istDateStr.split("-").map(Number);
+  return new Date(Date.UTC(year, month - 1, day, 0, 0, 0));
 };
 
 export const getAdminStats = async (req, res) => {
@@ -180,7 +180,7 @@ export const uploadChallenges = async (req, res) => {
     }
 
     const operations = challenges.map((ch) => {
-      const normalizedDate = normalizeDay(ch.date);
+      const normalizedDate = getIstStartOfDay(ch.date);
       return DailyChallenge.findOneAndUpdate(
         { date: normalizedDate },
         {

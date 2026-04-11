@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom"
 import { useContext } from "react"
 import { AuthContext } from "../../context/AuthContext"
+import { useNotifications } from "../../context/NotificationContext"
 import {
   Bell,
   Briefcase,
@@ -18,6 +19,7 @@ import {
 
 export default function Sidebar({ close }) {
   const { user } = useContext(AuthContext)
+  const { unreadCount } = useNotifications()
   const link =
     "flex items-center gap-3 px-3 py-2.5 rounded-xl text-zinc-400 hover:text-zinc-100 hover:bg-white/5 transition-all duration-200 font-medium"
 
@@ -65,7 +67,14 @@ export default function Sidebar({ close }) {
       <div className="p-3 space-y-2 border-t border-white/10">
         {accountLinks.map(({ to, label, icon: Icon }) => (
           <NavLink key={to} to={to} onClick={close} className={({ isActive }) => (isActive ? active : link)}>
-            <Icon size={16} />
+            <div className="relative">
+              <Icon size={16} />
+              {label === "Notifications" && unreadCount > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-red-500 text-[8px] font-bold text-white ring-2 ring-[#09090b]">
+                   {unreadCount > 9 ? "9+" : unreadCount}
+                </span>
+              )}
+            </div>
             <span className="text-sm font-medium">{label}</span>
           </NavLink>
         ))}

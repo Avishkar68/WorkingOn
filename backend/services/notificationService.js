@@ -1,4 +1,5 @@
 import Notification from "../models/Notification.js";
+import { getIO } from "../socket.js";
 
 export const createNotification = async (
   recipient,
@@ -9,7 +10,7 @@ export const createNotification = async (
   relatedModel
 ) => {
 
-  await Notification.create({
+  const notification = await Notification.create({
     recipient,
     sender,
     type,
@@ -17,5 +18,16 @@ export const createNotification = async (
     relatedId,
     relatedModel,
   });
+
+  const populated = await Notification.findById(notification._id)
+    .populate("sender", "name profileImage")
+    .populate("relatedId");
+
+  try {
+    const io = getIO();
+    io.to(`user-${recipient}`).emit("new-notification", populated);
+  } catch (err) {
+    console.error("Socket not initialized yet, skipping real-time notify");
+  }
 
 };

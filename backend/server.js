@@ -62,8 +62,11 @@ app.use("/api/streak", streakRoutes);
 app.use("/api/communities", communityRoutes);
 app.use("/api/messages", messageRoutes);
 
+app.get("/api/health", (req, res) => res.json({ status: "ok", version: "1.2", time: new Date() }));
+
 const PORT = process.env.PORT || 4000;
 
 httpServer.listen(PORT, () => {
   console.log(`Server running on ${PORT}`);
+  console.log("🚀 Spitians Backend [v1.2] loaded successfully");
 });

@@ -3,9 +3,8 @@ import { Sparkles, CalendarDays, CheckCircle2, Flame, ChevronLeft, ChevronRight 
 import api from "../../api/axios";
 
 const normalizeDayKey = (date) => {
-  const d = new Date(date);
-  d.setHours(0, 0, 0, 0);
-  return d.toISOString();
+  // ✅ FORCE IST (Asia/Kolkata) - Returns YYYY-MM-DD
+  return new Date(date).toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" });
 };
 
 const buildCalendar = (year, month) => {

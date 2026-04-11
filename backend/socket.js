@@ -38,6 +38,9 @@ export const initSocket = (httpServer) => {
   io.on("connection", (socket) => {
     console.log(`🔌 Socket connected: ${socket.user.name} (${socket.id})`);
 
+    // Join a private room for personal notifications
+    socket.join(`user-${socket.user._id}`);
+
     // 🏆 COMMUNITY CHAT LOGIC
     socket.on("join-community", (communityId) => {
       socket.join(`community-${communityId}`);

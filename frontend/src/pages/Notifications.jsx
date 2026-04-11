@@ -4,6 +4,7 @@ import NotificationCard from "../components/notifications/NotificationCard";
 import PageShell from "../components/layout/PageShell";
 import { AnimatePresence, motion } from "framer-motion";
 import toast from "react-hot-toast";
+import { useNotifications } from "../context/NotificationContext";
 
 const Notifications = () => {
 
@@ -11,6 +12,7 @@ const Notifications = () => {
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [contact, setContact] = useState("");
   const [loadingId, setLoadingId] = useState(null);
+  const { setUnreadCount } = useNotifications();
 
   // 🔥 LOAD NOTIFICATIONS
   const loadNotifications = async () => {
@@ -37,6 +39,9 @@ const Notifications = () => {
         )
       );
 
+      // ✅ Update unread count
+      setUnreadCount(prev => Math.max(0, prev - 1));
+
     } catch (err) {
       console.error(err);
     }
@@ -50,6 +55,10 @@ const Notifications = () => {
       setNotifications(prev =>
         prev.map(n => ({ ...n, read: true }))
       );
+      
+      // ✅ Reset unread count
+      setUnreadCount(0);
+      
       toast.success("All notifications marked as read!");
 
     } catch (err) {
