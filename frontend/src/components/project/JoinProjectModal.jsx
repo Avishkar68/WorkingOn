@@ -34,7 +34,7 @@ export default function JoinProjectModal({projectId,close,refresh}){
           placeholder="Tell them why you'd like to join..."
           value={message}
           onChange={(e)=>setMessage(e.target.value)}
-          className="w-full bg-white/5 border border-white/10 p-3 rounded text-gray-300"
+          className="input min-h-[100px] resize-none"
         />
 
         <div className="flex justify-end gap-3">

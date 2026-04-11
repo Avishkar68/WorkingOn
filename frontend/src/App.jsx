@@ -31,7 +31,7 @@ import { pageTransition, pageVariants } from "./lib/motion"
 
 // ⭐ NEW IMPORTS
 import CommunityPage from "./pages/CommunityPage"
-import CreateCommunity from "./pages/CreateCommunity"
+// import CreateCommunity from "./pages/CreateCommunity"
 import CommunitiesPage from "./pages/CommunitiesPage"
 import LandingPage from "./pages/LandingPage"
 import SocketProvider from "./context/SocketContext"
@@ -160,8 +160,8 @@ function AnimatedRoutes() {
             }
           />
 
-          {/* ⭐ CREATE COMMUNITY */}
-          <Route
+          {/* ⭐ CREATE COMMUNITY (REPLACED BY MODAL) */}
+          {/* <Route
             path="/create-community"
             element={
               <RouteFrame>
@@ -172,7 +172,7 @@ function AnimatedRoutes() {
                 </ProtectedRoute>
               </RouteFrame>
             }
-          />
+          /> */}
 
           <Route
             path="/communities"

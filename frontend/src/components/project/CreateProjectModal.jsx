@@ -73,8 +73,7 @@ export default function CreateProjectModal({ close, refresh }) {
           placeholder="Project Title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-gray-200 placeholder-gray-500 
-          focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30 transition"
+          className="input"
         />
 
         {/* DESCRIPTION */}
@@ -83,8 +82,7 @@ export default function CreateProjectModal({ close, refresh }) {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           rows="4"
-          className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-gray-200 placeholder-gray-500 
-          focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30 transition"
+          className="input"
         />
 
         {/* TECH STACK */}
@@ -97,8 +95,7 @@ export default function CreateProjectModal({ close, refresh }) {
               placeholder="React, Node, AI..."
               value={stackInput}
               onChange={(e) => setStackInput(e.target.value)}
-              className="flex-1 bg-white/5 border border-white/10 rounded-xl p-3 text-gray-300 placeholder-gray-500 
-              focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30 transition"
+              className="flex-1 input"
             />
 
             <button
@@ -139,8 +136,7 @@ export default function CreateProjectModal({ close, refresh }) {
             min="1"
             value={teamSize}
             onChange={(e) => setTeamSize(e.target.value)}
-            className="w-full mt-1 bg-white/5 border border-white/10 rounded-xl p-3 text-gray-300 
-            focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30 transition"
+            className="input mt-1"
           />
         </div>
 

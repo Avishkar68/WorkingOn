@@ -1,4 +1,6 @@
 import { NavLink } from "react-router-dom"
+import { useContext } from "react"
+import { AuthContext } from "../../context/AuthContext"
 import {
   Bell,
   Briefcase,
@@ -15,6 +17,7 @@ import {
 } from "lucide-react"
 
 export default function Sidebar({ close }) {
+  const { user } = useContext(AuthContext)
   const link =
     "flex items-center gap-3 px-3 py-2.5 rounded-xl text-zinc-400 hover:text-zinc-100 hover:bg-white/5 transition-all duration-200 font-medium"
 
@@ -36,7 +39,7 @@ export default function Sidebar({ close }) {
     // { to: "/profile", label: "Profile", icon: User },
     { to: "/notifications", label: "Notifications", icon: Bell },
     { to: "/settings", label: "Settings", icon: Settings },
-    { to: "/admin", label: "Admin Panel", icon: ShieldCheck }
+    ...(user?.isAdmin ? [{ to: "/admin", label: "Admin Panel", icon: ShieldCheck }] : [])
   ]
 
   return (

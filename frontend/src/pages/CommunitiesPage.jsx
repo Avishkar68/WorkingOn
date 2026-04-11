@@ -1,11 +1,13 @@
 import { useEffect, useState, useContext } from "react"
 import { AnimatePresence, motion } from "framer-motion"
-import { MessageSquare, FileText, LayoutGrid, CheckCircle2, Users } from "lucide-react"
+import { MessageSquare, FileText, LayoutGrid, CheckCircle2, Users, Plus } from "lucide-react"
 import api from "../api/axios"
 import PostCard from "../components/post/PostCard"
 import CommunityChat from "../components/community/CommunityChat"
 import { fadeInUp } from "../lib/motion"
 import { AuthContext } from "../context/AuthContext"
+import CreateCommunityModal from "../components/dialogueboxes/CreateCommunityModal"
+import CreatePostModal from "../components/post/CreatePostModal"
 
 export default function CommunitiesPage() {
   const [communities, setCommunities] = useState([])
@@ -16,6 +18,8 @@ export default function CommunitiesPage() {
   
   const [filter, setFilter] = useState("all") // "all" | "joined"
   const [view, setView] = useState("posts") // "posts" | "chat"
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isPostModalOpen, setIsPostModalOpen] = useState(false)
 
   const { user } = useContext(AuthContext)
 
@@ -101,6 +105,19 @@ export default function CommunitiesPage() {
             </div>
 
             <div className="h-[calc(100%-120px)] min-h-0 overflow-y-auto scrollbar-hide p-2">
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className="mb-4 group w-full flex items-center gap-3 rounded-xl border border-dashed border-indigo-500/30 bg-indigo-500/5 px-4 py-4 text-left transition hover:border-indigo-500/60 hover:bg-indigo-500/10"
+              >
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-500/20 text-indigo-400 transition group-hover:scale-110 group-hover:bg-indigo-500 group-hover:text-white">
+                  <Plus size={20} />
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-indigo-100 uppercase tracking-tight">Create Community</p>
+                  <p className="text-[10px] text-indigo-300/60 font-medium">Start your own space</p>
+                </div>
+              </button>
+
               {loadingCommunities ? (
                 <p className="text-sm text-slate-400 px-2 py-3">Loading communities...</p>
               ) : filteredCommunities.length === 0 ? (
@@ -172,32 +189,44 @@ export default function CommunitiesPage() {
                       </div>
 
                       {/* POSTS / CHAT TOGGLE */}
-                      <div className="flex p-1 bg-slate-900/60 rounded-xl border border-white/10 shrink-0">
-                        <button
-                          onClick={() => setView("posts")}
-                          className={`flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-lg transition-all ${
-                            view === "posts" ? "bg-white text-black shadow-lg" : "text-slate-400 hover:text-slate-200"
-                          }`}
-                        >
-                          <FileText size={14} />
-                          Posts
-                        </button>
-                        <button
-                          onClick={() => {
-                            if (isMember) {
-                               setView("chat")
-                            }
-                          }}
-                          className={`flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-lg transition-all ${
-                            !isMember ? "opacity-50 cursor-not-allowed" : ""
-                          } ${
-                            view === "chat" ? "bg-white text-black shadow-lg" : "text-slate-400 hover:text-slate-200"
-                          }`}
-                          title={!isMember ? "Join the community to chat" : ""}
-                        >
-                          <MessageSquare size={14} />
-                          Chat
-                        </button>
+                      <div className="flex items-center gap-3 shrink-0">
+                        {view === "posts" && isMember && (
+                          <button
+                            onClick={() => setIsPostModalOpen(true)}
+                            className="flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg transition-all active:scale-95"
+                          >
+                            <Plus size={14} />
+                            Create Post
+                          </button>
+                        )}
+                        
+                        <div className="flex p-1 bg-slate-900/60 rounded-xl border border-white/10">
+                          <button
+                            onClick={() => setView("posts")}
+                            className={`flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-lg transition-all ${
+                              view === "posts" ? "bg-white text-black shadow-lg" : "text-slate-400 hover:text-slate-200"
+                            }`}
+                          >
+                            <FileText size={14} />
+                            Posts
+                          </button>
+                          <button
+                            onClick={() => {
+                              if (isMember) {
+                                setView("chat")
+                              }
+                            }}
+                            className={`flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-lg transition-all ${
+                              !isMember ? "opacity-50 cursor-not-allowed" : ""
+                            } ${
+                              view === "chat" ? "bg-white text-black shadow-lg" : "text-slate-400 hover:text-slate-200"
+                            }`}
+                            title={!isMember ? "Join the community to chat" : ""}
+                          >
+                            <MessageSquare size={14} />
+                            Chat
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -234,6 +263,20 @@ export default function CommunitiesPage() {
           </section>
         </div>
       </div>
+
+      <CreateCommunityModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSuccess={loadCommunities}
+      />
+
+      {isPostModalOpen && (
+        <CreatePostModal
+          close={() => setIsPostModalOpen(false)}
+          refreshFeed={() => loadPosts(selectedCommunity?._id)}
+          communityId={selectedCommunity?._id}
+        />
+      )}
     </div>
   )
 }

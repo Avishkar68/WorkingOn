@@ -168,7 +168,7 @@ import { useEffect, useState } from "react"
 import { useNavigate, useLocation } from "react-router-dom"
 import api from "../api/axios"
 import { jwtDecode } from "jwt-decode"
-import { ArrowUpRight, Plus, Users } from "lucide-react"
+import { ArrowUpRight, Plus, Users, LayoutGrid } from "lucide-react"
 import { motion } from "framer-motion"
 import toast from "react-hot-toast"
 
@@ -295,13 +295,15 @@ export default function Home() {
       title="Explore communities"
       subtitle="Join focused spaces and collaborate with people in your domain."
       actions={
-        <button
-          onClick={() => navigate("/create-community")}
-          className="btn-primary inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium"
-        >
-          <Plus size={16} />
-          Create Community
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => navigate("/communities")}
+            className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-slate-300 hover:text-white transition-all bg-white/5 hover:bg-white/10 rounded-xl border border-white/10"
+          >
+            <LayoutGrid size={16} />
+            Communities Hub
+          </button>
+        </div>
       }
     >
       {showWelcome && <WelcomeModal close={() => setShowWelcome(false)} />}

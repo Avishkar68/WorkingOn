@@ -8,6 +8,7 @@ import EditProfileModal from "../components/profile/EditProfileModal";
 import PostCard from "../components/post/PostCard";
 import ProjectCard from "../components/project/ProjectCard";
 import EventCard from "../components/events/EventCard";
+import UserListModal from "../components/dialogueboxes/UserListModal";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -273,57 +274,26 @@ export default function Profile() {
       </div>
 
       {/* FOLLOWERS MODAL */}
-      {showFollowers && (
-        <Modal title="Followers" users={profile.followers} close={() => setShowFollowers(false)} navigate={navigate} />
-      )}
+      <UserListModal
+        isOpen={showFollowers}
+        onClose={() => setShowFollowers(false)}
+        title="Followers"
+        users={profile.followers}
+        navigate={navigate}
+      />
 
       {/* FOLLOWING MODAL */}
-      {showFollowing && (
-        <Modal title="Following" users={profile.following} close={() => setShowFollowing(false)} navigate={navigate} />
-      )}
+      <UserListModal
+        isOpen={showFollowing}
+        onClose={() => setShowFollowing(false)}
+        title="Following"
+        users={profile.following}
+        navigate={navigate}
+      />
 
       {showEdit && (
         <EditProfileModal user={profile} close={() => setShowEdit(false)} refresh={loadAll} />
       )}
-
-    </div>
-  );
-}
-
-function Modal({ title, users, close, navigate }) {
-  const safeUsers = Array.isArray(users) ? users : [];
-
-  return (
-    <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
-
-      <div className="glass p-6 rounded-2xl w-[400px] space-y-4 text-white">
-
-        <h2 className="font-bold text-lg">{title}</h2>
-
-        {safeUsers.length === 0 ? (
-          <p className="text-sm text-gray-400">No users found</p>
-        ) : safeUsers.map(u => (
-          <div
-            key={u._id}
-            className="flex gap-3 items-center cursor-pointer hover:bg-white/10 p-2 rounded-lg"
-            onClick={() => navigate(`/user/${u._id}`)}
-          >
-            <div className="w-10 h-10 bg-indigo-500 flex items-center justify-center rounded-full">
-              {u.name?.[0] || "U"}
-            </div>
-            {u.name}
-          </div>
-        ))}
-
-        <button
-          onClick={close}
-          className="w-full bg-indigo-500 hover:bg-indigo-600 py-2 rounded-xl"
-        >
-          Close
-        </button>
-
-      </div>
-
     </div>
   );
 }

@@ -268,14 +268,16 @@
 
 
 import { useCallback, useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { useParams, useNavigate } from "react-router-dom"
 import api from "../api/axios"
 import { jwtDecode } from "jwt-decode"
 import toast from "react-hot-toast"
+import UserListModal from "../components/dialogueboxes/UserListModal"
 
 export default function UserProfile() {
 
   const { id } = useParams()
+  const navigate = useNavigate()
 
   const [user, setUser] = useState(null)
   const [posts, setPosts] = useState([])
@@ -283,6 +285,8 @@ export default function UserProfile() {
   const [isFollowing, setIsFollowing] = useState(false)
   const [activeTab, setActiveTab] = useState("posts")
   const [loading, setLoading] = useState(false)
+  const [showFollowers, setShowFollowers] = useState(false)
+  const [showFollowing, setShowFollowing] = useState(false)
 
   const token = localStorage.getItem("token")
   const decoded = token ? jwtDecode(token) : null
@@ -398,13 +402,13 @@ export default function UserProfile() {
           {/* STATS */}
           <div className="flex gap-8 mt-4 text-gray-300">
 
-            <div>
-              <p className="font-bold text-white">{user.followers?.length}</p>
+            <div onClick={() => setShowFollowers(true)} className="cursor-pointer">
+              <p className="font-bold text-white">{user.followers?.length || 0}</p>
               <p className="text-sm text-gray-500">Followers</p>
             </div>
 
-            <div>
-              <p className="font-bold text-white">{user.following?.length}</p>
+            <div onClick={() => setShowFollowing(true)} className="cursor-pointer">
+              <p className="font-bold text-white">{user.following?.length || 0}</p>
               <p className="text-sm text-gray-500">Following</p>
             </div>
 
@@ -536,6 +540,21 @@ export default function UserProfile() {
         </div>
       )}
 
+      {/* MODALS */}
+      <UserListModal
+        isOpen={showFollowers}
+        onClose={() => setShowFollowers(false)}
+        title="Followers"
+        users={user.followers}
+        navigate={navigate}
+      />
+      <UserListModal
+        isOpen={showFollowing}
+        onClose={() => setShowFollowing(false)}
+        title="Following"
+        users={user.following}
+        navigate={navigate}
+      />
     </div>
   )
 }
