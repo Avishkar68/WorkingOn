@@ -53,10 +53,10 @@ export default function CreateProjectModal({ close, refresh }) {
         <div className="flex justify-between items-center">
           <div>
             <h2 className="text-xl font-semibold tracking-wide">
-              💻 Create Project
+              Create Project
             </h2>
             <p className="text-sm text-gray-400">
-              Build something and find teammates 🚀
+              Build something and find teammates 
             </p>
           </div>
 
@@ -155,7 +155,7 @@ export default function CreateProjectModal({ close, refresh }) {
             className="px-5 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-600 text-white 
             shadow-[0_0_15px_rgba(99,102,241,0.4)] hover:scale-105 transition"
           >
-            Create 🚀
+            Create 
           </button>
 
         </div>

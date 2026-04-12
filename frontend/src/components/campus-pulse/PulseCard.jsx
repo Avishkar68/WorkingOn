@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import { motion } from "framer-motion";
-import { Flame, Heart, Laugh, Flag, BarChart3, Clock, ShieldAlert } from "lucide-react";
+import { Flame, Heart, Laugh, Flag, BarChart3, Clock, ShieldAlert, ArrowBigUpDash, ArrowBigDownDash } from "lucide-react";
 import { buttonTap, cardHover } from "../../lib/motion";
 import api from "../../api/axios";
 import toast from "react-hot-toast";
@@ -193,7 +193,7 @@ export default function PulseCard({ post }) {
            <ShieldAlert size={24} />
         </div>
         <div>
-          <p className="text-sm font-bold text-text-primary mb-1">⚠️ Post Hidden</p>
+          <p className="text-sm font-bold text-text-primary mb-1"> Post Hidden</p>
           <p className="text-[11px] text-text-muted leading-relaxed">
             This pulse was hidden due to community feedback.
           </p>
@@ -229,7 +229,7 @@ export default function PulseCard({ post }) {
           </div>
           <div>
             <span className="text-[11px] font-bold text-text-primary uppercase tracking-[0.15em] opacity-80 decoration-indigo-500/30 underline-offset-4">
-              Anonymous Student 🤐
+              Anonymous Student 
             </span>
             <div className="flex items-center gap-1.5 text-[10px] text-text-muted font-medium mt-0.5">
                <span>
@@ -295,14 +295,14 @@ export default function PulseCard({ post }) {
              onClick={() => handlePulseVote("upvote")}
              className={`flex items-center gap-1 text-[11px] font-bold transition ${reactions.userVote === "upvote" ? "text-emerald-400" : "text-text-muted hover:text-emerald-400"}`}
            >
-             👍 {reactions.upvotes}
+             <ArrowBigUpDash /> {reactions.upvotes}
            </motion.button>
            <motion.button
              whileTap={buttonTap}
              onClick={() => handlePulseVote("downvote")}
              className={`flex items-center gap-1 text-[11px] font-bold transition ${reactions.userVote === "downvote" ? "text-red-400" : "text-text-muted hover:text-red-400"}`}
            >
-             👎 {reactions.downvotes}
+             <ArrowBigDownDash /> {reactions.downvotes}
            </motion.button>
         </div>
       </div>

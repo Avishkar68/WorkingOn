@@ -74,14 +74,14 @@ export default function CampusPulse() {
 
   const tabs = [
     { id: "all", label: "All", icon: Filter },
-    { id: "confession", label: "Confessions 😶", icon: Sparkles },
-    { id: "poll", label: "Polls 📊", icon: Zap },
+    { id: "confession", label: "Confessions ", icon: Sparkles },
+    { id: "poll", label: "Polls ", icon: Zap },
   ];
 
   const sortTabs = [
-    { id: "latest", label: "🆕 Latest", icon: Clock },
-    { id: "trending", label: "🔥 Trending", icon: Flame },
-    { id: "controversial", label: "⚠️ Controversial", icon: ShieldAlert },
+    { id: "latest", label: " Latest", icon: Clock },
+    { id: "trending", label: " Trending", icon: Flame },
+    { id: "controversial", label: " Controversial", icon: ShieldAlert },
   ];
 
   const trendingPosts = [...posts].sort((a, b) => 
@@ -92,7 +92,7 @@ export default function CampusPulse() {
   return (
     <PageShell
       eyebrow="Anonymous hub"
-      title="Campus Pulse 🔥"
+      title="Campus Pulse "
       subtitle="See what’s happening inside campus anonymously. No names, just vibes."
       actions={
         <motion.button
