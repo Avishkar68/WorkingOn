@@ -50,7 +50,7 @@ export default function CreateCommunity(){
         onClick={handleCreate}
         className="bg-indigo-500 px-5 py-2 rounded-lg text-white hover:bg-indigo-600"
       >
-        Create 🚀
+        Create 
       </button>
 
     </div>

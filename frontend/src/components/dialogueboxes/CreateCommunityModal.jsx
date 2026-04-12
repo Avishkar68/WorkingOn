@@ -45,10 +45,10 @@ export default function CreateCommunityModal({ isOpen, onClose, onSuccess }) {
         <div className="flex justify-between items-center">
           <div>
             <h2 className="text-xl font-semibold tracking-wide">
-              🌐 Create Community
+              Create Community
             </h2>
             <p className="text-sm text-zinc-400">
-              Build a hub for collaboration and discussion 🚀
+              Build a hub for collaboration and discussion 
             </p>
           </div>
 
@@ -105,7 +105,7 @@ export default function CreateCommunityModal({ isOpen, onClose, onSuccess }) {
               className="px-5 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white 
               shadow-[0_0_15px_rgba(99,102,241,0.3)] hover:scale-105 active:scale-95 transition disabled:opacity-50"
             >
-              {loading ? "Joining..." : "Create 🚀"}
+              {loading ? "Joining..." : "Create "}
             </button>
           </div>
         </form>
