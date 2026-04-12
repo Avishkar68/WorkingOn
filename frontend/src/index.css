@@ -31,6 +31,30 @@
   --radius-xl: 1rem;
   --radius-2xl: 1.5rem;
   --radius-3xl: 2rem;
+
+  /* Premium Typography Colors */
+  --color-text-primary: #f1f5f9;   /* Slate 100 */
+  --color-text-secondary: #94a3b8; /* Slate 400 */
+  --color-text-muted: #64748b;     /* Slate 500 */
+  --color-text-dim: #475569;       /* Slate 600 */
+}
+
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--color-text-primary);
+  }
+
+  p {
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+  }
+
+  /* Force Inter across all inputs and buttons */
+  input, button, textarea, select {
+    font-family: var(--font-sans);
+  }
 }
 
 /* Hide scrollbar globally but keep scroll working */

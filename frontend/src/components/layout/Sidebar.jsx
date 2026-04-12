@@ -14,7 +14,8 @@ import {
   Settings,
   ShieldCheck,
   Trophy,
-  User
+  User,
+  Zap
 } from "lucide-react"
 
 export default function Sidebar({ close }) {
@@ -33,6 +34,7 @@ export default function Sidebar({ close }) {
     { to: "/projects", label: "Projects", icon: FolderKanban },
     { to: "/events", label: "Events", icon: Calendar },
     { to: "/explore", label: "Explore", icon: Compass },
+    { to: "/campus-pulse", label: "Campus Pulse", icon: Zap },
     { to: "/leaderboard", label: "Leaderboard", icon: Trophy },
     { to: "/search", label: "Search", icon: Search }
   ]
@@ -48,10 +50,10 @@ export default function Sidebar({ close }) {
     <aside className="h-full flex flex-col justify-between glass rounded-2xl">
       <div>
         <div className="px-5 py-5 border-b border-white/10">
-          <NavLink to="/" onClick={close} className="font-semibold tracking-tight text-xl text-slate-100">
+          <NavLink to="/" onClick={close} className="font-bold tracking-tighter text-2xl text-text-primary">
             SPITConnect
           </NavLink>
-          <p className="mt-1 text-xs text-slate-400">Student collaboration workspace</p>
+          <p className="mt-1 text-xs font-medium text-text-secondary/80 tracking-wide uppercase">Workspace</p>
         </div>
 
         <nav className="space-y-2 px-3 py-4">

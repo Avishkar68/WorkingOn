@@ -1,5 +1,6 @@
 import api from "../../api/axios";
 import toast from "react-hot-toast";
+import { Trash2 } from "lucide-react";
 
 export default function ContentTable({ type, data, onRefresh }) {
 
@@ -15,37 +16,43 @@ export default function ContentTable({ type, data, onRefresh }) {
   };
 
   if(!data || data.length === 0) {
-    return <p className="text-gray-400 p-4 text-center">No {type}s found.</p>;
+    return (
+       <div className="py-20 text-center glass rounded-3xl border border-white/5 space-y-2">
+          <p className="text-text-primary font-bold">No {type}s found</p>
+          <p className="text-xs text-text-muted italic">There is currently no data to display for this category.</p>
+       </div>
+    );
   }
 
   return (
-    <div className="overflow-x-auto rounded-2xl border border-white/10 glass">
-      <table className="w-full text-left text-sm text-gray-300">
-        <thead className="bg-white/5 border-b border-white/10 text-xs uppercase font-semibold text-gray-400">
+    <div className="overflow-x-auto rounded-[2rem] border border-white/10 glass-card">
+      <table className="w-full text-left text-sm">
+        <thead className="bg-white/5 border-b border-white/10">
           <tr>
-            <th className="px-6 py-4">Title / Name</th>
-            <th className="px-6 py-4">Owner</th>
-            <th className="px-6 py-4">Created</th>
-            <th className="px-6 py-4 text-right">Actions</th>
+            <th className="px-8 py-5 text-[10px] uppercase font-black tracking-[0.2em] text-text-muted">Title / Name</th>
+            <th className="px-8 py-5 text-[10px] uppercase font-black tracking-[0.2em] text-text-muted">Owner</th>
+            <th className="px-8 py-5 text-[10px] uppercase font-black tracking-[0.2em] text-text-muted">Created Date</th>
+            <th className="px-8 py-5 text-[10px] uppercase font-black tracking-[0.2em] text-text-muted text-right">Actions</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-white/5">
           {data.map((item) => (
-            <tr key={item._id} className="hover:bg-white/5 transition">
-              <td className="px-6 py-4 font-medium text-white max-w-[200px] truncate">
+            <tr key={item._id} className="group hover:bg-white/[0.03] transition-colors duration-200">
+              <td className="px-8 py-5 font-bold text-text-primary max-w-[300px] truncate group-hover:text-indigo-400 transition-colors">
                 {item.title || item.name || "Untitled"}
               </td>
-              <td className="px-6 py-4">
+              <td className="px-8 py-5 text-text-secondary font-medium">
                 {item.postedBy?.name || item.creator?.name || item.admin?.name || "System"}
               </td>
-              <td className="px-6 py-4">
-                {new Date(item.createdAt).toLocaleDateString()}
+              <td className="px-8 py-5 text-text-muted font-medium">
+                {new Date(item.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
               </td>
-              <td className="px-6 py-4 text-right">
+              <td className="px-8 py-5 text-right">
                 <button
                   onClick={() => handleDelete(item._id)}
-                  className="px-3 py-1 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded transition"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-xl text-xs font-bold transition-all transform hover:scale-105"
                 >
+                  <Trash2 size={14} />
                   Delete
                 </button>
               </td>

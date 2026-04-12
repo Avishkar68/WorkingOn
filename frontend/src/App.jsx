@@ -35,6 +35,7 @@ import CommunityPage from "./pages/CommunityPage"
 // import CreateCommunity from "./pages/CreateCommunity"
 import CommunitiesPage from "./pages/CommunitiesPage"
 import LandingPage from "./pages/LandingPage"
+import CampusPulse from "./pages/CampusPulse.jsx" // 🔥 Force re-scan
 import SocketProvider from "./context/SocketContext"
 import NotificationProvider from "./context/NotificationContext"
 import { AuthProvider } from "./context/AuthContext"
@@ -198,6 +199,7 @@ function AnimatedRoutes() {
             { path: "/projects", element: <Projects /> },
             { path: "/events", element: <Events /> },
             { path: "/explore", element: <Explore /> },
+            { path: "/campus-pulse", element: <CampusPulse /> },
             { path: "/search", element: <Search /> },
             { path: "/profile", element: <Profile /> },
             { path: "/notifications", element: <Notifications /> },

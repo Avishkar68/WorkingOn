@@ -7,6 +7,8 @@ import admin from "../middleware/adminMiddleware.js";
 import {
   getAdminStats,
   getReportedPosts,
+  getUnifiedReports,
+  resolveReport,
   deletePostAdmin,
   banUser,
   unbanUser,
@@ -18,6 +20,9 @@ import {
   deleteProjectAdmin,
   deleteOpportunityAdmin,
   uploadChallenges,
+  deletePulseAdmin,
+  getAllPulsesAdmin,
+  restorePulseAdmin,
 } from "../controllers/adminController.js";
 
 const router = express.Router();
@@ -27,6 +32,8 @@ router.get("/users", protect, admin, getAllUsers);
 router.get("/stats", protect, admin, getAdminStats);
 
 router.get("/reported-posts", protect, admin, getReportedPosts);
+router.get("/reports", protect, admin, getUnifiedReports);
+router.post("/reports/:id/resolve", protect, admin, resolveReport);
 
 router.delete("/post/:id", protect, admin, deletePostAdmin);
 
@@ -41,6 +48,9 @@ router.delete("/community/:id", protect, admin, deleteCommunityAdmin);
 router.delete("/event/:id", protect, admin, deleteEventAdmin);
 router.delete("/project/:id", protect, admin, deleteProjectAdmin);
 router.delete("/opportunity/:id", protect, admin, deleteOpportunityAdmin);
+router.delete("/pulse/:id", protect, admin, deletePulseAdmin);
+router.get("/pulses", protect, admin, getAllPulsesAdmin);
+router.post("/pulse/:id/restore", protect, admin, restorePulseAdmin);
 
 router.post("/challenges/upload", protect, admin, uploadChallenges);
 

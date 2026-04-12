@@ -7,9 +7,9 @@ import StreakCard from "./StreakCard"
 
 export default function RightSidebar() {
 
-  const [events,setEvents] = useState([])
-  const [opportunities,setOpportunities] = useState([])
-  const [myCommunities,setMyCommunities] = useState([])
+  const [events, setEvents] = useState([])
+  const [opportunities, setOpportunities] = useState([])
+  const [myCommunities, setMyCommunities] = useState([])
 
   const navigate = useNavigate()
 
@@ -22,11 +22,11 @@ export default function RightSidebar() {
       >
         <div className="flex items-start justify-between gap-3 mb-3">
           <div className="min-w-0">
-            <h3 className="font-semibold text-white leading-6 truncate">
+            <h3 className="font-semibold text-text-primary leading-6 truncate">
               {title}
             </h3>
             {subtitle ? (
-              <p className="text-xs text-gray-400 mt-0.5 line-clamp-2">
+              <p className="text-[11px] text-text-secondary mt-0.5 line-clamp-2 leading-normal">
                 {subtitle}
               </p>
             ) : null}
@@ -57,11 +57,11 @@ export default function RightSidebar() {
         onClick={onClick}
         className="w-full text-left group rounded-[0.85rem] bg-transparent hover:bg-white/5 border border-transparent transition-all duration-200 px-3 py-2.5"
       >
-        <p className="text-sm font-medium text-slate-200 truncate group-hover:text-white">
+        <p className="text-sm font-medium text-text-primary/90 truncate group-hover:text-white transition-colors">
           {title}
         </p>
         {meta ? (
-          <p className="text-xs text-slate-500 truncate mt-0.5 group-hover:text-slate-400">
+          <p className="text-[11px] text-text-secondary/70 truncate mt-0.5 group-hover:text-text-secondary transition-colors">
             {meta}
           </p>
         ) : null}
@@ -69,38 +69,38 @@ export default function RightSidebar() {
     )
   }
 
-  const loadData = async ()=>{
-    try{
-      const [eRes,oRes] = await Promise.all([
+  const loadData = async () => {
+    try {
+      const [eRes, oRes] = await Promise.all([
         api.get("/events"),
         api.get("/opportunities")
       ])
 
-      setEvents(eRes.data.slice(0,3))
-      setOpportunities(oRes.data.slice(0,3))
+      setEvents(eRes.data.slice(0, 3))
+      setOpportunities(oRes.data.slice(0, 3))
 
-    }catch(err){
+    } catch (err) {
       console.error(err)
     }
   }
 
   const loadCommunities = async () => {
-    try{
+    try {
       const res = await api.get("/communities/user/me")
       setMyCommunities(res.data)
-    }catch(err){
+    } catch (err) {
       console.error(err)
     }
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     loadData()
     loadCommunities()
-  },[])
+  }, [])
 
   return (
     <motion.div
-      className="w-72 xl:w-80 h-full min-h-0 max-h-full px-3 py-4 space-y-4 overflow-y-auto scrollbar-hide"
+      className="w-72 xl:w-80 h-full min-h-0 max-h-full px-3 py-1 space-y-4 overflow-y-auto scrollbar-hide"
       variants={fadeInUp}
       initial="hidden"
       animate="visible"

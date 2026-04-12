@@ -5,6 +5,8 @@ import Event from "../models/Event.js";
 import Opportunity from "../models/Opportunity.js";
 import Community from "../models/Community.js";
 import DailyChallenge from "../models/DailyChallenge.js";
+import Report from "../models/Report.js";
+import Pulse from "../models/Pulse.js";
 
 const getIstStartOfDay = (date = new Date()) => {
   const istDateStr = new Date(date).toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" });
@@ -59,6 +61,34 @@ export const getAdminStats = async (req, res) => {
     });
   
   };
+
+  export const getUnifiedReports = async (req, res) => {
+    try {
+      const reports = await Report.find({ status: "pending" })
+        .populate("reporter", "name profileImage")
+        .populate("reportedUser", "name profileImage")
+        .sort({ createdAt: -1 });
+
+      res.json(reports);
+    } catch (err) {
+      res.status(500).json({ message: "Failed to fetch reports" });
+    }
+  };
+
+  export const resolveReport = async (req, res) => {
+    try {
+      const report = await Report.findById(req.params.id);
+      if (!report) return res.status(404).json({ message: "Report not found" });
+
+      report.status = "resolved";
+      await report.save();
+
+      res.json({ message: "Report resolved successfully" });
+    } catch (err) {
+      res.status(500).json({ message: "Failed to resolve report" });
+    }
+  };
+
   export const getReportedPosts = async (req, res) => {
 
     const posts = await Post.find({
@@ -130,6 +160,50 @@ export const getAdminStats = async (req, res) => {
     try {
       await User.findByIdAndDelete(req.params.id);
       res.json({ message: "User permanently deleted." });
+    } catch (err) {
+      res.status(500).json({ message: "Action failed" });
+    }
+  };
+
+  export const deletePulseAdmin = async (req, res) => {
+    try {
+      await Pulse.findByIdAndDelete(req.params.id);
+      res.json({ message: "Pulse permanently deleted." });
+    } catch (err) {
+      res.status(500).json({ message: "Action failed" });
+    }
+  };
+
+  export const getAllPulsesAdmin = async (req, res) => {
+    try {
+      const { filter } = req.query; // all, reported, hidden, downvoted
+      let query = {};
+
+      if (filter === "reported") query.status = "reported";
+      else if (filter === "hidden") query.status = "hidden";
+      else if (filter === "downvoted") query = { "downvotes.0": { $exists: true } };
+
+      const pulses = await Pulse.find(query)
+        .populate("author", "name profileImage")
+        .sort({ createdAt: -1 });
+
+      res.json(pulses);
+    } catch (err) {
+      res.status(500).json({ message: "Failed to fetch pulses" });
+    }
+  };
+
+  export const restorePulseAdmin = async (req, res) => {
+    try {
+      const pulse = await Pulse.findById(req.params.id);
+      if (!pulse) return res.status(404).json({ message: "Pulse not found" });
+
+      pulse.status = "active";
+      // Optional: Clear downvotes to give it a fresh start
+      pulse.downvotes = [];
+      await pulse.save();
+
+      res.json({ message: "Pulse restored to active feed." });
     } catch (err) {
       res.status(500).json({ message: "Action failed" });
     }

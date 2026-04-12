@@ -339,11 +339,11 @@ export default function Home() {
 
               {/* CONTENT */}
               <div className="relative z-10 space-y-3 mt-2">
-                <h2 className="text-xl sm:text-2xl font-semibold text-slate-100 group-hover:text-indigo-300 transition-colors tracking-tight leading-snug">
+                <h2 className="text-xl sm:text-2xl font-bold text-text-primary group-hover:text-indigo-300 transition-colors tracking-tight leading-snug">
                   {c.name}
                 </h2>
 
-                <p className="text-sm text-slate-400 mb-2 leading-relaxed line-clamp-2">
+                <p className="text-sm text-text-secondary mb-2 leading-relaxed line-clamp-2">
                   {c.description}
                 </p>
               </div>

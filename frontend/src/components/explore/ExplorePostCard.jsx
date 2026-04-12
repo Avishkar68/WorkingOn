@@ -1,16 +1,18 @@
 import { useState } from "react"
 import { useNavigate, Link } from "react-router-dom"
-import { Heart, MessageCircle, Share2 } from "lucide-react"
+import { Heart, MessageCircle, Share2, ShieldAlert } from "lucide-react"
 import { jwtDecode } from "jwt-decode"
 import api from "../../api/axios"
 import CommentSection from "../post/CommentSection"
 import toast from "react-hot-toast"
+import ReportModal from "../common/ReportModal"
 
 export default function ExplorePostCard({ post }) {
 
   const navigate = useNavigate()
 
   const [showComments,setShowComments] = useState(false)
+  const [showReport, setShowReport] = useState(false)
 
   const formatDate = (date) => {
     return new Date(date).toLocaleDateString()
@@ -171,15 +173,37 @@ export default function ExplorePostCard({ post }) {
 
         </div>
 
-        {/* 🔗 SHARE */}
-        <button
-          onClick={sharePost}
-          className="flex items-center gap-1 hover:text-indigo-400 transition"
-        >
-          <Share2 size={18} />
-        </button>
+        <div className="flex gap-4">
+          {/* 🔗 SHARE */}
+          <button
+            onClick={sharePost}
+            className="flex items-center gap-1 hover:text-indigo-400 transition"
+            title="Share"
+          >
+            <Share2 size={18} />
+          </button>
+          
+          {/* 🚨 REPORT */}
+          <button
+            onClick={() => setShowReport(true)}
+            className="flex items-center gap-1 hover:text-red-400 transition"
+            title="Report"
+          >
+            <ShieldAlert size={18} />
+          </button>
+        </div>
 
       </div>
+
+      {showReport && (
+        <ReportModal
+          entityId={post._id}
+          entityModel="Post"
+          reportedUserId={post.author?._id}
+          snapshot={`[EXPLORE POST by ${post.author?.name}] ${post.content}`}
+          onClose={() => setShowReport(false)}
+        />
+      )}
 
       {/* 💬 COMMENTS SECTION */}
       {showComments && (

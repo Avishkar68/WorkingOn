@@ -2,8 +2,9 @@ import { useState } from "react"
 import api from "../../api/axios"
 import CommentSection from "./CommentSection"
 import { useNavigate, Link } from "react-router-dom"
-import { Heart, MessageCircle, Share2, Trash2 } from "lucide-react"
+import { Heart, MessageCircle, Share2, Trash2, ShieldAlert } from "lucide-react"
 import { jwtDecode } from "jwt-decode"
+import ReportModal from "../common/ReportModal"
 import { motion } from "framer-motion"
 import { buttonTap, cardHover, fadeInUp } from "../../lib/motion"
 import toast from "react-hot-toast"
@@ -14,6 +15,7 @@ export default function PostCard({ post, refreshFeed }) {
 
   const [showComments,setShowComments] = useState(false)
   const [loading,setLoading] = useState(false)
+  const [showReport, setShowReport] = useState(false)
 
   // ✅ GET CURRENT USER
   const token = localStorage.getItem("token")
@@ -220,7 +222,7 @@ export default function PostCard({ post, refreshFeed }) {
           </motion.button>
 
           {/* 🗑 DELETE ONLY OWNER */}
-          {isOwner && (
+          {isOwner ? (
             <motion.button
               onClick={deletePost}
               title="Delete"
@@ -229,11 +231,30 @@ export default function PostCard({ post, refreshFeed }) {
             >
               <Trash2 size={18} />
             </motion.button>
+          ) : (
+            <motion.button
+              onClick={() => setShowReport(true)}
+              title="Report Post"
+              whileTap={buttonTap}
+              className="hover:text-red-400 transition"
+            >
+              <ShieldAlert size={18} />
+            </motion.button>
           )}
 
         </div>
 
       </div>
+
+      {showReport && (
+        <ReportModal
+          entityId={post._id}
+          entityModel="Post"
+          reportedUserId={post.author?._id}
+          snapshot={`[POST by ${post.author?.name}] ${post.content}`}
+          onClose={() => setShowReport(false)}
+        />
+      )}
 
       {/* 💬 COMMENTS */}
       {showComments && (

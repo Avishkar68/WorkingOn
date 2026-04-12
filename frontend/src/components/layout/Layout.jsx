@@ -12,7 +12,7 @@ export default function Layout({ children }) {
 
   const [open,setOpen] = useState(false)
   const location = useLocation()
-  const hideRightSidebar = location.pathname === "/communities" || location.pathname === "/academic-help"
+  const hideRightSidebar = ["/communities", "/academic-help", "/campus-pulse", "/admin"].includes(location.pathname)
   const isFullBleed = FULL_BLEED_ROUTES.includes(location.pathname)
 
   return (

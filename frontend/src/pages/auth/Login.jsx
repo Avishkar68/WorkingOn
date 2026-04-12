@@ -1,11 +1,13 @@
-import { useState } from "react"
+import { useState, useContext } from "react"
 import api from "../../api/axios"
 import { useNavigate } from "react-router-dom"
 import toast from "react-hot-toast"
+import { AuthContext } from "../../context/AuthContext"
 
 export default function Login() {
 
   const navigate = useNavigate()
+  const { getUser } = useContext(AuthContext)
 
   const [email,setEmail] = useState("")
   const [password,setPassword] = useState("")
@@ -23,6 +25,9 @@ export default function Login() {
       })
 
       localStorage.setItem("token",res.data.token)
+      
+      // Update AuthContext immediately
+      await getUser()
 
       navigate("/")
 

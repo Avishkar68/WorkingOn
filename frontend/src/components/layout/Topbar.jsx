@@ -30,6 +30,7 @@ export default function Topbar({ openSidebar }) {
     "/events": "Events",
     "/opportunities": "Opportunities",
     "/explore": "Explore",
+    "/campus-pulse": "Campus Pulse",
     "/search": "Search",
     "/leaderboard": "Leaderboard",
     "/challenge": "Challenge",

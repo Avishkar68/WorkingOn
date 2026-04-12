@@ -19,11 +19,11 @@ export default function PageShell({
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div className="space-y-2">
             {eyebrow && (
-              <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-indigo-400">{eyebrow}</p>
+              <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] text-indigo-400 opacity-90">{eyebrow}</p>
             )}
-            <h1 className="text-3xl font-bold tracking-tight text-slate-100 sm:text-4xl">{title}</h1>
+            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-text-primary">{title}</h1>
             {subtitle && (
-              <p className="text-sm text-slate-400 leading-relaxed sm:text-base max-w-2xl">{subtitle}</p>
+              <p className="text-sm sm:text-base text-text-secondary leading-relaxed max-w-2xl">{subtitle}</p>
             )}
           </div>
           {actions ? <div className="flex items-center gap-2">{actions}</div> : null}
