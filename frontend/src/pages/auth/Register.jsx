@@ -54,7 +54,7 @@ export default function Register() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center relative overflow-hidden py-12">
+    <div className="min-h-screen flex items-center justify-center relative overflow-hidden py-0">
       {/* BACKGROUND GLOWS */}
       <div className="absolute w-[600px] h-[600px] bg-brand-500/10 blur-[140px] rounded-full -top-48 -left-48" />
       <div className="absolute w-[500px] h-[500px] bg-brand-400/10 blur-[120px] rounded-full -bottom-48 -right-48" />
@@ -161,10 +161,9 @@ export default function Register() {
                   value={form.branch}
                   onChange={(e) => setForm({ ...form, branch: e.target.value })}
                 >
-                  <option className="bg-[#0b1012]">Computer Engineering</option>
-                  <option className="bg-[#0b1012]">CSE</option>
-                  <option className="bg-[#0b1012]">Electronics</option>
-                  <option className="bg-[#0b1012]">AIDS</option>
+                  <option value="Computer Engineering">Computer Engineering</option>
+                  <option value="Computer Science and Engineering">Computer Science and Engineering</option>
+                  <option value="Electronics Engineering">Electronics Engineering</option>
                 </select>
               </div>
 
