@@ -76,6 +76,14 @@ export default function LandingPage() {
           </span>
         </div>
         <div className="flex items-center gap-6">
+          {/* Add this link */}
+          <button
+            onClick={() => navigate("/landing/our-team")}
+            className="text-sm font-semibold text-gray-400 hover:text-white transition-colors"
+          >
+            Our Team
+          </button>
+
           <button
             onClick={() => navigate("/login")}
             className="text-sm font-semibold text-gray-400 hover:text-white transition-colors"

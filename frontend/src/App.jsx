@@ -39,6 +39,7 @@ import CampusPulse from "./pages/CampusPulse.jsx" // 🔥 Force re-scan
 import SocketProvider from "./context/SocketContext"
 import NotificationProvider from "./context/NotificationContext"
 import { AuthProvider } from "./context/AuthContext"
+import OurTeam from "./pages/OurTeam.jsx"
 
 function App() {
   return (
@@ -46,7 +47,7 @@ function App() {
       <AuthProvider>
         <SocketProvider>
           <NotificationProvider>
-            <Toaster 
+            <Toaster
               position="top-right"
               toastOptions={{
                 style: {
@@ -134,6 +135,7 @@ function AnimatedRoutes() {
           <Route path="/login" element={<RouteFrame><Login /></RouteFrame>} />
           <Route path="/register" element={<RouteFrame><Register /></RouteFrame>} />
           <Route path="/landing" element={<RouteFrame><LandingPage /></RouteFrame>} />
+          <Route path="/landing/our-team" element={<RouteFrame><OurTeam /></RouteFrame>} />
 
           {/* ================= PROTECTED ROUTES ================= */}
 
