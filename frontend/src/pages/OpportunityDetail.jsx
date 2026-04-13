@@ -61,7 +61,7 @@ export default function OpportunityDetail() {
       <PageShell title="Not Found" subtitle="This opportunity might have expired">
         <div className="text-center py-20">
           <p className="text-slate-400">The opportunity you're looking for doesn't exist or has been removed.</p>
-          <button 
+          <button
             onClick={() => navigate("/opportunities")}
             className="mt-6 btn-secondary px-6 py-2 rounded-xl"
           >
@@ -79,18 +79,18 @@ export default function OpportunityDetail() {
       subtitle={op.company}
     >
       <div className="max-w-4xl mx-auto space-y-6 pb-20">
-        
+
         {/* BACK BUTTON & ACTIONS */}
         <div className="flex items-center justify-between mb-4">
-          <button 
+          <button
             onClick={() => navigate(-1)}
             className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm font-medium"
           >
             <ChevronLeft size={16} />
             Back
           </button>
-          
-          <button 
+
+          <button
             onClick={handleShare}
             className="p-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 transition-all active:scale-95"
           >
@@ -98,7 +98,7 @@ export default function OpportunityDetail() {
           </button>
         </div>
 
-        <motion.div 
+        <motion.div
           variants={fadeInUp}
           initial="hidden"
           animate="visible"
@@ -108,13 +108,13 @@ export default function OpportunityDetail() {
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-8 border-b border-white/10">
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                 <span className="pill-badge bg-indigo-500/10 text-indigo-400 border-indigo-500/20 px-3 py-1">
-                    {(!op.postedBy || (op.postedBy?._id || op.postedBy) === "000000000000000000000001") ? "External" : "Student Post"}
-                 </span>
-                 <span className="text-slate-500 text-xs">•</span>
-                 <span className="text-slate-400 text-xs font-medium uppercase tracking-wider">
-                    Posted {new Date(op.createdAt).toLocaleDateString()}
-                 </span>
+                <span className="pill-badge bg-indigo-500/10 text-indigo-400 border-indigo-500/20 px-3 py-1">
+                  {(!op.postedBy || (op.postedBy?._id || op.postedBy) === "000000000000000000000001") ? "External" : "Student Post"}
+                </span>
+                <span className="text-slate-500 text-xs">•</span>
+                <span className="text-slate-400 text-xs font-medium uppercase tracking-wider">
+                  Posted {new Date(op.createdAt).toLocaleDateString()}
+                </span>
               </div>
               <h1 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">
                 {op.title}
@@ -137,73 +137,73 @@ export default function OpportunityDetail() {
 
           {/* MAIN CONTENT GRID */}
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-10">
-            
+
             <div className="space-y-8">
               <section className="space-y-4">
-                 <h3 className="text-indigo-400 text-xs font-bold uppercase tracking-widest flex items-center gap-2">
-                    About this Role
-                 </h3>
-                 <p className="text-slate-300 leading-relaxed text-lg whitespace-pre-wrap">
-                    {op.description}
-                 </p>
+                <h3 className="text-indigo-400 text-xs font-bold uppercase tracking-widest flex items-center gap-2">
+                  About this Role
+                </h3>
+                <p className="text-slate-300 leading-relaxed text-lg whitespace-pre-wrap">
+                  {op.description}
+                </p>
               </section>
 
               <section className="space-y-4">
-                 <h3 className="text-emerald-400 text-xs font-bold uppercase tracking-widest">Target Skills</h3>
-                 <div className="flex flex-wrap gap-2">
-                    {op.tags?.flatMap(t => t.split(",")).map(t => t.trim()).filter(Boolean).map(tag => (
-                      <span key={tag} className="pill-badge">
-                        #{tag}
-                      </span>
-                    ))}
-                 </div>
+                <h3 className="text-emerald-400 text-xs font-bold uppercase tracking-widest">Target Skills</h3>
+                <div className="flex flex-wrap gap-2">
+                  {op.tags?.flatMap(t => t.split(",")).map(t => t.trim()).filter(Boolean).map(tag => (
+                    <span key={tag} className="pill-badge">
+                      #{tag}
+                    </span>
+                  ))}
+                </div>
               </section>
             </div>
 
             {/* SIDEBAR INFO */}
             <div className="space-y-6">
-               <div className="glass p-6 rounded-2xl border border-white/10 space-y-5">
-                  <h4 className="text-white font-semibold text-sm">Role Details</h4>
-                  
-                  <div className="space-y-4">
-                     <div className="flex items-center gap-3 text-slate-300 text-sm">
-                        <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center shrink-0">
-                           <IndianRupee size={16} className="text-emerald-400" />
-                        </div>
-                        <div>
-                           <p className="text-[10px] text-slate-500 uppercase font-bold">Stipend</p>
-                           <p className="font-medium">{op.stipend || "Unpaid / N/A"}</p>
-                        </div>
-                     </div>
-                     
-                     <div className="flex items-center gap-3 text-slate-300 text-sm">
-                        <div className="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center shrink-0">
-                           <Hourglass size={16} className="text-amber-400" />
-                        </div>
-                        <div>
-                           <p className="text-[10px] text-slate-500 uppercase font-bold">Duration</p>
-                           <p className="font-medium">{op.duration || "Flexible"}</p>
-                        </div>
-                     </div>
+              <div className="glass p-6 rounded-2xl border border-white/10 space-y-5">
+                <h4 className="text-white font-semibold text-sm">Role Details</h4>
 
-                     <div className="flex items-center gap-3 text-slate-300 text-sm">
-                        <div className="w-8 h-8 rounded-lg bg-indigo-500/10 flex items-center justify-center shrink-0">
-                           <CalendarDays size={16} className="text-indigo-400" />
-                        </div>
-                        <div>
-                           <p className="text-[10px] text-slate-500 uppercase font-bold">Deadline</p>
-                           <p className="font-medium">{daysLeft(op.deadline)}</p>
-                        </div>
-                     </div>
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3 text-slate-300 text-sm">
+                    <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center shrink-0">
+                      <IndianRupee size={16} className="text-emerald-400" />
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-slate-500 uppercase font-bold">Stipend</p>
+                      <p className="font-medium">{op.stipend || "Unpaid / N/A"}</p>
+                    </div>
                   </div>
-               </div>
 
-               <div className="p-4 bg-indigo-500/5 rounded-2xl border border-indigo-500/10">
-                  <p className="text-[10px] text-indigo-300 block mb-2 font-bold uppercase tracking-tighter">Pro Tip</p>
-                  <p className="text-xs text-slate-400 leading-normal">
-                    Make sure your profile is complete before applying to increase your chances of selection.
-                  </p>
-               </div>
+                  <div className="flex items-center gap-3 text-slate-300 text-sm">
+                    <div className="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center shrink-0">
+                      <Hourglass size={16} className="text-amber-400" />
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-slate-500 uppercase font-bold">Duration</p>
+                      <p className="font-medium">{op.duration || "Flexible"}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3 text-slate-300 text-sm">
+                    <div className="w-8 h-8 rounded-lg bg-indigo-500/10 flex items-center justify-center shrink-0">
+                      <CalendarDays size={16} className="text-indigo-400" />
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-slate-500 uppercase font-bold">Deadline</p>
+                      <p className="font-medium">{daysLeft(op.deadline)}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-4 bg-indigo-500/5 rounded-2xl border border-indigo-500/10">
+                <p className="text-[10px] text-indigo-300 block mb-2 font-bold uppercase tracking-tighter">Pro Tip</p>
+                <p className="text-xs text-slate-400 leading-normal">
+                  Make sure your profile is complete before applying to increase your chances of selection.
+                </p>
+              </div>
             </div>
 
           </div>
