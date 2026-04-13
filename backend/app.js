@@ -58,7 +58,7 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/comments", commentRoutes);
 app.use("/api/search", searchRoutes);
 app.use("/api/explore", exploreRoutes);
-app.use("/api/academic", academicRoutes );
+app.use("/api/academic", academicRoutes);
 app.use("/api/challenge", challengeRoutes);
 app.use("/api/streak", streakRoutes);
 app.use("/api/communities", communityRoutes);
