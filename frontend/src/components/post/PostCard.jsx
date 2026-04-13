@@ -8,6 +8,7 @@ import ReportModal from "../common/ReportModal"
 import { motion } from "framer-motion"
 import { buttonTap, cardHover, fadeInUp } from "../../lib/motion"
 import toast from "react-hot-toast"
+import ConfirmationModal from "../common/ConfirmationModal"
 
 export default function PostCard({ post, refreshFeed }) {
 
@@ -16,6 +17,7 @@ export default function PostCard({ post, refreshFeed }) {
   const [showComments,setShowComments] = useState(false)
   const [loading,setLoading] = useState(false)
   const [showReport, setShowReport] = useState(false)
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
   // ✅ GET CURRENT USER
   const token = localStorage.getItem("token")
@@ -43,7 +45,7 @@ export default function PostCard({ post, refreshFeed }) {
 
   // ✅ CHECK OWNER
   const isOwner =
-    post.author?._id?.toString() === currentUserId?.toString()
+    (post.author?._id || post.author)?.toString() === currentUserId?.toString()
 
   // ❤️ LIKE / UNLIKE
   const handleLike = async () => {
@@ -95,16 +97,12 @@ export default function PostCard({ post, refreshFeed }) {
   }
 
   // 🗑 DELETE
-  const deletePost = async () => {
-
-    const confirmDelete = confirm("Delete this post?")
-
-    if(!confirmDelete) return
-
+  const handleDeletePost = async () => {
     try{
       await api.delete(`/posts/${post._id}`)
       toast.success("Post deleted!")
       refreshFeed()
+      setShowDeleteConfirm(false)
     }catch(err){
       console.error(err)
       toast.error("Failed to delete post")
@@ -150,7 +148,7 @@ export default function PostCard({ post, refreshFeed }) {
       </Link>
 
       {/* 📝 CONTENT */}
-      <p className="text-gray-300 text-sm leading-relaxed">
+      <p className="text-gray-300 text-sm leading-relaxed whitespace-pre-wrap">
         {post.content}
       </p>
 
@@ -164,10 +162,10 @@ export default function PostCard({ post, refreshFeed }) {
 
       {/* 🏷 TAGS */}
       <div className="flex gap-2 flex-wrap">
-        {post.tags?.map(tag => (
+        {post.tags?.flatMap(t => t.split(",")).map(t => t.trim()).filter(Boolean).map(tag => (
           <span
             key={tag}
-            className="bg-transparent border border-white/10 text-xs px-3 py-1 rounded-full text-gray-300"
+            className="pill-badge"
           >
             #{tag}
           </span>
@@ -224,7 +222,7 @@ export default function PostCard({ post, refreshFeed }) {
           {/* 🗑 DELETE ONLY OWNER */}
           {isOwner ? (
             <motion.button
-              onClick={deletePost}
+              onClick={() => setShowDeleteConfirm(true)}
               title="Delete"
               whileTap={buttonTap}
               className="hover:text-red-400 transition"
@@ -261,6 +259,15 @@ export default function PostCard({ post, refreshFeed }) {
         <CommentSection postId={post._id}/>
       )}
 
+      {/* 🗑 DELETE CONFIRM */}
+      <ConfirmationModal
+        isOpen={showDeleteConfirm}
+        onClose={() => setShowDeleteConfirm(false)}
+        onConfirm={handleDeletePost}
+        title="Delete Post"
+        message="Are you sure you want to delete this post? This action cannot be undone."
+        confirmText="Confirm Delete"
+      />
     </motion.div>
   )
 }

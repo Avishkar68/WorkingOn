@@ -10,11 +10,25 @@ export default function EditProfileModal({user,close,refresh}){
   const [file, setFile] = useState(null)
   const [skillInput,setSkillInput] = useState("")
 
-  const addSkill = ()=>{
-    if(skillInput.trim() === "") return
-    setSkills([...skills,skillInput])
-    setSkillInput("")
-  }
+  const handleSkillInput = (e) => {
+    const val = e.target.value;
+    if (val.includes(",")) {
+      const parts = val.split(",").map(p => p.trim()).filter(p => p !== "");
+      const newSkills = [...new Set([...skills, ...parts])];
+      setSkills(newSkills);
+      setSkillInput("");
+    } else {
+      setSkillInput(val);
+    }
+  };
+
+  const addSkill = () => {
+    if (!skillInput.trim()) return;
+    if (!skills.includes(skillInput.trim())) {
+      setSkills([...skills, skillInput.trim()]);
+    }
+    setSkillInput("");
+  };
 
   const removeSkill = (skill)=>{
     setSkills(skills.filter(s=>s !== skill))
@@ -90,7 +104,8 @@ export default function EditProfileModal({user,close,refresh}){
 
             <input
               value={skillInput}
-              onChange={(e)=>setSkillInput(e.target.value)}
+              onChange={handleSkillInput}
+              onKeyDown={(e) => e.key === "Enter" && addSkill()}
               placeholder="Add skill"
               className="flex-1 p-2 rounded-lg bg-white/5 border border-white/10 text-gray-300 outline-none"
             />

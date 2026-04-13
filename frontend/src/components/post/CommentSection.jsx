@@ -59,7 +59,7 @@ export default function CommentSection({ postId }) {
             />
           </Link>
 
-          <div className="bg-white/5 px-3 py-2 rounded-lg text-sm text-gray-300">
+          <div className="bg-white/5 px-3 py-2 rounded-lg text-sm text-gray-300 whitespace-pre-wrap">
 
             <Link
               to={`/user/${c.author?._id}`}
@@ -79,11 +79,17 @@ export default function CommentSection({ postId }) {
       {/* INPUT */}
       <div className="flex gap-2 mt-3">
 
-        <input
+        <textarea
           value={content}
           onChange={(e)=>setContent(e.target.value)}
-          className="flex-1 bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-gray-300"
-          placeholder="Write a comment..."
+          className="flex-1 bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-gray-300 resize-none min-h-[40px] focus:min-h-[80px] transition-all scrollbar-hide"
+          placeholder="Write a comment... (Shift+Enter for new line)"
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              addComment();
+            }
+          }}
         />
 
         <button

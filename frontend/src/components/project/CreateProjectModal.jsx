@@ -11,11 +11,25 @@ export default function CreateProjectModal({ close, refresh }) {
   const [stackInput, setStackInput] = useState("")
   const [teamSize, setTeamSize] = useState(2)
 
+  const handleStackInput = (e) => {
+    const val = e.target.value;
+    if (val.includes(",")) {
+      const parts = val.split(",").map(p => p.trim()).filter(p => p !== "");
+      const newStack = [...new Set([...techStack, ...parts])];
+      setTechStack(newStack);
+      setStackInput("");
+    } else {
+      setStackInput(val);
+    }
+  };
+
   const addStack = () => {
-    if (!stackInput.trim()) return
-    setTechStack([...techStack, stackInput])
-    setStackInput("")
-  }
+    if (!stackInput.trim()) return;
+    if (!techStack.includes(stackInput.trim())) {
+      setTechStack([...techStack, stackInput.trim()]);
+    }
+    setStackInput("");
+  };
 
   const removeStack = (tech) => {
     setTechStack(techStack.filter(t => t !== tech))
@@ -94,7 +108,8 @@ export default function CreateProjectModal({ close, refresh }) {
             <input
               placeholder="React, Node, AI..."
               value={stackInput}
-              onChange={(e) => setStackInput(e.target.value)}
+              onChange={handleStackInput}
+              onKeyDown={(e) => e.key === "Enter" && addStack()}
               className="flex-1 input"
             />
 

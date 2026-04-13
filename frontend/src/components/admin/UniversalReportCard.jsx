@@ -92,7 +92,7 @@ const UniversalReportCard = ({ report, onRefresh }) => {
         {/* Snapshot Evidence */}
         <div>
           <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-2">Content Snapshot</p>
-          <div className="p-4 rounded-xl bg-black/40 border border-white/5 font-mono text-sm text-slate-300 leading-relaxed max-h-32 overflow-y-auto">
+          <div className="p-4 rounded-xl bg-black/40 border border-white/5 font-mono text-sm text-slate-300 leading-relaxed max-h-32 overflow-y-auto whitespace-pre-wrap">
             {report.snapshot}
           </div>
         </div>

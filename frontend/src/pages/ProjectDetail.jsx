@@ -144,11 +144,11 @@ export default function ProjectDetail() {
               <section className="space-y-4">
                  <h3 className="text-emerald-400 text-xs font-bold uppercase tracking-widest">Technologies</h3>
                  <div className="flex flex-wrap gap-2">
-                    {project.techStack?.map(tech => (
-                      <span key={tech} className="pill-badge bg-emerald-500/10 text-emerald-400 border-emerald-500/20 px-4 py-1.5 text-sm">
-                        {tech}
-                      </span>
-                    ))}
+                     {project.techStack?.flatMap(t => t.split(",")).map(t => t.trim()).filter(Boolean).map(tech => (
+                       <span key={tech} className="pill-badge">
+                         {tech}
+                       </span>
+                     ))}
                  </div>
               </section>
             </div>

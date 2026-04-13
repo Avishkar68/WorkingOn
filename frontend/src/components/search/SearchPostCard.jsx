@@ -41,7 +41,7 @@ export default function SearchPostCard({post}){
       </Link>
 
       {/* CONTENT */}
-      <p className="text-gray-300 text-sm wrap-break-word">
+      <p className="text-gray-300 text-sm whitespace-pre-wrap">
         {post.content}
       </p>
 
@@ -55,10 +55,10 @@ export default function SearchPostCard({post}){
 
       {/* TAGS */}
       <div className="flex gap-2 flex-wrap">
-        {post.tags?.slice(0,6).map(tag => (
+        {(post.tags || []).flatMap(t => t.split(",")).map(t => t.trim()).filter(Boolean).slice(0, 6).map(tag => (
           <span
             key={tag}
-            className="bg-transparent border border-white/10 px-3 py-1 text-xs rounded-full text-gray-300"
+            className="pill-badge"
           >
             #{tag}
           </span>

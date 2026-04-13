@@ -35,8 +35,7 @@ export default function Sidebar({ close }) {
     { to: "/events", label: "Events", icon: Calendar },
     { to: "/explore", label: "Explore", icon: Compass },
     { to: "/campus-pulse", label: "Campus Pulse", icon: Zap },
-    { to: "/leaderboard", label: "Leaderboard", icon: Trophy },
-    { to: "/search", label: "Search", icon: Search }
+    { to: "/leaderboard", label: "Leaderboard", icon: Trophy }
   ]
 
   const accountLinks = [

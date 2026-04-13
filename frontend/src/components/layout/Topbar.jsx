@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { Bell, Command, Menu, Plus } from "lucide-react"
+import { Bell, Command, Menu, Plus, Search } from "lucide-react"
 import { useLocation, useNavigate, Link } from "react-router-dom"
 import { jwtDecode } from "jwt-decode"
 import { AnimatePresence, motion } from "framer-motion"
@@ -20,6 +20,7 @@ export default function Topbar({ openSidebar }) {
   const [leaderboardPreview, setLeaderboardPreview] = useState([])
   const [type,setType] = useState(null)
   const [user,setUser] = useState(null)
+  const [searchQuery, setSearchQuery] = useState("")
 
   const navigate = useNavigate()
   const location = useLocation()
@@ -81,7 +82,29 @@ export default function Topbar({ openSidebar }) {
       setShowChallengeModal(true)
       localStorage.setItem(shownKey, "true")
     }
+
+    // Keyboard shortcut for search
+    const handleKeyDown = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault()
+        document.getElementById("global-search-input")?.focus()
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown)
+    return () => window.removeEventListener("keydown", handleKeyDown)
   },[])
+
+  // Sync searchQuery with URL params
+  useEffect(() => {
+    const params = new URLSearchParams(location.search)
+    const q = params.get("q") || ""
+    if (location.pathname === "/search") {
+      setSearchQuery(q)
+    } else {
+      setSearchQuery("")
+    }
+  }, [location.search, location.pathname])
 
   return (
     <>
@@ -98,6 +121,42 @@ export default function Topbar({ openSidebar }) {
     <h1 className="text-sm sm:text-base font-semibold text-slate-100 truncate">
       {currentTitle}
     </h1>
+  </div>
+</div>
+
+{/* CENTER: SEARCH */}
+<div className="hidden md:flex flex-1 max-w-sm mx-4 relative group">
+  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none transition-colors group-focus-within:text-indigo-400 text-slate-400">
+    <Search size={16} />
+  </div>
+  <input
+    id="global-search-input"
+    type="text"
+    placeholder="Search users, posts..."
+    className="w-full bg-white/5 border border-white/10 rounded-xl py-2 pl-10 pr-4 text-sm text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500/40 transition-all"
+    value={searchQuery}
+    onChange={(e) => {
+      const val = e.target.value
+      setSearchQuery(val)
+      if (val.trim() || location.pathname === "/search") {
+        navigate(`/search?q=${val}`, { replace: true })
+      }
+    }}
+    onFocus={() => {
+      if (location.pathname !== "/search") {
+        navigate("/search")
+      }
+    }}
+    onKeyDown={(e) => {
+      if (e.key === "Enter") {
+        e.target.blur()
+      }
+    }}
+  />
+  <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+    <kbd className="text-[10px] font-medium text-slate-500 bg-white/5 border border-white/10 rounded px-1.5 py-0.5">
+      ⌘ K
+    </kbd>
   </div>
 </div>
 

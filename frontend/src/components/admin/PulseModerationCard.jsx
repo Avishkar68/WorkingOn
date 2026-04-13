@@ -56,7 +56,7 @@ export default function PulseModerationCard({ pulse, onRefresh }) {
         </div>
       </div>
 
-      <p className="text-sm text-text-primary/90 leading-relaxed mb-4 line-clamp-3">
+      <p className="text-sm text-text-primary/90 leading-relaxed mb-4 line-clamp-3 whitespace-pre-wrap">
         {pulse.content}
       </p>
 

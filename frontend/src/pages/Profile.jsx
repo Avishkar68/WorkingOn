@@ -3,12 +3,14 @@ import { jwtDecode } from "jwt-decode";
 import api from "../api/axios";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { Trash2 } from "lucide-react";
 
 import EditProfileModal from "../components/profile/EditProfileModal";
 import PostCard from "../components/post/PostCard";
 import ProjectCard from "../components/project/ProjectCard";
 import EventCard from "../components/events/EventCard";
 import UserListModal from "../components/dialogueboxes/UserListModal";
+import ConfirmationModal from "../components/common/ConfirmationModal";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -25,6 +27,8 @@ export default function Profile() {
   const [showEdit, setShowEdit] = useState(false);
   const [showFollowers, setShowFollowers] = useState(false);
   const [showFollowing, setShowFollowing] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [deleteData, setDeleteData] = useState({ type: null, id: null });
 
   const loadAll = async () => {
     try {
@@ -59,13 +63,20 @@ export default function Profile() {
     return () => window.removeEventListener("global-refresh", loadAll)
   }, []);
 
-  const handleDelete = async (type, id) => {
-    if (!window.confirm("Delete this item?")) return;
+  const handleDelete = (type, id) => {
+    setDeleteData({ type, id });
+    setShowConfirm(true);
+  };
+
+  const confirmDelete = async () => {
+    const { type, id } = deleteData;
+    if (!type || !id) return;
 
     try {
       await api.delete(`/${type}/${id}`);
-      toast.success("Item deleted successfully!");
+      toast.success(`${type.charAt(0).toUpperCase() + type.slice(1, -1)} deleted successfully!`);
       loadAll();
+      setShowConfirm(false);
     } catch (err) {
       console.error(err);
       toast.error("Failed to delete item");
@@ -103,17 +114,17 @@ export default function Profile() {
           </p>
 
           {profile.bio && (
-            <p className="mt-3 text-gray-300">
+            <p className="mt-3 text-gray-300 whitespace-pre-wrap">
               {profile.bio}
             </p>
           )}
           {/* SKILLS */}
           {profile.skills && profile.skills.length > 0 && (
             <div className="mt-4 flex flex-wrap gap-2">
-              {profile.skills.map((skill, index) => (
+              {profile.skills?.flatMap(s => s.split(",")).map(s => s.trim()).filter(Boolean).map((skill, index) => (
                 <span
                   key={index}
-                  className="px-3 py-1 text-sm bg-indigo-500/20 text-indigo-300 rounded-full border border-indigo-500/30"
+                  className="pill-badge"
                 >
                   {skill}
                 </span>
@@ -176,13 +187,6 @@ export default function Profile() {
             : posts.map(p => (
               <div key={p._id} className="relative group">
                 <PostCard post={p} refreshFeed={loadAll} />
-
-                <button
-                  onClick={() => handleDelete("posts", p._id)}
-                  className="absolute top-2 right-2 text-red-400 opacity-0 group-hover:opacity-100"
-                >
-                  🗑
-                </button>
               </div>
             ))
         )}
@@ -194,15 +198,6 @@ export default function Profile() {
             : projects.map(p => (
               <div key={p._id} className="relative group">
                 <ProjectCard project={p} refresh={loadAll} />
-
-                {p.creator === userId && (
-                  <button
-                    onClick={() => handleDelete("projects", p._id)}
-                    className="absolute top-2 right-2 text-red-400 opacity-0 group-hover:opacity-100"
-                  >
-                    🗑
-                  </button>
-                )}
               </div>
             ))
         )}
@@ -213,16 +208,7 @@ export default function Profile() {
             ? <p className="text-gray-400">No events</p>
             : events.map(e => (
               <div key={e._id} className="relative group">
-                <EventCard event={e} />
-
-                {e.organizer === userId && (
-                  <button
-                    onClick={() => handleDelete("events", e._id)}
-                    className="absolute top-2 right-2 text-red-400 opacity-0 group-hover:opacity-100"
-                  >
-                    🗑
-                  </button>
-                )}
+                <EventCard event={e} refresh={loadAll} />
               </div>
             ))
         )}
@@ -236,37 +222,49 @@ export default function Profile() {
                 key={op._id}
                 className="glass p-6 rounded-2xl space-y-4 relative group"
               >
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h2 className="text-lg font-semibold text-white">
+                      {op.title}
+                    </h2>
+                    <p className="text-indigo-400 text-sm">
+                      {op.company}
+                    </p>
+                  </div>
+                </div>
 
-                {op.postedBy === userId && (
-                  <button
-                    onClick={() => handleDelete("opportunities", op._id)}
-                    className="absolute top-3 right-3 text-red-400 opacity-0 group-hover:opacity-100"
-                  >
-                    🗑
-                  </button>
-                )}
-
-                <h2 className="text-lg font-semibold text-white">
-                  {op.title}
-                </h2>
-
-                <p className="text-indigo-400 text-sm">
-                  {op.company}
-                </p>
-
-                <p className="text-gray-300 text-sm">
+                <p className="text-gray-300 text-sm whitespace-pre-wrap">
                   {op.description}
                 </p>
 
-                <a
-                  href={op.registrationLink}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="block text-center bg-indigo-500 hover:bg-indigo-600 text-white py-2 rounded-xl"
-                >
-                  Apply Now
-                </a>
+                {/* TAGS SPLIT FIX */}
+                <div className="flex gap-2 flex-wrap">
+                  {op.tags?.flatMap(t => t.split(",")).map(t => t.trim()).filter(Boolean).map(tag => (
+                    <span key={tag} className="pill-badge">#{tag}</span>
+                  ))}
+                </div>
 
+                <div className="flex gap-3 pt-2">
+                  <a
+                    href={op.registrationLink}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex-1 text-center bg-indigo-500 hover:bg-indigo-600 text-white py-2 rounded-xl text-sm font-semibold transition"
+                  >
+                    Apply Now
+                  </a>
+                  {op.postedBy === userId && (
+                    <button
+                      onClick={() => {
+                        setDeleteData({ type: "opportunities", id: op._id });
+                        setShowConfirm(true);
+                      }}
+                      className="p-2.5 rounded-xl border border-white/10 bg-white/5 text-red-400 hover:text-red-500 hover:bg-white/10 transition-all flex items-center justify-center shrink-0"
+                    >
+                      <Trash2 size={18} />
+                    </button>
+                  )}
+                </div>
               </div>
             ))
         )}
@@ -294,6 +292,15 @@ export default function Profile() {
       {showEdit && (
         <EditProfileModal user={profile} close={() => setShowEdit(false)} refresh={loadAll} />
       )}
+
+      <ConfirmationModal
+        isOpen={showConfirm}
+        onClose={() => setShowConfirm(false)}
+        onConfirm={confirmDelete}
+        title="Delete Item"
+        message={`Are you sure you want to delete this ${deleteData.type?.slice(0, -1)}? This action is permanent and cannot be reversed.`}
+        confirmText="Confirm Delete"
+      />
     </div>
   );
 }

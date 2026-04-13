@@ -15,11 +15,25 @@ export default function CreateOpportunityModal({ close, refresh }) {
   const [registrationLink, setRegistrationLink] = useState("")
   const [loading, setLoading] = useState(false)
 
+  const handleTagInput = (e) => {
+    const val = e.target.value;
+    if (val.includes(",")) {
+      const parts = val.split(",").map(p => p.trim()).filter(p => p !== "");
+      const newTags = [...new Set([...tags, ...parts])];
+      setTags(newTags);
+      setTagInput("");
+    } else {
+      setTagInput(val);
+    }
+  };
+
   const addTag = () => {
-    if (!tagInput.trim()) return
-    setTags([...tags, tagInput])
-    setTagInput("")
-  }
+    if (!tagInput.trim()) return;
+    if (!tags.includes(tagInput.trim())) {
+      setTags([...tags, tagInput.trim()]);
+    }
+    setTagInput("");
+  };
 
   const removeTag = (tagToRemove) => {
     setTags(tags.filter(tag => tag !== tagToRemove))
@@ -162,7 +176,8 @@ export default function CreateOpportunityModal({ close, refresh }) {
               <input
                 placeholder="Add tag (React, AI...)"
                 value={tagInput}
-                onChange={(e) => setTagInput(e.target.value)}
+                onChange={handleTagInput}
+                onKeyDown={(e) => e.key === "Enter" && addTag()}
                 className="flex-1 input"
               />
               <button

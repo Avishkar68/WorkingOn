@@ -8,8 +8,33 @@ export default function CreatePostModal({ close, refreshFeed, communityId }) {
 
   const [content, setContent] = useState("")
   const [file, setFile] = useState(null)
-  const [tags, setTags] = useState("")
+  const [tags, setTags] = useState([])
+  const [tagInput, setTagInput] = useState("")
   const [loading, setLoading] = useState(false)
+
+  const handleTagInput = (e) => {
+    const val = e.target.value;
+    if (val.includes(",")) {
+      const parts = val.split(",").map(p => p.trim()).filter(p => p !== "");
+      const newTags = [...new Set([...tags, ...parts])];
+      setTags(newTags);
+      setTagInput("");
+    } else {
+      setTagInput(val);
+    }
+  };
+
+  const addTag = () => {
+    if (!tagInput.trim()) return;
+    if (!tags.includes(tagInput.trim())) {
+      setTags([...tags, tagInput.trim()]);
+    }
+    setTagInput("");
+  };
+
+  const removeTag = (tag) => {
+    setTags(tags.filter(t => t !== tag));
+  };
 
   const submitPost = async () => {
     if (!content.trim()) return
@@ -19,7 +44,7 @@ export default function CreatePostModal({ close, refreshFeed, communityId }) {
       setLoading(true)
       const formData = new FormData()
       formData.append("content", content)
-      formData.append("tags", tags)
+      formData.append("tags", tags.join(","))
       formData.append("image", file)
       formData.append("isAnonymous", false)
 
@@ -121,18 +146,25 @@ export default function CreatePostModal({ close, refreshFeed, communityId }) {
 
           <input
             placeholder="React, Node, AI"
-            value={tags}
-            onChange={(e) => setTags(e.target.value)}
+            value={tagInput}
+            onChange={handleTagInput}
+            onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addTag())}
             className="input"
           />
 
           <div className="flex flex-wrap gap-2">
-            {tags.split(",").map(tag => tag.trim()).filter(Boolean).map(tag => (
+            {tags.map(tag => (
               <span
                 key={tag}
-                className="bg-white/10 text-zinc-300 px-3 py-1 rounded-full text-xs border border-white/5"
+                className="pill-badge"
               >
                 #{tag}
+                <button 
+                  onClick={() => removeTag(tag)}
+                  className="ml-1 text-red-400 hover:text-red-500 transition-colors"
+                >
+                  <X size={12} />
+                </button>
               </span>
             ))}
           </div>

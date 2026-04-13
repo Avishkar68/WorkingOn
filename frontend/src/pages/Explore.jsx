@@ -23,7 +23,7 @@ export default function Explore() {
       setPosts(globalPosts)
 
       // tags from filtered posts only
-      const allTags = globalPosts.flatMap(p => p.tags || [])
+      const allTags = globalPosts.flatMap(p => (p.tags || []).flatMap(t => t.split(",")).map(t => t.trim()).filter(Boolean))
       const uniqueTags = [...new Set(allTags)].slice(0, 15)
 
       setTags(uniqueTags)

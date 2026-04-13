@@ -38,7 +38,7 @@ const ReportedPostCard = ({ post, onRefresh }) => {
 
       </div>
 
-      <p className="text-gray-300 text-sm">
+      <p className="text-gray-300 text-sm whitespace-pre-wrap">
         {post.content}
       </p>
 

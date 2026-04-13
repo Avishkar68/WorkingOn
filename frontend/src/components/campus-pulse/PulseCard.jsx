@@ -135,7 +135,7 @@ export default function PulseCard({ post }) {
       case "poll":
         return (
           <div className="space-y-3 mt-2">
-            <p className="text-text-primary text-[15px] leading-relaxed mb-4">{post.content}</p>
+            <p className="text-text-primary text-[15px] leading-relaxed mb-4 whitespace-pre-wrap">{post.content}</p>
             {post.pollOptions?.map((opt) => {
               const totalVotes = post.pollOptions.reduce((acc, curr) => acc + (curr.votes || 0), 0);
               const percentage = totalVotes === 0 ? 0 : Math.round((opt.votes / totalVotes) * 100);
@@ -173,7 +173,7 @@ export default function PulseCard({ post }) {
 
       default: // Confession
         return (
-          <p className="text-[17px] leading-relaxed font-medium bg-gradient-to-br from-white via-white/90 to-white/40 bg-clip-text text-transparent tracking-tight">
+          <p className="text-[17px] leading-relaxed font-medium bg-gradient-to-br from-white via-white/90 to-white/40 bg-clip-text text-transparent tracking-tight whitespace-pre-wrap">
             {post.content}
           </p>
         );

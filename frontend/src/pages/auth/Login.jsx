@@ -25,6 +25,7 @@ export default function Login() {
       })
 
       localStorage.setItem("token",res.data.token)
+      localStorage.setItem("userId", res.data.user?._id || res.data.user?.id)
       
       // Update AuthContext immediately
       await getUser()

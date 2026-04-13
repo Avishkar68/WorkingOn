@@ -1,9 +1,26 @@
 import { motion } from "framer-motion"
+import { jwtDecode } from "jwt-decode"
 import { buttonTap, cardHover, fadeInUp } from "../../lib/motion"
-import { CalendarDays, MapPin, Users, Share2 } from "lucide-react";
+import { CalendarDays, MapPin, Users, Share2, Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
+import api from "../../api/axios";
+import ConfirmationModal from "../common/ConfirmationModal";
+import { useState } from "react";
 
-export default function EventCard({ event }) {
+export default function EventCard({ event, refresh }) {
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  
+  const token = localStorage.getItem("token");
+  let currentUserId = localStorage.getItem("userId");
+
+  if (!currentUserId && token) {
+    try {
+      const decoded = jwtDecode(token);
+      currentUserId = decoded.id || decoded._id;
+    } catch {
+      currentUserId = null;
+    }
+  }
 
   const formatDate = (date) => {
     const d = new Date(date)
@@ -30,6 +47,18 @@ export default function EventCard({ event }) {
       toast.success("Link copied to clipboard!");
     } catch {
       toast.error("Failed to copy link");
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      await api.delete(`/events/${event._id}`);
+      toast.success("Event deleted!");
+      if (refresh) refresh();
+      setShowDeleteConfirm(false);
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to delete event");
     }
   };
 
@@ -70,18 +99,18 @@ export default function EventCard({ event }) {
         </h2>
 
         {/* DESC */}
-        <p className="text-gray-300 text-sm">
+        <p className="text-gray-300 text-sm whitespace-pre-wrap">
           {event.description}
         </p>
 
         {/* TAGS */}
         <div className="flex gap-2 flex-wrap">
-          {event.tags?.map(tag => (
+          {event.tags?.flatMap(t => t.split(",")).map(t => t.trim()).filter(Boolean).map(tag => (
             <span
               key={tag}
               className="pill-badge"
             >
-              {tag}
+              #{tag}
             </span>
           ))}
         </div>
@@ -124,10 +153,29 @@ export default function EventCard({ event }) {
           >
             <Share2 size={18} />
           </motion.button>
+
+          {(event.organizer?._id || event.organizer)?.toString() === currentUserId?.toString() && (
+            <motion.button
+              onClick={() => setShowDeleteConfirm(true)}
+              whileTap={buttonTap}
+              title="Delete Event"
+              className="p-3 rounded-xl border border-white/10 bg-white/5 text-red-400 hover:text-red-500 hover:bg-white/10 transition-all flex items-center justify-center shrink-0"
+            >
+              <Trash2 size={18} />
+            </motion.button>
+          )}
         </div>
 
       </div>
 
+      <ConfirmationModal
+        isOpen={showDeleteConfirm}
+        onClose={() => setShowDeleteConfirm(false)}
+        onConfirm={handleDelete}
+        title="Delete Event"
+        message="Are you sure you want to delete this event? This action cannot be undone."
+        confirmText="Confirm Delete"
+      />
     </motion.div>
 
   )

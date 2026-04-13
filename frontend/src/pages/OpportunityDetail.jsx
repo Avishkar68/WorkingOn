@@ -151,9 +151,9 @@ export default function OpportunityDetail() {
               <section className="space-y-4">
                  <h3 className="text-emerald-400 text-xs font-bold uppercase tracking-widest">Target Skills</h3>
                  <div className="flex flex-wrap gap-2">
-                    {op.tags?.map(tag => (
-                      <span key={tag} className="pill-badge bg-emerald-500/10 text-emerald-400 border-emerald-500/20 px-4 py-1.5 text-sm">
-                        {tag}
+                    {op.tags?.flatMap(t => t.split(",")).map(t => t.trim()).filter(Boolean).map(tag => (
+                      <span key={tag} className="pill-badge">
+                        #{tag}
                       </span>
                     ))}
                  </div>

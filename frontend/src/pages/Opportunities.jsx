@@ -53,22 +53,22 @@ const matchScore = (userSkills, tags) => {
 
 export default function Opportunities() {
 
-  const [opportunities,setOpportunities] = useState([])
-  const [filtered,setFiltered] = useState([])
-  const [userSkills,setUserSkills] = useState([])
+  const [opportunities, setOpportunities] = useState([])
+  const [filtered, setFiltered] = useState([])
+  const [userSkills, setUserSkills] = useState([])
 
-  const [search,setSearch] = useState("")
-  const [filter,setFilter] = useState("all")
+  const [search, setSearch] = useState("")
+  const [filter, setFilter] = useState("all")
 
-  const [showModal,setShowModal] = useState(false)
-  const [loading,setLoading] = useState(true)
+  const [showModal, setShowModal] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   const loadData = async () => {
-    try{
+    try {
       const token = localStorage.getItem("token")
       let skills = []
 
-      if(token){
+      if (token) {
         const decoded = jwtDecode(token)
         const id = decoded.id || decoded._id
         const userRes = await api.get(`/users/${id}`)
@@ -79,22 +79,22 @@ export default function Opportunities() {
       const res = await api.get("/opportunities")
       setOpportunities(res.data)
 
-    }catch(err){
+    } catch (err) {
       console.error(err)
     }
     setLoading(false)
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     loadData()
     window.addEventListener("global-refresh", loadData)
     return () => window.removeEventListener("global-refresh", loadData)
-  },[])
+  }, [])
 
-  const daysLeft = (deadline)=>{
-    if(!deadline) return "No deadline"
+  const daysLeft = (deadline) => {
+    if (!deadline) return "No deadline"
     const diff = new Date(deadline) - new Date()
-    const days = Math.ceil(diff / (1000*60*60*24))
+    const days = Math.ceil(diff / (1000 * 60 * 60 * 24))
     return days > 0 ? `${days} days left` : "Expired"
   }
 
@@ -108,12 +108,12 @@ export default function Opportunities() {
     }
   };
 
-  useEffect(()=>{
+  useEffect(() => {
 
     let data = [...opportunities]
 
     // 🔍 SEARCH
-    if(search){
+    if (search) {
       const q = search.toLowerCase()
       data = data.filter(op =>
         op.title.toLowerCase().includes(q) ||
@@ -123,28 +123,28 @@ export default function Opportunities() {
     }
 
     // 🎯 FILTERS
-    if(filter === "external"){
+    if (filter === "external") {
       data = data.filter(op => op.postedBy?._id === EXTERNAL_USER_ID)
     }
 
-    if(filter === "student"){
+    if (filter === "student") {
       data = data.filter(op => op.postedBy?._id !== EXTERNAL_USER_ID)
     }
 
     // ⭐ BEST FOR ME
-    if(filter === "best"){
+    if (filter === "best") {
       data = data
         .map(op => {
           const score = matchScore(userSkills, op.tags || [])
           return { ...op, score }
         })
         .filter(op => op.score > 0)
-        .sort((a,b)=> b.score - a.score)
+        .sort((a, b) => b.score - a.score)
     }
 
     setFiltered(data)
 
-  },[search,filter,opportunities,userSkills])
+  }, [search, filter, opportunities, userSkills])
 
   return (
     <PageShell
@@ -153,7 +153,7 @@ export default function Opportunities() {
       subtitle="Find internships, external roles, and student-shared openings."
       actions={
         <button
-          onClick={()=>setShowModal(true)}
+          onClick={() => setShowModal(true)}
           className="btn-primary px-4 py-2 rounded-xl text-sm font-medium"
         >
           Post Opportunity
@@ -168,7 +168,7 @@ export default function Opportunities() {
           type="text"
           placeholder="Search opportunities..."
           value={search}
-          onChange={(e)=>setSearch(e.target.value)}
+          onChange={(e) => setSearch(e.target.value)}
           className="input flex-1"
         />
 
@@ -184,15 +184,15 @@ export default function Opportunities() {
         </select> */}
 
         <select
-  value={filter}
-  onChange={(e) => setFilter(e.target.value)}
-  className="input max-w-[220px]"
->
-  <option value="all">Filters</option>
-  <option value="best">Best For Me</option>
-  <option value="student">Student Posts</option>
-  <option value="external">External</option>
-</select>
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+          className="input max-w-[220px]"
+        >
+          <option value="all">Filters</option>
+          <option value="best">Best For Me</option>
+          <option value="student">College Posts</option>
+          <option value="external">External</option>
+        </select>
 
       </div>
 
@@ -237,10 +237,9 @@ export default function Opportunities() {
               key={op._id}
               variants={fadeInUp}
               className={`relative p-6 glass-card space-y-4 overflow-hidden
-                ${
-                  isUserPost
-                    ? "border-amber-300/30 hover:border-amber-400/50 shadow-[inset_0_0_15px_rgba(251,191,36,0.05)]"
-                    : ""
+                ${isUserPost
+                  ? "border-amber-300/30 hover:border-amber-400/50 shadow-[inset_0_0_15px_rgba(251,191,36,0.05)]"
+                  : ""
                 }`}
             >
 
@@ -249,7 +248,7 @@ export default function Opportunities() {
 
                 {isUserPost ? (
                   <span className="pill-badge bg-amber-400/10 text-amber-400 border-amber-500/20">
-                    ⭐ Student
+                    ⭐ College
                   </span>
                 ) : (
                   <span className="pill-badge">
@@ -276,46 +275,44 @@ export default function Opportunities() {
               </div>
 
               {/* DESC */}
-              <p className="relative z-10 text-slate-300 text-sm leading-relaxed">
+              <p className="relative z-10 text-slate-300 text-sm leading-relaxed whitespace-pre-wrap">
                 {op.description}
               </p>
 
               {/* TAGS */}
               <div className="flex gap-2 flex-wrap relative z-10">
-                {op.tags?.map(tag=>(
+                {op.tags?.flatMap(t => t.split(",")).map(t => t.trim()).filter(Boolean).map(tag => (
                   <span
                     key={tag}
-                    className="pill-badge "
-                          style={{ backgroundColor: "#2DD4BF10", color: "#2DD4BF" }}
-
+                    className="pill-badge"
                   >
-                    {tag}
+                    #{tag}
                   </span>
                 ))}
               </div>
 
               {/* INFO */}
-             <div className="flex gap-4 text-sm flex-wrap relative z-10 text-slate-400">
-  
-  {op.stipend && (
-    <span className="flex items-center gap-1">
-      {op.stipend}
-    </span>
-  )}
+              <div className="flex gap-4 text-sm flex-wrap relative z-10 text-slate-400">
 
-  {op.duration && (
-    <span className="flex items-center gap-1">
-      <Hourglass size={14} className="text-yellow-400" />
-      {op.duration}
-    </span>
-  )}
+                {op.stipend && (
+                  <span className="flex items-center gap-1">
+                    {op.stipend}
+                  </span>
+                )}
 
-  <span className="flex gap-2 items-center">
-    <CalendarDays size={16} className="text-[#2DD4BF]" />
-    {daysLeft(op.deadline)}
-  </span>
+                {op.duration && (
+                  <span className="flex items-center gap-1">
+                    <Hourglass size={14} className="text-yellow-400" />
+                    {op.duration}
+                  </span>
+                )}
 
-</div>
+                <span className="flex gap-2 items-center">
+                  <CalendarDays size={16} className="text-[#2DD4BF]" />
+                  {daysLeft(op.deadline)}
+                </span>
+
+              </div>
 
               {/* APPLY & SHARE */}
               <div className="flex gap-3 relative z-10">
@@ -327,7 +324,7 @@ export default function Opportunities() {
                 >
                   Apply Now
                 </a>
-                
+
                 <button
                   onClick={() => handleShare(op._id)}
                   className="p-3 rounded-xl border border-white/10 bg-white/5 text-slate-400 hover:text-white hover:bg-white/10 transition-all flex items-center justify-center shrink-0"
@@ -346,7 +343,7 @@ export default function Opportunities() {
       {/* MODAL */}
       {showModal &&
         <CreateOpportunityModal
-          close={()=>setShowModal(false)}
+          close={() => setShowModal(false)}
           refresh={loadData}
         />
       }

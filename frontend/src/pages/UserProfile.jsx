@@ -1,335 +1,77 @@
-// import { useEffect, useState } from "react"
-// import { useParams } from "react-router-dom"
-// import api from "../api/axios"
-// import { jwtDecode } from "jwt-decode"
-
-// export default function UserProfile(){
-
-//   const { id } = useParams()
-
-//   const [user,setUser] = useState(null)
-//   const [posts,setPosts] = useState([])
-//   const [projects,setProjects] = useState([])
-//   const [isFollowing,setIsFollowing] = useState(false)
-//   const [activeTab,setActiveTab] = useState("posts")
-//   const [loading,setLoading] = useState(false)
-
-//   // ✅ GET CURRENT USER
-//   const token = localStorage.getItem("token")
-//   const decoded = token ? jwtDecode(token) : null
-//   const currentUserId = decoded?.id || decoded?._id
-
-//   // ✅ LOAD USER
-//   const loadUser = async ()=>{
-//     try{
-//       const res = await api.get(`/users/${id}`)
-//       setUser(res.data)
-
-//       setIsFollowing(
-//         res.data.followers?.some(
-//           f => f._id.toString() === currentUserId?.toString()
-//         )
-//       )
-
-//     }catch(err){
-//       console.error(err)
-//     }
-//   }
-
-//   // ✅ LOAD POSTS + PROJECTS
-//   const loadData = async ()=>{
-//     try{
-//       const postRes = await api.get(`/posts/user/${id}`)
-//       setPosts(postRes.data)
-
-//       const projectRes = await api.get(`/projects/user/${id}`)
-//       setProjects(projectRes.data)
-
-//     }catch(err){
-//       console.error(err)
-//     }
-//   }
-
-//   useEffect(()=>{
-//     loadUser()
-//     loadData()
-//   },[id])
-
-//   // ✅ FOLLOW / UNFOLLOW
-//   const handleFollow = async ()=>{
-//     try{
-//       setLoading(true)
-
-//       if(isFollowing){
-//         await api.post(`/users/${id}/unfollow`)
-//       }else{
-//         await api.post(`/users/${id}/follow`)
-//       }
-
-//       await loadUser() // 🔥 reload for correct state
-
-//     }catch(err){
-//       console.error(err)
-//     }finally{
-//       setLoading(false)
-//     }
-//   }
-
-//   if(!user) return null
-
-//   return(
-//     <div className="space-y-6">
-
-//       {/* 🔥 PROFILE CARD */}
-//       <div className="bg-white p-6 rounded-xl shadow flex gap-6">
-
-//         {/* AVATAR */}
-//           {/* {user.name?.[0]} */}
-//            {user.profileImage ? (
-//           <img
-//             src={user.profileImage}
-//             alt="profile"
-//             className="w-24 h-24 rounded-full object-cover"
-//           />
-//         ) : (
-//           <div className="w-24 h-24 rounded-full bg-indigo-600 text-white flex items-center justify-center text-3xl">
-//             {user.name?.[0]}
-//           </div>
-//         )}
-
-//         <div className="flex-1">
-
-//           <h2 className="text-2xl font-bold">
-//             {user.name}
-//           </h2>
-
-//           <p className="text-gray-600">
-//             🎓 {user.branch} - Year {user.year}
-//           </p>
-
-//           <p className="text-gray-600">
-//             ✉ {user.email}
-//           </p>
-
-//           {user.bio && (
-//             <p className="mt-2 text-gray-700">
-//               {user.bio}
-//             </p>
-//           )}
-
-//           {/* STATS */}
-//           <div className="flex gap-8 mt-4">
-
-//             <div>
-//               <p className="font-bold">{user.followers?.length}</p>
-//               <p className="text-sm text-gray-500">Followers</p>
-//             </div>
-
-//             <div>
-//               <p className="font-bold">{user.following?.length}</p>
-//               <p className="text-sm text-gray-500">Following</p>
-//             </div>
-
-//           </div>
-
-//           {/* FOLLOW BUTTON */}
-//           {currentUserId !== id && (
-//             <button
-//               onClick={handleFollow}
-//               disabled={loading}
-//               className={`mt-4 px-4 py-2 rounded-lg text-white transition
-//               ${isFollowing ? "bg-gray-500" : "bg-indigo-600"}
-//               ${loading ? "opacity-50" : ""}`}
-//             >
-//               {loading
-//                 ? "Please wait..."
-//                 : isFollowing
-//                 ? "Unfollow"
-//                 : "Follow"}
-//             </button>
-//           )}
-
-//         </div>
-
-//       </div>
-
-//       {/* 🔥 TABS */}
-//       <div className="flex gap-6 border-b pb-2 text-lg">
-
-//         <button
-//           onClick={()=>setActiveTab("posts")}
-//           className={`pb-1 ${
-//             activeTab === "posts"
-//               ? "border-b-2 border-indigo-600 font-semibold"
-//               : "text-gray-500"
-//           }`}
-//         >
-//           Posts ({posts.length})
-//         </button>
-
-//         <button
-//           onClick={()=>setActiveTab("projects")}
-//           className={`pb-1 ${
-//             activeTab === "projects"
-//               ? "border-b-2 border-indigo-600 font-semibold"
-//               : "text-gray-500"
-//           }`}
-//         >
-//           Projects ({projects.length})
-//         </button>
-
-//       </div>
-
-//       {/* 🔥 POSTS TAB */}
-//       {activeTab === "posts" && (
-//         <div className="space-y-4">
-
-//           {posts.length === 0 ? (
-//             <p className="text-gray-500">No posts</p>
-//           ) : (
-//             posts.map(p => (
-//               <div key={p._id} className="bg-white p-4 rounded-xl shadow">
-
-//                 {/* HEADER */}
-//                 <div className="flex items-center gap-3">
-
-//                   <div className="w-10 h-10 rounded-full bg-indigo-500 text-white flex items-center justify-center">
-//                     {p.author?.name?.[0]}
-//                   </div>
-
-//                   <div>
-//                     <p className="font-semibold">
-//                       {p.author?.name}
-//                     </p>
-//                     <p className="text-xs text-gray-400">
-//                       {new Date(p.createdAt).toLocaleDateString()}
-//                     </p>
-//                   </div>
-
-//                 </div>
-
-//                 {/* CONTENT */}
-//                 <p className="mt-3">{p.content}</p>
-
-//                 {/* IMAGE */}
-//                 {p.image && (
-//                   <img
-//                     src={p.image}
-//                     alt="post"
-//                     className="mt-3 rounded-lg"
-//                   />
-//                 )}
-
-//                 {/* STATS */}
-//                 <div className="flex gap-4 mt-3 text-sm text-gray-500">
-//                   ❤️ {p.likes?.length || 0}
-//                   💬 {p.comments?.length || 0}
-//                 </div>
-
-//               </div>
-//             ))
-//           )}
-
-//         </div>
-//       )}
-
-//       {/* 🔥 PROJECTS TAB */}
-//       {activeTab === "projects" && (
-//         <div className="space-y-4">
-
-//           {projects.length === 0 ? (
-//             <p className="text-gray-500">No projects</p>
-//           ) : (
-//             projects.map(p => (
-//               <div key={p._id} className="bg-white p-4 rounded-xl shadow">
-
-//                 <h3 className="font-semibold text-lg">
-//                   {p.title}
-//                 </h3>
-
-//                 <p className="text-gray-600 mt-1">
-//                   {p.description}
-//                 </p>
-
-//                 <div className="text-sm text-gray-500 mt-2">
-//                   👥 {p.teamSize?.current}/{p.teamSize?.needed}
-//                 </div>
-
-//               </div>
-//             ))
-//           )}
-
-//         </div>
-//       )}
-
-//     </div>
-//   )
-// }
-
-
 import { useCallback, useEffect, useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
-import api from "../api/axios"
 import { jwtDecode } from "jwt-decode"
+import api from "../api/axios"
 import toast from "react-hot-toast"
+
+import PostCard from "../components/post/PostCard"
+import ProjectCard from "../components/project/ProjectCard"
+import EventCard from "../components/events/EventCard"
 import UserListModal from "../components/dialogueboxes/UserListModal"
+import EditProfileModal from "../components/profile/EditProfileModal"
 
 export default function UserProfile() {
-
   const { id } = useParams()
   const navigate = useNavigate()
 
-  const [user, setUser] = useState(null)
+  const [profile, setProfile] = useState(null)
+  const [activeTab, setActiveTab] = useState("posts")
+
   const [posts, setPosts] = useState([])
   const [projects, setProjects] = useState([])
+  const [events, setEvents] = useState([])
+  const [opportunities, setOpportunities] = useState([])
+
   const [isFollowing, setIsFollowing] = useState(false)
-  const [activeTab, setActiveTab] = useState("posts")
   const [loading, setLoading] = useState(false)
   const [showFollowers, setShowFollowers] = useState(false)
   const [showFollowing, setShowFollowing] = useState(false)
+  const [showEdit, setShowEdit] = useState(false)
 
   const token = localStorage.getItem("token")
   const decoded = token ? jwtDecode(token) : null
   const currentUserId = decoded?.id || decoded?._id
 
-  const loadUser = useCallback(async () => {
+  const loadAll = useCallback(async () => {
     try {
-      const res = await api.get(`/users/${id}`)
-      setUser(res.data)
+      const [u, p1, p2, p3, p4] = await Promise.all([
+        api.get(`/users/${id}`),
+        api.get(`/posts/user/${id}`),
+        api.get(`/projects/user/${id}`),
+        api.get(`/events/user/${id}`),
+        api.get(`/opportunities/user/${id}`)
+      ])
+
+      setProfile(u.data)
+      setPosts(p1.data)
+      setProjects(p2.data)
+      setEvents(p3.data)
+      setOpportunities(p4.data)
 
       setIsFollowing(
-        res.data.followers?.some(
-          f => f._id.toString() === currentUserId?.toString()
+        u.data.followers?.some(
+          f => (f._id || f).toString() === currentUserId?.toString()
         )
       )
-
     } catch (err) {
       console.error(err)
+      toast.error("Failed to load profile")
     }
   }, [id, currentUserId])
 
-  const loadData = useCallback(async () => {
-    try {
-      const postRes = await api.get(`/posts/user/${id}`)
-      setPosts(postRes.data)
-
-      const projectRes = await api.get(`/projects/user/${id}`)
-      setProjects(projectRes.data)
-
-    } catch (err) {
-      console.error(err)
-    }
-  }, [id])
-
   useEffect(() => {
-    loadUser()
-    loadData()
-  }, [loadUser, loadData])
+    loadAll()
+    window.addEventListener("global-refresh", loadAll)
+    return () => window.removeEventListener("global-refresh", loadAll)
+  }, [loadAll])
 
   const handleFollow = async () => {
+    if (!currentUserId) {
+      toast.error("Please login to follow")
+      return
+    }
     try {
       setLoading(true)
-
       if (isFollowing) {
         await api.post(`/users/${id}/unfollow`)
         toast.success("Unfollowed successfully")
@@ -337,9 +79,7 @@ export default function UserProfile() {
         await api.post(`/users/${id}/follow`)
         toast.success("Followed successfully")
       }
-
-      await loadUser()
-
+      loadAll()
     } catch (err) {
       console.error(err)
       toast.error("Action failed")
@@ -348,213 +88,196 @@ export default function UserProfile() {
     }
   }
 
-  if (!user) return null
+  if (!profile) return null
 
   return (
     <div className="space-y-6">
-
       {/* PROFILE CARD */}
       <div className="glass p-6 rounded-2xl flex gap-6">
-
-        {user.profileImage ? (
-          <img
-            src={user.profileImage}
-            className="w-24 h-24 rounded-full object-cover"
-          />
+        {profile.profileImage ? (
+          <img src={profile.profileImage} className="w-24 h-24 rounded-full object-cover" />
         ) : (
-          <div className="w-24 h-24 rounded-full bg-indigo-500 text-white flex items-center justify-center text-3xl">
-            {user.name?.[0]}
+          <div className="w-24 h-24 rounded-full bg-indigo-500 text-white flex items-center justify-center text-3xl font-bold">
+            {profile.name?.[0]}
           </div>
         )}
 
         <div className="flex-1">
-
           <h2 className="text-2xl font-bold text-white">
-            {user.name}
+            {profile.name}
           </h2>
 
           <p className="text-gray-400">
-            🎓 {user.branch} - Year {user.year}
+            🎓 {profile.branch} - Year {profile.year}
           </p>
 
           <p className="text-gray-400">
-            ✉ {user.email}
+            ✉ {profile.email}
           </p>
 
-          {user.bio && (
-            <p className="mt-3 text-gray-300">
-              {user.bio}
+          {profile.bio && (
+            <p className="mt-3 text-gray-300 whitespace-pre-wrap">
+              {profile.bio}
             </p>
           )}
+
           {/* SKILLS */}
-          {user.skills && user.skills.length > 0 && (
+          {profile.skills && profile.skills.length > 0 && (
             <div className="mt-4 flex flex-wrap gap-2">
-              {user.skills.map((skill, index) => (
-                <span
-                  key={index}
-                  className="px-3 py-1 text-sm bg-indigo-500/20 text-indigo-300 rounded-full border border-indigo-500/30"
-                >
+              {profile.skills?.flatMap(s => s.split(",")).map(s => s.trim()).filter(Boolean).map((skill, index) => (
+                <span key={index} className="pill-badge">
                   {skill}
                 </span>
               ))}
             </div>
           )}
+
           {/* STATS */}
           <div className="flex gap-8 mt-4 text-gray-300">
+            <div>
+              <p className="font-bold text-white">{posts.length}</p>
+              <p className="text-sm text-gray-500">Posts</p>
+            </div>
 
-            <div onClick={() => setShowFollowers(true)} className="cursor-pointer">
-              <p className="font-bold text-white">{user.followers?.length || 0}</p>
+            <div onClick={() => setShowFollowers(true)} className="cursor-pointer hover:opacity-80 transition">
+              <p className="font-bold text-white">{profile.followers?.length || 0}</p>
               <p className="text-sm text-gray-500">Followers</p>
             </div>
 
-            <div onClick={() => setShowFollowing(true)} className="cursor-pointer">
-              <p className="font-bold text-white">{user.following?.length || 0}</p>
+            <div onClick={() => setShowFollowing(true)} className="cursor-pointer hover:opacity-80 transition">
+              <p className="font-bold text-white">{profile.following?.length || 0}</p>
               <p className="text-sm text-gray-500">Following</p>
             </div>
-
           </div>
 
-          {/* FOLLOW BUTTON */}
-          {currentUserId !== id && (
+          {/* ACTION BUTTON */}
+          {currentUserId === id ? (
+            <button
+              onClick={() => setShowEdit(true)}
+              className="mt-4 bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-xl shadow-[0_0_15px_rgba(99,102,241,0.3)] transition-all font-semibold"
+            >
+              Edit Profile
+            </button>
+          ) : (
             <button
               onClick={handleFollow}
               disabled={loading}
-              className={`mt-4 px-4 py-2 rounded-xl text-white transition shadow-[0_0_15px_rgba(99,102,241,0.3)]
+              className={`mt-4 px-6 py-2 rounded-xl text-white transition-all font-semibold shadow-[0_0_15px_rgba(99,102,241,0.3)]
               ${isFollowing
-                  ? "bg-white/10 text-gray-300 hover:bg-white/20"
+                  ? "bg-white/10 text-gray-300 hover:bg-white/20 border border-white/10"
                   : "bg-indigo-500 hover:bg-indigo-600"}
-              ${loading ? "opacity-50" : ""}`}
+              ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
             >
-              {loading
-                ? "Please wait..."
-                : isFollowing
-                  ? "Unfollow"
-                  : "Follow"}
+              {loading ? "..." : isFollowing ? "Unfollow" : "Follow"}
             </button>
           )}
-
         </div>
-
       </div>
 
       {/* TABS */}
       <div className="flex gap-4 glass p-2 rounded-2xl">
-
-        {["posts", "projects"].map(tab => (
+        {["posts", "projects", "events", "opportunities"].map(tab => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`flex-1 py-2 rounded-xl capitalize transition ${activeTab === tab
-                ? "bg-indigo-500/20 text-white shadow-[0_0_15px_rgba(99,102,241,0.3)]"
+            className={`flex-1 py-2 rounded-xl capitalize transition-all duration-300 ${activeTab === tab
+                ? "bg-indigo-500/20 text-white shadow-[0_0_15px_rgba(99,102,241,0.3)] border border-indigo-500/30"
                 : "text-gray-400 hover:bg-white/10"
               }`}
           >
-            {tab} ({tab === "posts" ? posts.length : projects.length})
+            {tab}
           </button>
         ))}
-
       </div>
 
-      {/* POSTS */}
-      {activeTab === "posts" && (
-        <div className="space-y-4">
+      {/* CONTENT */}
+      <div className="space-y-6">
+        {activeTab === "posts" && (
+          posts.length === 0
+            ? <p className="text-gray-400 text-center py-8 glass rounded-2xl">No posts yet</p>
+            : posts.map(p => (
+              <PostCard key={p._id} post={p} refreshFeed={loadAll} />
+            ))
+        )}
 
-          {posts.length === 0 ? (
-            <p className="text-gray-400">No posts</p>
-          ) : (
-            posts.map(p => (
+        {activeTab === "projects" && (
+          projects.length === 0
+            ? <p className="text-gray-400 text-center py-8 glass rounded-2xl">No projects yet</p>
+            : projects.map(p => (
+              <ProjectCard key={p._id} project={p} refresh={loadAll} />
+            ))
+        )}
+
+        {activeTab === "events" && (
+          events.length === 0
+            ? <p className="text-gray-400 text-center py-8 glass rounded-2xl">No events yet</p>
+            : events.map(e => (
+              <EventCard key={e._id} event={e} refresh={loadAll} />
+            ))
+        )}
+
+        {activeTab === "opportunities" && (
+          opportunities.length === 0
+            ? <p className="text-gray-400 text-center py-8 glass rounded-2xl">No opportunities yet</p>
+            : opportunities.map(op => (
               <div
-                key={p._id}
-                className="glass p-5 rounded-2xl space-y-3"
+                key={op._id}
+                className="glass p-6 rounded-2xl space-y-4 relative group"
               >
-
-                <div className="flex items-center gap-3">
-
-                  <div className="w-10 h-10 rounded-full bg-indigo-500 text-white flex items-center justify-center">
-                    {p.author?.name?.[0]}
-                  </div>
-
+                <div className="flex justify-between items-start">
                   <div>
-                    <p className="text-white font-semibold">
-                      {p.author?.name}
-                    </p>
-                    <p className="text-xs text-gray-500">
-                      {new Date(p.createdAt).toLocaleDateString()}
+                    <h2 className="text-lg font-semibold text-white">
+                      {op.title}
+                    </h2>
+                    <p className="text-indigo-400 text-sm">
+                      {op.company}
                     </p>
                   </div>
-
                 </div>
 
-                <p className="text-gray-300">
-                  {p.content}
+                <p className="text-gray-300 text-sm whitespace-pre-wrap">
+                  {op.description}
                 </p>
 
-                {p.image && (
-                  <img
-                    src={p.image}
-                    className="rounded-xl border border-white/10"
-                  />
-                )}
-
-                <div className="text-sm text-gray-400 flex gap-4">
-                  ❤️ {p.likes?.length || 0}
-                  💬 {p.comments?.length || 0}
+                <div className="flex gap-2 flex-wrap">
+                  {op.tags?.flatMap(t => t.split(",")).map(t => t.trim()).filter(Boolean).map(tag => (
+                    <span key={tag} className="pill-badge">#{tag}</span>
+                  ))}
                 </div>
 
-              </div>
-            ))
-          )}
-
-        </div>
-      )}
-
-      {/* PROJECTS */}
-      {activeTab === "projects" && (
-        <div className="space-y-4">
-
-          {projects.length === 0 ? (
-            <p className="text-gray-400">No projects</p>
-          ) : (
-            projects.map(p => (
-              <div
-                key={p._id}
-                className="glass p-5 rounded-2xl space-y-2"
-              >
-
-                <h3 className="text-white font-semibold text-lg">
-                  {p.title}
-                </h3>
-
-                <p className="text-gray-300">
-                  {p.description}
-                </p>
-
-                <div className="text-sm text-gray-400">
-                  👥 {p.teamSize?.current}/{p.teamSize?.needed}
+                <div className="flex gap-3 pt-2">
+                  <a
+                    href={op.registrationLink}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex-1 text-center bg-indigo-500 hover:bg-indigo-600 text-white py-2 rounded-xl text-sm font-semibold transition-all shadow-[0_0_10px_rgba(99,102,241,0.2)]"
+                  >
+                    Apply Now
+                  </a>
                 </div>
-
               </div>
             ))
-          )}
-
-        </div>
-      )}
+        )}
+      </div>
 
       {/* MODALS */}
       <UserListModal
         isOpen={showFollowers}
         onClose={() => setShowFollowers(false)}
         title="Followers"
-        users={user.followers}
+        users={profile.followers}
         navigate={navigate}
       />
       <UserListModal
         isOpen={showFollowing}
         onClose={() => setShowFollowing(false)}
         title="Following"
-        users={user.following}
+        users={profile.following}
         navigate={navigate}
       />
+      {showEdit && (
+        <EditProfileModal user={profile} close={() => setShowEdit(false)} refresh={loadAll} />
+      )}
     </div>
   )
 }

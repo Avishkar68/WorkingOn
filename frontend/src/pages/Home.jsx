@@ -343,7 +343,7 @@ export default function Home() {
                   {c.name}
                 </h2>
 
-                <p className="text-sm text-text-secondary mb-2 leading-relaxed line-clamp-2">
+                <p className="text-sm text-text-secondary mb-2 leading-relaxed line-clamp-2 whitespace-pre-wrap">
                   {c.description}
                 </p>
               </div>

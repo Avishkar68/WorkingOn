@@ -1,4 +1,5 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useSearchParams } from "react-router-dom"
 import api from "../api/axios"
 import PageShell from "../components/layout/PageShell"
 
@@ -6,26 +7,36 @@ import SearchPostCard from "../components/search/SearchPostCard"
 import SearchUserCard from "../components/search/SearchUserCard"
 
 export default function Search(){
+  const [searchParams, setSearchParams] = useSearchParams()
+  const q = searchParams.get("q") || ""
 
-  const [query,setQuery] = useState("")
+  const [query,setQuery] = useState(q)
   const [results,setResults] = useState(null)
   const [activeTab,setActiveTab] = useState("posts")
 
-  const search = async (value)=>{
-    setQuery(value)
+  // Sync local query with URL param
+  useEffect(() => {
+    setQuery(q)
+  }, [q])
 
-    if(!value.trim()){
+  // Debounced search execution
+  useEffect(() => {
+    if (!q.trim()) {
       setResults(null)
       return
     }
 
-    try{
-      const res = await api.get(`/search?q=${value}`)
-      setResults(res.data)
-    }catch(err){
-      console.error(err)
-    }
-  }
+    const handler = setTimeout(async () => {
+      try {
+        const res = await api.get(`/search?q=${q}`)
+        setResults(res.data)
+      } catch (err) {
+        console.error(err)
+      }
+    }, 300)
+
+    return () => clearTimeout(handler)
+  }, [q])
 
   return(
 
@@ -35,15 +46,11 @@ export default function Search(){
       subtitle="Find people, posts, and topics quickly."
     >
 
-      {/* SEARCH BAR */}
-      <div className="glass rounded-2xl p-3 border border-white/10">
-        <input
-          type="text"
-          placeholder="Search posts, users..."
-          value={query}
-          onChange={(e)=>search(e.target.value)}
-          className="input bg-transparent border-0 shadow-none px-2"
-        />
+      {/* RESULTS HEADER */}
+      <div className="flex items-center justify-between mb-2">
+        <p className="text-slate-400 text-sm">
+          Showing results for <span className="text-indigo-400 font-semibold">"{q}"</span>
+        </p>
       </div>
 
       {/* TABS */}

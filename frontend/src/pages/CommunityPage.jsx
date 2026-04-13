@@ -87,7 +87,7 @@ export default function CommunityPage() {
           <h1 className="text-2xl font-bold text-white">
             {community?.name}
           </h1>
-          <p className="text-gray-400 text-sm">
+          <p className="text-gray-400 text-sm whitespace-pre-wrap">
             {community?.description}
           </p>
         </div>

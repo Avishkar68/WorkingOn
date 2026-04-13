@@ -120,7 +120,7 @@ export default function ExplorePostCard({ post }) {
       </Link>
 
       {/* CONTENT */}
-      <p className="text-gray-300 text-sm leading-relaxed wrap-break-word">
+      <p className="text-gray-300 text-sm leading-relaxed whitespace-pre-wrap">
         {post.content}
       </p>
 
@@ -134,12 +134,10 @@ export default function ExplorePostCard({ post }) {
 
       {/* TAGS */}
       <div className="flex gap-2 flex-wrap">
-        {post.tags?.slice(0,6).map((tag) => (
+        {(post.tags || []).flatMap(t => t.split(",")).map(t => t.trim()).filter(Boolean).slice(0, 6).map((tag) => (
           <span
             key={tag}
-            className="bg-transparent border border-white/10 text-xs px-3 py-1 rounded-full text-gray-300"
-                                      style={{ backgroundColor: "#2DD4BF10", color: "#2DD4BF" }}
-
+            className="pill-badge"
           >
             #{tag}
           </span>

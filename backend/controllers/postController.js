@@ -9,7 +9,7 @@ import mongoose from "mongoose";
 // ✅ CREATE POST (WITH COMMUNITY)
 export const createPost = async (req, res) => {
   try {
-    const { content, tags, isAnonymous, communityId } = req.body;
+    const { content, tags: rawTags, isAnonymous, communityId } = req.body;
 
     // 🔥 VALIDATION
     if (!content) {
@@ -33,6 +33,13 @@ export const createPost = async (req, res) => {
     if (req.file) {
       imageUrl = await uploadImage(req.file.path);
     }
+
+    // ✅ NORMALIZE TAGS
+    const tags = Array.isArray(rawTags)
+      ? rawTags.flatMap(t => t.split(",")).map(t => t.trim()).filter(Boolean)
+      : typeof rawTags === "string"
+        ? rawTags.split(",").map(t => t.trim()).filter(Boolean)
+        : [];
 
     const post = await Post.create({
       author: req.user._id,

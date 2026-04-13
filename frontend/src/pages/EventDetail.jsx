@@ -70,7 +70,7 @@ export default function EventDetail(){
         {/* DESCRIPTION */}
         <div>
           <h3 className="text-white font-semibold mb-2">About Event</h3>
-          <p className="text-gray-300 leading-relaxed">
+          <p className="text-gray-300 leading-relaxed whitespace-pre-wrap">
             {event.description}
           </p>
         </div>
