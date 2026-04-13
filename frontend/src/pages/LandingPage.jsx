@@ -84,15 +84,21 @@ export default function LandingPage() {
             Our Team
           </button>
 
-          <button
-            onClick={() => navigate("/login")}
-            className="text-sm font-semibold text-gray-400 hover:text-white transition-colors"
-          >
-            Log in
-          </button>
+    <button
+      onClick={() => navigate("/login")}
+      className="
+        text-sm font-bold transition-all
+        /* Mobile Styles */
+        px-5 py-2.5 rounded-xl bg-white/10 border border-white/10 text-white active:scale-95
+        /* Desktop Reset (md: prefix) */
+        md:bg-transparent md:border-none md:p-0 md:text-gray-400 md:hover:text-white md:active:scale-100
+      "
+    >
+      Log in
+    </button>
           <button
             onClick={() => navigate("/register")}
-            className="text-sm font-bold btn-primary px-6 py-2.5 rounded-xl shadow-[0_0_25px_rgba(20,184,166,0.2)] hover:shadow-[0_0_35px_rgba(20,184,166,0.5)] transition-all hover:scale-105"
+            className="text-sm hidden md:block font-bold btn-primary px-6 py-2.5 rounded-xl shadow-[0_0_25px_rgba(20,184,166,0.2)] hover:shadow-[0_0_35px_rgba(20,184,166,0.5)] transition-all hover:scale-105"
           >
             Join the Campus
           </button>

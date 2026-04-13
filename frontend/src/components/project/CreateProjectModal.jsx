@@ -57,7 +57,7 @@ export default function CreateProjectModal({ close, refresh }) {
   }
 
   return createPortal(
-    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm p-4 md:p-0 flex items-center justify-center z-50">
 
       <div className="w-[520px] rounded-2xl p-6 text-white space-y-5 
         bg-white/5 backdrop-blur-xl border border-white/10 

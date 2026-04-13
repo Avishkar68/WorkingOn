@@ -6,15 +6,13 @@ import { motion } from "framer-motion"
 import { fadeInUp, staggerContainer } from "../lib/motion"
 import PageShell from "../components/layout/PageShell"
 import Skeleton from "../components/ui/Skeleton"
-import { CalendarDays, IndianRupee, Hourglass, Share2 } from "lucide-react";
+import { CalendarDays, Hourglass, Share2 } from "lucide-react";
 import toast from "react-hot-toast";
 
 const EXTERNAL_USER_ID = "000000000000000000000001"
 
-// 🔥 NORMALIZER
 const normalize = (text) => text?.toLowerCase().trim()
 
-// 🔥 SKILL SYNONYMS MAP
 const skillMap = {
   react: ["react", "reactjs", "react.js"],
   javascript: ["js", "javascript", "node", "nodejs"],
@@ -26,40 +24,29 @@ const skillMap = {
   data: ["data", "data science", "analytics"],
 }
 
-// 🔥 MATCHING FUNCTION
 const matchScore = (userSkills, tags) => {
   let score = 0
-
   const normalizedUserSkills = userSkills.map(normalize)
   const normalizedTags = tags.map(normalize)
 
   normalizedTags.forEach(tag => {
     normalizedUserSkills.forEach(skill => {
-
       if (tag === skill) score += 3
       else if (tag.includes(skill) || skill.includes(tag)) score += 2
-
       Object.values(skillMap).forEach(group => {
-        if (group.includes(skill) && group.includes(tag)) {
-          score += 2
-        }
+        if (group.includes(skill) && group.includes(tag)) score += 2
       })
-
     })
   })
-
   return score
 }
 
 export default function Opportunities() {
-
   const [opportunities, setOpportunities] = useState([])
   const [filtered, setFiltered] = useState([])
   const [userSkills, setUserSkills] = useState([])
-
   const [search, setSearch] = useState("")
   const [filter, setFilter] = useState("all")
-
   const [showModal, setShowModal] = useState(false)
   const [loading, setLoading] = useState(true)
 
@@ -67,7 +54,6 @@ export default function Opportunities() {
     try {
       const token = localStorage.getItem("token")
       let skills = []
-
       if (token) {
         const decoded = jwtDecode(token)
         const id = decoded.id || decoded._id
@@ -75,10 +61,8 @@ export default function Opportunities() {
         skills = userRes.data.skills || []
         setUserSkills(skills.map(s => normalize(s)))
       }
-
       const res = await api.get("/opportunities")
       setOpportunities(res.data)
-
     } catch (err) {
       console.error(err)
     }
@@ -109,10 +93,7 @@ export default function Opportunities() {
   };
 
   useEffect(() => {
-
     let data = [...opportunities]
-
-    // 🔍 SEARCH
     if (search) {
       const q = search.toLowerCase()
       data = data.filter(op =>
@@ -121,29 +102,19 @@ export default function Opportunities() {
         op.tags?.some(tag => tag.toLowerCase().includes(q))
       )
     }
-
-    // 🎯 FILTERS
     if (filter === "external") {
       data = data.filter(op => !op.postedBy || (op.postedBy?._id || op.postedBy) === EXTERNAL_USER_ID)
     }
-
     if (filter === "student") {
       data = data.filter(op => op.postedBy && (op.postedBy?._id || op.postedBy) !== EXTERNAL_USER_ID)
     }
-
-    // ⭐ BEST FOR ME
     if (filter === "best") {
       data = data
-        .map(op => {
-          const score = matchScore(userSkills, op.tags || [])
-          return { ...op, score }
-        })
+        .map(op => ({ ...op, score: matchScore(userSkills, op.tags || []) }))
         .filter(op => op.score > 0)
         .sort((a, b) => b.score - a.score)
     }
-
     setFiltered(data)
-
   }, [search, filter, opportunities, userSkills])
 
   return (
@@ -154,202 +125,133 @@ export default function Opportunities() {
       actions={
         <button
           onClick={() => setShowModal(true)}
-          className="btn-primary px-4 py-2 rounded-xl text-sm font-medium"
+          className="btn-primary w-full md:w-auto px-4 py-2 rounded-xl text-sm font-medium"
         >
           Post Opportunity
         </button>
       }
     >
 
-      {/* SEARCH + FILTER */}
-      <div className="glass p-4 rounded-2xl flex flex-col md:flex-row gap-3 border border-white/10">
-
+      {/* SEARCH + FILTER - Stack on mobile, side-by-side on desktop */}
+      <div className="glass p-3 md:p-4 rounded-2xl flex flex-col md:flex-row gap-3 border border-white/10">
         <input
           type="text"
           placeholder="Search opportunities..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="input flex-1"
+          className="input flex-1 w-full"
         />
-
-        {/* <select
-          value={filter}
-          onChange={(e)=>setFilter(e.target.value)}
-          className="bg-white/10 text-white px-4 py-2 rounded-xl outline-none"
-        >
-          <option value="all">Filters</option>
-          <option value="best">⭐ Best For Me</option>
-          <option value="student">Student Posts</option>
-          <option value="external">External</option>
-        </select> */}
 
         <select
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
-          className="input max-w-[220px]"
+          className="input w-full md:max-w-[220px]"
         >
           <option value="all">Filters</option>
           <option value="best">Best For Me</option>
           <option value="student">College Posts</option>
           <option value="external">External</option>
         </select>
-
       </div>
 
       {/* LIST */}
       <motion.div
-        className="grid grid-cols-1 gap-4"
+        className="grid grid-cols-1 gap-4 mt-6"
         variants={staggerContainer}
         initial="hidden"
         animate="visible"
       >
-
         {loading ? (
           [1, 2, 3].map(i => (
             <div key={i} className="glass-card p-6 flex flex-col gap-4">
-              <div className="flex gap-2">
-                <Skeleton className="w-20 h-6 rounded-full" />
-                <Skeleton className="w-24 h-6 rounded-full" />
-              </div>
-              <div className="space-y-2">
-                <Skeleton className="w-1/3 h-6" />
-                <Skeleton className="w-1/4 h-4" />
-              </div>
+              <div className="flex gap-2"><Skeleton className="w-20 h-6 rounded-full" /><Skeleton className="w-24 h-6 rounded-full" /></div>
+              <div className="space-y-2"><Skeleton className="w-1/3 h-6" /><Skeleton className="w-1/4 h-4" /></div>
               <Skeleton className="w-full h-16" />
-              <div className="flex gap-4">
-                <Skeleton className="w-20 h-4" />
-                <Skeleton className="w-24 h-4" />
-              </div>
+              <div className="flex gap-4"><Skeleton className="w-20 h-4" /><Skeleton className="w-24 h-4" /></div>
               <Skeleton className="w-full h-12 rounded-xl mt-2" />
             </div>
           ))
         ) : filtered.length === 0 ? (
-          <div className="text-center text-slate-400 py-10">
-            No opportunities found
-          </div>
+          <div className="text-center text-slate-400 py-10">No opportunities found</div>
         ) : filtered.map(op => {
-
-          const isExternal =
-            !op.postedBy || (op.postedBy?._id || op.postedBy) === EXTERNAL_USER_ID
-          
+          const isExternal = !op.postedBy || (op.postedBy?._id || op.postedBy) === EXTERNAL_USER_ID
           const isUserPost = !isExternal
 
           return (
             <motion.div
               key={op._id}
               variants={fadeInUp}
-              className={`relative p-6 glass-card space-y-4 overflow-hidden
-                ${isUserPost
-                  ? "border-amber-300/30 hover:border-amber-400/50 shadow-[inset_0_0_15px_rgba(251,191,36,0.05)]"
-                  : ""
-                }`}
+              className={`relative p-4 md:p-6 glass-card space-y-4 overflow-hidden
+                ${isUserPost ? "border-amber-300/30 shadow-[inset_0_0_15px_rgba(251,191,36,0.05)]" : ""}`}
             >
-
               {/* BADGES */}
               <div className="flex gap-2 flex-wrap relative z-10">
-
                 {isUserPost ? (
-                  <span className="pill-badge bg-amber-400/10 text-amber-400 border-amber-500/20">
-                    ⭐ College
-                  </span>
+                  <span className="pill-badge bg-amber-400/10 text-amber-400 border-amber-500/20">⭐ College</span>
                 ) : (
-                  <span className="pill-badge">
-                    🌐 External
-                  </span>
+                  <span className="pill-badge">🌐 External</span>
                 )}
-
                 {filter === "best" && op.score > 0 && (
-                  <span className="pill-badge bg-emerald-500/10 text-emerald-400 border-emerald-500/20">
-                    🔥 {op.score} Match
-                  </span>
+                  <span className="pill-badge bg-emerald-500/10 text-emerald-400 border-emerald-500/20">🔥 {op.score} Match</span>
                 )}
-
               </div>
 
               {/* TITLE */}
               <div className="relative z-10">
-                <h2 className="text-lg font-semibold text-slate-100">
+                <h2 className="text-base md:text-lg font-semibold text-slate-100 break-words">
                   {op.title}
                 </h2>
-                <p className="text-indigo-300 text-sm">
-                  {op.company}
-                </p>
+                <p className="text-indigo-300 text-xs md:text-sm">{op.company}</p>
               </div>
 
               {/* DESC */}
-              <p className="relative z-10 text-slate-300 text-sm leading-relaxed whitespace-pre-wrap">
+              <p className="relative z-10 text-slate-300 text-sm leading-relaxed whitespace-pre-wrap line-clamp-4 md:line-clamp-none">
                 {op.description}
               </p>
 
               {/* TAGS */}
               <div className="flex gap-2 flex-wrap relative z-10">
                 {op.tags?.flatMap(t => t.split(",")).map(t => t.trim()).filter(Boolean).map(tag => (
-                  <span
-                    key={tag}
-                    className="pill-badge"
-                  >
-                    #{tag}
-                  </span>
+                  <span key={tag} className="pill-badge text-[10px] md:text-xs">#{tag}</span>
                 ))}
               </div>
 
               {/* INFO */}
-              <div className="flex gap-4 text-sm flex-wrap relative z-10 text-slate-400">
-
-                {op.stipend && (
-                  <span className="flex items-center gap-1">
-                    {op.stipend}
-                  </span>
-                )}
-
+              <div className="flex gap-3 md:gap-4 text-xs md:text-sm flex-wrap relative z-10 text-slate-400">
+                {op.stipend && <span className="flex items-center gap-1">{op.stipend}</span>}
                 {op.duration && (
                   <span className="flex items-center gap-1">
-                    <Hourglass size={14} className="text-yellow-400" />
-                    {op.duration}
+                    <Hourglass size={14} className="text-yellow-400" /> {op.duration}
                   </span>
                 )}
-
                 <span className="flex gap-2 items-center">
-                  <CalendarDays size={16} className="text-[#2DD4BF]" />
-                  {daysLeft(op.deadline)}
+                  <CalendarDays size={14} className="text-[#2DD4BF]" /> {daysLeft(op.deadline)}
                 </span>
-
               </div>
 
               {/* APPLY & SHARE */}
-              <div className="flex gap-3 relative z-10">
+              <div className="flex gap-3 relative z-10 pt-2">
                 <a
                   href={op.registrationLink || op.link}
                   target="_blank"
                   rel="noreferrer"
-                  className="flex-1 block text-center py-3 rounded-xl text-sm font-medium btn-primary transition-all active:scale-[0.98]"
+                  className="flex-1 block text-center py-2.5 md:py-3 rounded-xl text-sm font-medium btn-primary transition-all active:scale-[0.98]"
                 >
                   Apply Now
                 </a>
-
                 <button
                   onClick={() => handleShare(op._id)}
-                  className="p-3 rounded-xl border border-white/10 bg-white/5 text-slate-400 hover:text-white hover:bg-white/10 transition-all flex items-center justify-center shrink-0"
-                  title="Share Opportunity"
+                  className="p-2.5 md:p-3 rounded-xl border border-white/10 bg-white/5 text-slate-400 hover:text-white transition-all flex items-center justify-center shrink-0"
                 >
                   <Share2 size={18} />
                 </button>
               </div>
-
             </motion.div>
           )
         })}
-
       </motion.div>
 
-      {/* MODAL */}
-      {showModal &&
-        <CreateOpportunityModal
-          close={() => setShowModal(false)}
-          refresh={loadData}
-        />
-      }
-
+      {showModal && <CreateOpportunityModal close={() => setShowModal(false)} refresh={loadData} />}
     </PageShell>
   )
 }

@@ -61,7 +61,7 @@ export default function Settings() {
 
   const logout = () => {
     localStorage.removeItem("token")
-    navigate("/login")
+    navigate("/landing")
   }
 
   if (!user) return null

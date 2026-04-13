@@ -31,7 +31,6 @@ export default function Projects(){
   },[])
 
   return(
-
     <PageShell
       eyebrow="Collaboration"
       title="Projects"
@@ -62,7 +61,7 @@ export default function Projects(){
                   <Skeleton className="w-16 h-6 rounded-full" />
                 </div>
               </div>
-              <Skeleton className="w-24 h-10 rounded-xl md:mt-0" />
+              <Skeleton className="w-full md:w-24 h-10 rounded-xl md:mt-0" />
             </div>
           ))
         ) : projects.length > 0 ? (
@@ -90,6 +89,5 @@ export default function Projects(){
       }
 
     </PageShell>
-
   )
 }
