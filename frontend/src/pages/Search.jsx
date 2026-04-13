@@ -6,13 +6,13 @@ import PageShell from "../components/layout/PageShell"
 import SearchPostCard from "../components/search/SearchPostCard"
 import SearchUserCard from "../components/search/SearchUserCard"
 
-export default function Search(){
+export default function Search() {
   const [searchParams, setSearchParams] = useSearchParams()
   const q = searchParams.get("q") || ""
 
-  const [query,setQuery] = useState(q)
-  const [results,setResults] = useState(null)
-  const [activeTab,setActiveTab] = useState("posts")
+  const [query, setQuery] = useState(q)
+  const [results, setResults] = useState(null)
+  const [activeTab, setActiveTab] = useState("posts")
 
   // Sync local query with URL param
   useEffect(() => {
@@ -38,7 +38,7 @@ export default function Search(){
     return () => clearTimeout(handler)
   }, [q])
 
-  return(
+  return (
 
     <PageShell
       eyebrow="Lookup"
@@ -59,34 +59,31 @@ export default function Search(){
         <div className="glass rounded-2xl p-2 flex gap-2 border border-white/10">
 
           <button
-            onClick={()=>setActiveTab("posts")}
-            className={`px-4 py-2 rounded-xl text-sm transition ${
-              activeTab==="posts"
+            onClick={() => setActiveTab("posts")}
+            className={`px-4 py-2 rounded-xl text-sm transition ${activeTab === "posts"
                 ? "bg-indigo-500/90 text-white border border-indigo-400/40"
                 : "text-slate-400 hover:bg-white/8"
-            }`}
+              }`}
           >
             Posts ({results.posts?.length || 0})
           </button>
 
           <button
-            onClick={()=>setActiveTab("users")}
-            className={`px-4 py-2 rounded-xl text-sm transition ${
-              activeTab==="users"
+            onClick={() => setActiveTab("users")}
+            className={`px-4 py-2 rounded-xl text-sm transition ${activeTab === "users"
                 ? "bg-indigo-500/90 text-white border border-indigo-400/40"
                 : "text-slate-400 hover:bg-white/8"
-            }`}
+              }`}
           >
             Users ({results.users?.length || 0})
           </button>
 
           <button
-            onClick={()=>setActiveTab("tags")}
-            className={`px-4 py-2 rounded-xl text-sm transition ${
-              activeTab==="tags"
+            onClick={() => setActiveTab("tags")}
+            className={`px-4 py-2 rounded-xl text-sm transition ${activeTab === "tags"
                 ? "bg-indigo-500/90 text-white border border-indigo-400/40"
                 : "text-slate-400 hover:bg-white/8"
-            }`}
+              }`}
           >
             Tags
           </button>
@@ -98,7 +95,7 @@ export default function Search(){
       {/* RESULTS */}
 
       {/* POSTS */}
-      {results && activeTab==="posts" && (
+      {results && activeTab === "posts" && (
         <div className="space-y-6">
 
           {results.posts?.length === 0 ? (
@@ -113,7 +110,7 @@ export default function Search(){
       )}
 
       {/* USERS */}
-      {results && activeTab==="users" && (
+      {results && activeTab === "users" && (
         <div className="space-y-4">
 
           {results.users?.length === 0 ? (
