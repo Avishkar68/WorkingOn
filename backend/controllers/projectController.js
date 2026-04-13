@@ -177,6 +177,9 @@ export const rejectJoinRequest = async (req, res) => {
 };
 export const getUserProjects = async (req,res)=>{
   const projects = await Project.find({ creator: req.params.id })
+    .populate("creator", "name profileImage branch year")
+    .populate("members", "name profileImage")
+    .sort({ createdAt: -1 });
   res.json(projects)
 }
 export const deleteProject = async (req,res)=>{

@@ -13,10 +13,10 @@ export default function ProjectCard({ project, refresh }) {
   const [showJoin, setShowJoin] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
+  // ✅ GET CURRENT USER
   const token = localStorage.getItem("token");
-  let currentUserId = localStorage.getItem("userId");
-
-  if (!currentUserId && token) {
+  let currentUserId = null;
+  if (token) {
     try {
       const decoded = jwtDecode(token);
       currentUserId = decoded.id || decoded._id;
@@ -26,10 +26,12 @@ export default function ProjectCard({ project, refresh }) {
   }
 
   const request = project.joinRequests?.find(
-    (r) => r.user?._id === currentUserId,
+    (r) => (r.user?._id || r.user)?.toString() === currentUserId?.toString(),
   );
 
-  const isMember = project.members?.some((m) => m._id === currentUserId);
+  const isMember = project.members?.some(
+    (m) => (m._id || m)?.toString() === currentUserId?.toString(),
+  );
 
   const handleShare = async (e) => {
     e.stopPropagation();

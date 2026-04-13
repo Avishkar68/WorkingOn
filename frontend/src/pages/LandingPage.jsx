@@ -93,7 +93,7 @@ export default function LandingPage() {
 
       <main className="relative z-10">
         {/* 🔥 SECTION 1: HERO */}
-        <section className="pt-25 pb-20 px-6 max-w-7xl mx-auto">
+        <section className="pt-25 md:pt-50 pb-20 px-6 max-w-7xl mx-auto">
           <div className="flex flex-col lg:flex-row items-center gap-2">
             <div className="w-full lg:w-1/ flex flex-col items-start text-left">
               <motion.div
@@ -112,7 +112,7 @@ export default function LandingPage() {
                 className="text-5xl md:text-7xl font-black tracking-tighter leading-[0.95] mb-3"
               >
                 Everything happening <br />
-                in SPIT. 
+                in SPIT.
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-300 via-brand-500 to-indigo-500">
                   One place.
                 </span>

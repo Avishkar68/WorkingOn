@@ -9,11 +9,11 @@ import { useState } from "react";
 
 export default function EventCard({ event, refresh }) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  
-  const token = localStorage.getItem("token");
-  let currentUserId = localStorage.getItem("userId");
 
-  if (!currentUserId && token) {
+  // ✅ GET CURRENT USER
+  const token = localStorage.getItem("token");
+  let currentUserId = null;
+  if (token) {
     try {
       const decoded = jwtDecode(token);
       currentUserId = decoded.id || decoded._id;
@@ -128,10 +128,10 @@ export default function EventCard({ event, refresh }) {
             {event.location}
           </p>
 
-          <p className="flex items-center gap-2">
+          {/* <p className="flex items-center gap-2">
             <Users size={14} className="text-blue-400" />
             {event.registeredUsers?.length || 0} attending
-          </p>
+          </p> */}
 
         </div>
 

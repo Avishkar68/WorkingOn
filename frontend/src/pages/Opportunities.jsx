@@ -124,11 +124,11 @@ export default function Opportunities() {
 
     // 🎯 FILTERS
     if (filter === "external") {
-      data = data.filter(op => op.postedBy?._id === EXTERNAL_USER_ID)
+      data = data.filter(op => !op.postedBy || (op.postedBy?._id || op.postedBy) === EXTERNAL_USER_ID)
     }
 
     if (filter === "student") {
-      data = data.filter(op => op.postedBy?._id !== EXTERNAL_USER_ID)
+      data = data.filter(op => op.postedBy && (op.postedBy?._id || op.postedBy) !== EXTERNAL_USER_ID)
     }
 
     // ⭐ BEST FOR ME
@@ -229,8 +229,10 @@ export default function Opportunities() {
           </div>
         ) : filtered.map(op => {
 
-          const isUserPost =
-            op.postedBy?._id !== EXTERNAL_USER_ID
+          const isExternal =
+            !op.postedBy || (op.postedBy?._id || op.postedBy) === EXTERNAL_USER_ID
+          
+          const isUserPost = !isExternal
 
           return (
             <motion.div

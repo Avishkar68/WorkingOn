@@ -194,7 +194,7 @@ export const createEvent = async (req, res) => {
       location,
       eventType,
       image: imageUrl,
-      capacity,
+      capacity: capacity || undefined,
       tags: parsedTags,
       registrationLink,
       organizer: req.user._id
@@ -295,7 +295,9 @@ export const getUserEvents = async (req, res) => {
 
     const events = await Event.find({
       organizer: req.params.id
-    }).sort({ createdAt: -1 });
+    })
+    .populate("organizer", "name profileImage branch year")
+    .sort({ createdAt: -1 });
 
     res.json(events);
 

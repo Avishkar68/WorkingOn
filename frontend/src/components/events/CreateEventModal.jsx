@@ -10,7 +10,7 @@ export default function CreateEventModal({ close, refresh }) {
   const [description, setDescription] = useState("")
   const [date, setDate] = useState("")
   const [location, setLocation] = useState("")
-  const [capacity, setCapacity] = useState(100)
+  const [capacity, setCapacity] = useState("")
   const [tags, setTags] = useState([])
   const [tagInput, setTagInput] = useState("")
   const [registrationLink, setRegistrationLink] = useState("")
@@ -73,7 +73,7 @@ export default function CreateEventModal({ close, refresh }) {
 
   return createPortal(
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      
+
       <div className="w-[540px] max-h-[90vh] overflow-y-auto rounded-2xl p-6 text-white space-y-5
         bg-white/5 backdrop-blur-xl border border-white/10 
         shadow-[0_0_25px_rgba(99,102,241,0.15)] scrollbar-hide">
@@ -85,7 +85,7 @@ export default function CreateEventModal({ close, refresh }) {
               <Calendar size={20} className="text-indigo-400" /> Create Event
             </h2>
             <p className="text-sm text-zinc-400">
-              Share events happening in your college 
+              Share events happening in your college
             </p>
           </div>
 
@@ -116,7 +116,7 @@ export default function CreateEventModal({ close, refresh }) {
 
           {/* EVENT TYPE */}
           <div className="space-y-2">
-            <label className="text-xs font-bold uppercase tracking-widest text-zinc-500 ml-1">Event Type</label>
+            <label className="text-xs font-bold uppercase tracking-widest text-white ml-1">Event Type</label>
             <div className="flex gap-2 flex-wrap mt-2">
               {eventTypes.map(type => (
                 <button
@@ -137,10 +137,10 @@ export default function CreateEventModal({ close, refresh }) {
           {/* DATE + LOCATION */}
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
-               <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 ml-1 flex items-center gap-1">
-                 <Calendar size={12} /> Date & Time
-               </label>
-               <input
+              <label className="text-[10px] font-bold uppercase tracking-widest text-white ml-1 flex items-center gap-1">
+                <Calendar size={12} /> Date & Time
+              </label>
+              <input
                 type="datetime-local"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
@@ -148,10 +148,10 @@ export default function CreateEventModal({ close, refresh }) {
               />
             </div>
             <div className="space-y-1.5">
-               <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 ml-1 flex items-center gap-1">
-                 <MapPin size={12} /> Location
-               </label>
-               <input
+              <label className="text-[10px] font-bold uppercase tracking-widest text-white ml-1 flex items-center gap-1">
+                <MapPin size={12} /> Location
+              </label>
+              <input
                 placeholder="e.g. Auditorium"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
@@ -163,21 +163,22 @@ export default function CreateEventModal({ close, refresh }) {
           {/* CAPACITY + LINK */}
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
-               <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 ml-1 flex items-center gap-1">
-                 <UsersIcon size={12} /> Capacity
-               </label>
-               <input
+              <label className="text-[10px] font-bold uppercase tracking-widest text-white ml-1 flex items-center gap-1">
+                <UsersIcon size={12} /> Capacity (Optional)
+              </label>
+              <input
                 type="number"
                 value={capacity}
                 onChange={(e) => setCapacity(e.target.value)}
+                placeholder="e.g. 100"
                 className="input"
               />
             </div>
             <div className="space-y-1.5">
-               <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 ml-1 flex items-center gap-1">
-                 <LinkIcon size={12} /> Registration Link
-               </label>
-               <input
+              <label className="text-[10px] font-bold uppercase tracking-widest text-white ml-1 flex items-center gap-1">
+                <LinkIcon size={12} /> Registration Link
+              </label>
+              <input
                 placeholder="https://..."
                 value={registrationLink}
                 onChange={(e) => setRegistrationLink(e.target.value)}
@@ -188,7 +189,7 @@ export default function CreateEventModal({ close, refresh }) {
 
           {/* IMAGE */}
           <div className="space-y-1.5">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 ml-1 flex items-center gap-1">
+            <label className="text-[10px] font-bold uppercase tracking-widest text-white ml-1 flex items-center gap-1">
               <ImageIcon size={12} /> Event Banner
             </label>
             <input
@@ -201,7 +202,7 @@ export default function CreateEventModal({ close, refresh }) {
 
           {/* TAGS */}
           <div className="space-y-2">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 ml-1 flex items-center gap-1">
+            <label className="text-[10px] font-bold uppercase tracking-widest text-white ml-1 flex items-center gap-1">
               <Tag size={12} /> Tags
             </label>
             <div className="flex gap-2">
@@ -222,7 +223,7 @@ export default function CreateEventModal({ close, refresh }) {
               {tags.map(tag => (
                 <span key={tag} className="flex items-center gap-1 bg-white/5 px-3 py-1 rounded-full text-xs border border-white/10 text-zinc-300">
                   #{tag}
-                  <button onClick={() => removeTag(tag)} className="text-zinc-500 hover:text-red-400">
+                  <button onClick={() => removeTag(tag)} className="text-white hover:text-red-400">
                     <X size={12} />
                   </button>
                 </span>

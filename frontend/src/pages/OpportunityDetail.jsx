@@ -109,7 +109,7 @@ export default function OpportunityDetail() {
             <div className="space-y-4">
               <div className="flex items-center gap-3">
                  <span className="pill-badge bg-indigo-500/10 text-indigo-400 border-indigo-500/20 px-3 py-1">
-                    {op.postedBy?._id === "000000000000000000000001" ? "External" : "Student Post"}
+                    {(!op.postedBy || (op.postedBy?._id || op.postedBy) === "000000000000000000000001") ? "External" : "Student Post"}
                  </span>
                  <span className="text-slate-500 text-xs">•</span>
                  <span className="text-slate-400 text-xs font-medium uppercase tracking-wider">
