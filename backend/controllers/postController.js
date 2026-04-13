@@ -189,7 +189,7 @@ export const getUserPosts = async (req, res) => {
     const posts = await Post.find({
       author: req.params.id
     })
-      .populate("author", "name profileImage")
+      .populate("author", "name profileImage branch year")
       .sort({ createdAt: -1 });
 
     res.json(posts);

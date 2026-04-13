@@ -3,13 +3,13 @@ import { Heart, MessageCircle } from "lucide-react"
 import { motion } from "framer-motion"
 import { cardHover, fadeInUp } from "../../lib/motion"
 
-export default function SearchPostCard({post}){
+export default function SearchPostCard({ post }) {
 
-  const formatDate = (date)=>{
+  const formatDate = (date) => {
     return new Date(date).toLocaleDateString()
   }
 
-  return(
+  return (
 
     <motion.div
       className="glass-card p-6 space-y-4"
@@ -21,13 +21,20 @@ export default function SearchPostCard({post}){
     >
 
       {/* AUTHOR */}
-      <Link 
+      <Link
         to={`/user/${post.author?._id}`}
         className="flex items-center gap-3 group/author"
       >
-        <div className="w-10 h-10 bg-indigo-500 text-white rounded-full flex items-center justify-center font-bold ring-2 ring-transparent group-hover/author:ring-indigo-500/30 transition-all">
-          {post.author?.name?.[0]}
-        </div>
+        {post.author?.profileImage ? (
+          <img
+            src={post.author.profileImage}
+            className="w-10 h-10 rounded-full object-cover border border-white/10"
+          />
+        ) : (
+          <div className="w-10 h-10 bg-indigo-500 text-white rounded-full flex items-center justify-center font-bold">
+            {post.author?.name?.[0]}
+          </div>
+        )}
 
         <div>
           <p className="font-semibold text-white group-hover/author:text-indigo-400 transition-colors">
@@ -75,13 +82,13 @@ export default function SearchPostCard({post}){
 
         <span className="hover:text-indigo-400 transition flex gap-2">
           <Heart
-              size={18}
-            /> {post.likeCount || 0}
+            size={18}
+          /> {post.likeCount || 0}
         </span>
 
         <span className="hover:text-indigo-400 transition flex gap-2">
-          
-            <MessageCircle size={18} />Comment {post.commentCount || 0}
+
+          <MessageCircle size={18} />Comment {post.commentCount || 0}
         </span>
 
         <span className="hover:text-indigo-400 cursor-pointer transition">

@@ -14,8 +14,8 @@ export default function PostCard({ post, refreshFeed }) {
 
   const navigate = useNavigate()
 
-  const [showComments,setShowComments] = useState(false)
-  const [loading,setLoading] = useState(false)
+  const [showComments, setShowComments] = useState(false)
+  const [loading, setLoading] = useState(false)
   const [showReport, setShowReport] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
@@ -23,21 +23,21 @@ export default function PostCard({ post, refreshFeed }) {
   const token = localStorage.getItem("token")
 
   let currentUserId = null
-  if(token){
-    try{
+  if (token) {
+    try {
       const decoded = jwtDecode(token)
       currentUserId = decoded.id || decoded._id
-    }catch{
+    } catch {
       currentUserId = null
     }
   }
 
   // ✅ LOCAL LIKE STATE
-  const [likes,setLikes] = useState(post.likes || [])
+  const [likes, setLikes] = useState(post.likes || [])
 
   // ✅ CHECK LIKE (handles object + string)
   const isLiked = likes.some(like => {
-    if(typeof like === "object"){
+    if (typeof like === "object") {
       return like._id?.toString() === currentUserId?.toString()
     }
     return like?.toString() === currentUserId?.toString()
@@ -50,16 +50,16 @@ export default function PostCard({ post, refreshFeed }) {
   // ❤️ LIKE / UNLIKE
   const handleLike = async () => {
 
-    if(!currentUserId) return
+    if (!currentUserId) return
 
-    try{
+    try {
       setLoading(true)
 
-      if(isLiked){
+      if (isLiked) {
         // remove locally
         setLikes(prev =>
           prev.filter(like => {
-            if(typeof like === "object"){
+            if (typeof like === "object") {
               return like._id !== currentUserId
             }
             return like !== currentUserId
@@ -68,17 +68,17 @@ export default function PostCard({ post, refreshFeed }) {
 
         await api.post(`/posts/${post._id}/unlike`)
 
-      }else{
+      } else {
         // add locally
         setLikes(prev => [...prev, currentUserId])
 
         await api.post(`/posts/${post._id}/like`)
       }
 
-    }catch(err){
+    } catch (err) {
       console.error(err)
       refreshFeed()
-    }finally{
+    } finally {
       setLoading(false)
     }
   }
@@ -88,22 +88,22 @@ export default function PostCard({ post, refreshFeed }) {
 
     const url = `${window.location.origin}/posts/${post._id}`
 
-    try{
+    try {
       await navigator.clipboard.writeText(url)
       toast.success("Link copied to clipboard!")
-    }catch{
-      window.open(url,"_blank")
+    } catch {
+      window.open(url, "_blank")
     }
   }
 
   // 🗑 DELETE
   const handleDeletePost = async () => {
-    try{
+    try {
       await api.delete(`/posts/${post._id}`)
       toast.success("Post deleted!")
       refreshFeed()
       setShowDeleteConfirm(false)
-    }catch(err){
+    } catch (err) {
       console.error(err)
       toast.error("Failed to delete post")
     }
@@ -140,7 +140,7 @@ export default function PostCard({ post, refreshFeed }) {
           <p className="font-semibold text-white group-hover/author:text-indigo-300 transition-colors">
             {post.author?.name}
           </p>
-
+          {console.log(post)}
           <p className="text-xs text-gray-400">
             {post.author?.branch} • Year {post.author?.year}
           </p>
@@ -182,11 +182,10 @@ export default function PostCard({ post, refreshFeed }) {
             onClick={handleLike}
             disabled={loading}
             whileTap={buttonTap}
-            className={`flex items-center gap-1 transition transform cursor-pointer ${
-              isLiked
-                ? "text-red-500 scale-105"
-                : "hover:text-red-400"
-            }`}
+            className={`flex items-center gap-1 transition transform cursor-pointer ${isLiked
+              ? "text-red-500 scale-105"
+              : "hover:text-red-400"
+              }`}
           >
             <Heart
               size={18}
@@ -256,7 +255,7 @@ export default function PostCard({ post, refreshFeed }) {
 
       {/* 💬 COMMENTS */}
       {showComments && (
-        <CommentSection postId={post._id}/>
+        <CommentSection postId={post._id} />
       )}
 
       {/* 🗑 DELETE CONFIRM */}
