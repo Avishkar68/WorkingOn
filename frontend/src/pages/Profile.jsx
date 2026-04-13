@@ -168,8 +168,8 @@ export default function Profile() {
             key={tab}
             onClick={() => setActiveTab(tab)}
             className={`flex-1 py-2 rounded-xl capitalize transition ${activeTab === tab
-                ? "bg-indigo-500/20 text-white shadow-[0_0_15px_rgba(99,102,241,0.3)]"
-                : "text-gray-400 hover:bg-white/10"
+              ? "bg-indigo-500/20 text-white shadow-[0_0_15px_rgba(99,102,241,0.3)]"
+              : "text-gray-400 hover:bg-white/10"
               }`}
           >
             {tab}
