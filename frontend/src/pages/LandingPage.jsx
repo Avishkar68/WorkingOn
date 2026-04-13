@@ -93,9 +93,9 @@ export default function LandingPage() {
 
       <main className="relative z-10">
         {/* 🔥 SECTION 1: HERO */}
-        <section className="pt-40 pb-20 px-6 max-w-7xl mx-auto">
-          <div className="flex flex-col lg:flex-row items-center gap-16">
-            <div className="w-full lg:w-1/2 flex flex-col items-start text-left">
+        <section className="pt-25 pb-20 px-6 max-w-7xl mx-auto">
+          <div className="flex flex-col lg:flex-row items-center gap-2">
+            <div className="w-full lg:w-1/ flex flex-col items-start text-left">
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -109,10 +109,10 @@ export default function LandingPage() {
                 variants={fadeInUp}
                 initial="hidden"
                 animate="visible"
-                className="text-5xl md:text-8xl font-black tracking-tighter leading-[0.95] mb-8"
+                className="text-5xl md:text-7xl font-black tracking-tighter leading-[0.95] mb-3"
               >
                 Everything happening <br />
-                in SPIT. <br />
+                in SPIT. 
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-300 via-brand-500 to-indigo-500">
                   One place.
                 </span>
@@ -123,7 +123,7 @@ export default function LandingPage() {
                 initial="hidden"
                 animate="visible"
                 transition={{ delay: 0.2 }}
-                className="text-lg md:text-2xl text-gray-400 max-w-xl mb-10 leading-relaxed font-medium"
+                className="text-lg md:text-xl text-gray-400 max-w-xl mb-10 leading-relaxed font-medium"
               >
                 No more scattered WhatsApp groups. No more missed opportunities.{" "}
                 <br />
@@ -137,7 +137,7 @@ export default function LandingPage() {
                 initial="hidden"
                 animate="visible"
                 transition={{ delay: 0.3 }}
-                className="flex flex-wrap items-center gap-4 w-full mb-8"
+                className="flex flex-wrap items-center gap-4 w-full -mt-4 mb-8"
               >
                 <button
                   onClick={() => navigate("/register")}
@@ -149,7 +149,7 @@ export default function LandingPage() {
                   onClick={() => navigate("/login")}
                   className="w-full sm:w-auto px-8 py-4 rounded-2xl font-bold bg-white/5 border border-white/10 hover:bg-white/10 transition-all flex items-center justify-center gap-2"
                 >
-                  👀 Explore Campus Pulse
+                  Explore Campus Pulse
                 </button>
               </motion.div>
             </div>
