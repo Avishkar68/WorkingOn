@@ -9,7 +9,7 @@ export default function PageShell({
   children
 }) {
   return (
-    <div className="space-y-6 sm:space-y-8">
+    <div className="space-y-6 sm:space-y-8 p-6 md:p-0">
       <motion.section
         variants={fadeInUp}
         initial="hidden"

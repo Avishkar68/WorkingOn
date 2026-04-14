@@ -1,36 +1,36 @@
-import { useCallback, useEffect, useState } from "react"
-import { useParams, useNavigate } from "react-router-dom"
-import { jwtDecode } from "jwt-decode"
-import api from "../api/axios"
-import toast from "react-hot-toast"
+import { useCallback, useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
+import api from "../api/axios";
+import toast from "react-hot-toast";
 
-import PostCard from "../components/post/PostCard"
-import ProjectCard from "../components/project/ProjectCard"
-import EventCard from "../components/events/EventCard"
-import UserListModal from "../components/dialogueboxes/UserListModal"
-import EditProfileModal from "../components/profile/EditProfileModal"
+import PostCard from "../components/post/PostCard";
+import ProjectCard from "../components/project/ProjectCard";
+import EventCard from "../components/events/EventCard";
+import UserListModal from "../components/dialogueboxes/UserListModal";
+import EditProfileModal from "../components/profile/EditProfileModal";
 
 export default function UserProfile() {
-  const { id } = useParams()
-  const navigate = useNavigate()
+  const { id } = useParams();
+  const navigate = useNavigate();
 
-  const [profile, setProfile] = useState(null)
-  const [activeTab, setActiveTab] = useState("posts")
+  const [profile, setProfile] = useState(null);
+  const [activeTab, setActiveTab] = useState("posts");
 
-  const [posts, setPosts] = useState([])
-  const [projects, setProjects] = useState([])
-  const [events, setEvents] = useState([])
-  const [opportunities, setOpportunities] = useState([])
+  const [posts, setPosts] = useState([]);
+  const [projects, setProjects] = useState([]);
+  const [events, setEvents] = useState([]);
+  const [opportunities, setOpportunities] = useState([]);
 
-  const [isFollowing, setIsFollowing] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [showFollowers, setShowFollowers] = useState(false)
-  const [showFollowing, setShowFollowing] = useState(false)
-  const [showEdit, setShowEdit] = useState(false)
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [showFollowers, setShowFollowers] = useState(false);
+  const [showFollowing, setShowFollowing] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
 
-  const token = localStorage.getItem("token")
-  const decoded = token ? jwtDecode(token) : null
-  const currentUserId = decoded?.id || decoded?._id
+  const token = localStorage.getItem("token");
+  const decoded = token ? jwtDecode(token) : null;
+  const currentUserId = decoded?.id || decoded?._id;
 
   const loadAll = useCallback(async () => {
     try {
@@ -40,121 +40,123 @@ export default function UserProfile() {
         api.get(`/projects/user/${id}`),
         api.get(`/events/user/${id}`),
         api.get(`/opportunities/user/${id}`)
-      ])
+      ]);
 
-      setProfile(u.data)
-      setPosts(p1.data)
-      setProjects(p2.data)
-      setEvents(p3.data)
-      setOpportunities(p4.data)
+      setProfile(u.data);
+      setPosts(p1.data);
+      setProjects(p2.data);
+      setEvents(p3.data);
+      setOpportunities(p4.data);
 
       setIsFollowing(
         u.data.followers?.some(
           f => (f._id || f).toString() === currentUserId?.toString()
         )
-      )
+      );
     } catch (err) {
-      console.error(err)
-      toast.error("Failed to load profile")
+      console.error(err);
+      toast.error("Failed to load profile");
     }
-  }, [id, currentUserId])
+  }, [id, currentUserId]);
 
   useEffect(() => {
-    loadAll()
-    window.addEventListener("global-refresh", loadAll)
-    return () => window.removeEventListener("global-refresh", loadAll)
-  }, [loadAll])
+    loadAll();
+    window.addEventListener("global-refresh", loadAll);
+    return () => window.removeEventListener("global-refresh", loadAll);
+  }, [loadAll]);
 
   const handleFollow = async () => {
     if (!currentUserId) {
-      toast.error("Please login to follow")
-      return
+      toast.error("Please login to follow");
+      return;
     }
     try {
-      setLoading(true)
+      setLoading(true);
       if (isFollowing) {
-        await api.post(`/users/${id}/unfollow`)
-        toast.success("Unfollowed successfully")
+        await api.post(`/users/${id}/unfollow`);
+        toast.success("Unfollowed successfully");
       } else {
-        await api.post(`/users/${id}/follow`)
-        toast.success("Followed successfully")
+        await api.post(`/users/${id}/follow`);
+        toast.success("Followed successfully");
       }
-      loadAll()
+      loadAll();
     } catch (err) {
-      console.error(err)
-      toast.error("Action failed")
+      console.error(err);
+      toast.error("Action failed");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
-  if (!profile) return null
+  if (!profile) return null;
 
   return (
-    <div className="space-y-6">
-      {/* PROFILE CARD */}
-      <div className="glass p-6 rounded-2xl flex gap-6">
+    <div className="space-y-6 p-2 md:p-0 md:px-0">
+      {/* PROFILE CARD - Responsive stack matches Profile.jsx */}
+      <div className="glass p-5 md:p-6 rounded-2xl flex flex-col md:flex-row items-start gap-4 md:gap-6 text-left">
         {profile.profileImage ? (
-          <img src={profile.profileImage} className="w-24 h-24 rounded-full object-cover" />
+          <img
+            src={profile.profileImage}
+            className="w-24 h-24 md:w-28 md:h-28 rounded-full object-cover border-2 border-indigo-500/20"
+            alt={profile.name}
+          />
         ) : (
-          <div className="w-24 h-24 rounded-full bg-indigo-500 text-white flex items-center justify-center text-3xl font-bold">
+          <div className="w-24 h-24 md:w-28 md:h-28 rounded-full bg-indigo-500 text-white flex items-center justify-center text-3xl shrink-0">
             {profile.name?.[0]}
           </div>
         )}
 
-        <div className="flex-1">
-          <h2 className="text-2xl font-bold text-white">
+        <div className="flex-1 w-full">
+          <h2 className="text-xl md:text-2xl font-bold text-white">
             {profile.name}
           </h2>
 
-          <p className="text-gray-400">
+          <p className="text-gray-400 text-sm md:text-base">
             🎓 {profile.branch} - Year {profile.year}
           </p>
 
-          <p className="text-gray-400">
+          <p className="text-gray-400 text-sm">
             ✉ {profile.email}
           </p>
 
           {profile.bio && (
-            <p className="mt-3 text-gray-300 whitespace-pre-wrap">
+            <p className="mt-3 text-gray-300 whitespace-pre-wrap text-sm md:text-base line-clamp-3 md:line-clamp-none">
               {profile.bio}
             </p>
           )}
 
           {/* SKILLS */}
           {profile.skills && profile.skills.length > 0 && (
-            <div className="mt-4 flex flex-wrap gap-2">
+            <div className="mt-4 flex flex-wrap gap-2 justify-start">
               {profile.skills?.flatMap(s => s.split(",")).map(s => s.trim()).filter(Boolean).map((skill, index) => (
-                <span key={index} className="pill-badge">
+                <span key={index} className="pill-badge text-xs">
                   {skill}
                 </span>
               ))}
             </div>
           )}
 
-          {/* STATS */}
-          <div className="flex gap-8 mt-4 text-gray-300">
+          {/* STATS - Responsive border/padding matches Profile.jsx */}
+          <div className="flex justify-around md:justify-start gap-4 md:gap-8 mt-6 md:mt-4 text-gray-300 border-t border-white/5 pt-4 md:border-none md:pt-0">
             <div>
               <p className="font-bold text-white">{posts.length}</p>
-              <p className="text-sm text-gray-500">Posts</p>
+              <p className="text-xs md:text-sm text-gray-500">Posts</p>
             </div>
-
             <div onClick={() => setShowFollowers(true)} className="cursor-pointer hover:opacity-80 transition">
               <p className="font-bold text-white">{profile.followers?.length || 0}</p>
-              <p className="text-sm text-gray-500">Followers</p>
+              <p className="text-xs md:text-sm text-gray-500">Followers</p>
             </div>
-
             <div onClick={() => setShowFollowing(true)} className="cursor-pointer hover:opacity-80 transition">
               <p className="font-bold text-white">{profile.following?.length || 0}</p>
-              <p className="text-sm text-gray-500">Following</p>
+              <p className="text-xs md:text-sm text-gray-500">Following</p>
             </div>
           </div>
 
-          {/* ACTION BUTTON */}
+          {/* ACTION BUTTON - Responsive width */}
           {currentUserId === id ? (
             <button
               onClick={() => setShowEdit(true)}
-              className="mt-4 bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-xl shadow-[0_0_15px_rgba(99,102,241,0.3)] transition-all font-semibold"
+              className="mt-6 md:mt-4 w-full md:w-auto bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-2.5 rounded-xl shadow-[0_0_15px_rgba(99,102,241,0.3)] text-sm font-semibold transition-all"
             >
               Edit Profile
             </button>
@@ -162,7 +164,7 @@ export default function UserProfile() {
             <button
               onClick={handleFollow}
               disabled={loading}
-              className={`mt-4 px-6 py-2 rounded-xl text-white transition-all font-semibold shadow-[0_0_15px_rgba(99,102,241,0.3)]
+              className={`mt-6 md:mt-4 w-full md:w-auto px-6 py-2.5 rounded-xl text-white transition-all text-sm font-semibold shadow-[0_0_15px_rgba(99,102,241,0.3)]
               ${isFollowing
                   ? "bg-white/10 text-gray-300 hover:bg-white/20 border border-white/10"
                   : "bg-indigo-500 hover:bg-indigo-600"}
@@ -174,13 +176,13 @@ export default function UserProfile() {
         </div>
       </div>
 
-      {/* TABS */}
-      <div className="flex gap-4 glass p-2 rounded-2xl">
+      {/* TABS - Horizontal scroll enabled for mobile */}
+      <div className="flex gap-2 md:gap-4 glass p-2 rounded-2xl overflow-x-auto scrollbar-hide">
         {["posts", "projects", "events", "opportunities"].map(tab => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`flex-1 py-2 rounded-xl capitalize transition-all duration-300 ${activeTab === tab
+            className={`flex-1 min-w-[100px] md:min-w-0 py-2 rounded-xl capitalize transition text-sm md:text-base whitespace-nowrap ${activeTab === tab
               ? "bg-indigo-500/20 text-white shadow-[0_0_15px_rgba(99,102,241,0.3)] border border-indigo-500/30"
               : "text-gray-400 hover:bg-white/10"
               }`}
@@ -190,11 +192,11 @@ export default function UserProfile() {
         ))}
       </div>
 
-      {/* CONTENT */}
-      <div className="space-y-6">
+      {/* CONTENT - Responsive spacing */}
+      <div className="space-y-4 md:space-y-6">
         {activeTab === "posts" && (
           posts.length === 0
-            ? <p className="text-gray-400 text-center py-8 glass rounded-2xl">No posts yet</p>
+            ? <p className="text-gray-400 text-center py-10 glass rounded-2xl">No posts yet</p>
             : posts.map(p => (
               <PostCard key={p._id} post={p} refreshFeed={loadAll} />
             ))
@@ -202,7 +204,7 @@ export default function UserProfile() {
 
         {activeTab === "projects" && (
           projects.length === 0
-            ? <p className="text-gray-400 text-center py-8 glass rounded-2xl">No projects yet</p>
+            ? <p className="text-gray-400 text-center py-10 glass rounded-2xl">No projects yet</p>
             : projects.map(p => (
               <ProjectCard key={p._id} project={p} refresh={loadAll} />
             ))
@@ -210,7 +212,7 @@ export default function UserProfile() {
 
         {activeTab === "events" && (
           events.length === 0
-            ? <p className="text-gray-400 text-center py-8 glass rounded-2xl">No events yet</p>
+            ? <p className="text-gray-400 text-center py-10 glass rounded-2xl">No events yet</p>
             : events.map(e => (
               <EventCard key={e._id} event={e} refresh={loadAll} />
             ))
@@ -218,15 +220,12 @@ export default function UserProfile() {
 
         {activeTab === "opportunities" && (
           opportunities.length === 0
-            ? <p className="text-gray-400 text-center py-8 glass rounded-2xl">No opportunities yet</p>
+            ? <p className="text-gray-400 text-center py-10 glass rounded-2xl">No opportunities yet</p>
             : opportunities.map(op => (
-              <div
-                key={op._id}
-                className="glass p-6 rounded-2xl space-y-4 relative group"
-              >
+              <div key={op._id} className="glass p-5 md:p-6 rounded-2xl space-y-4 relative group">
                 <div className="flex justify-between items-start">
                   <div>
-                    <h2 className="text-lg font-semibold text-white">
+                    <h2 className="text-lg font-semibold text-white truncate max-w-[200px] md:max-w-none">
                       {op.title}
                     </h2>
                     <p className="text-indigo-400 text-sm">
@@ -235,13 +234,13 @@ export default function UserProfile() {
                   </div>
                 </div>
 
-                <p className="text-gray-300 text-sm whitespace-pre-wrap">
+                <p className="text-gray-300 text-sm whitespace-pre-wrap line-clamp-4 md:line-clamp-none">
                   {op.description}
                 </p>
 
                 <div className="flex gap-2 flex-wrap">
                   {op.tags?.flatMap(t => t.split(",")).map(t => t.trim()).filter(Boolean).map(tag => (
-                    <span key={tag} className="pill-badge">#{tag}</span>
+                    <span key={tag} className="pill-badge text-[10px] md:text-xs">#{tag}</span>
                   ))}
                 </div>
 
@@ -250,7 +249,7 @@ export default function UserProfile() {
                     href={op.registrationLink}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex-1 text-center bg-indigo-500 hover:bg-indigo-600 text-white py-2 rounded-xl text-sm font-semibold transition-all shadow-[0_0_10px_rgba(99,102,241,0.2)]"
+                    className="flex-1 text-center bg-indigo-500 hover:bg-indigo-600 text-white py-2.5 rounded-xl text-sm font-semibold transition-all shadow-[0_0_10px_rgba(99,102,241,0.2)]"
                   >
                     Apply Now
                   </a>
@@ -279,5 +278,5 @@ export default function UserProfile() {
         <EditProfileModal user={profile} close={() => setShowEdit(false)} refresh={loadAll} />
       )}
     </div>
-  )
+  );
 }

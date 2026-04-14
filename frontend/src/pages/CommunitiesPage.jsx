@@ -95,7 +95,7 @@ export default function CommunitiesPage() {
 
   return (
     <div className="h-full min-h-0 flex flex-col">
-      <div className="flex-1 min-h-0 rounded-2xl border border-white/10 bg-transparent backdrop-blur-md overflow-hidden">
+      <div className="flex-1 min-h-0 md:rounded-2xl md:border md:border-white/10 bg-transparent backdrop-blur-md overflow-hidden">
         <div className="grid h-full min-h-0 grid-cols-1 lg:grid-cols-[320px_minmax(0,1fr)]">
 
           {/* LEFT PANEL */}
@@ -177,7 +177,7 @@ export default function CommunitiesPage() {
           </aside>
 
           {/* RIGHT PANEL */}
-          <section className={`min-h-0 overflow-hidden flex flex-col ${!selectedCommunity ? 'hidden lg:flex' : 'flex'}`}>
+          <section className={`min-h-0  overflow-hidden flex flex-col ${!selectedCommunity ? 'hidden lg:flex' : 'flex'}`}>
             <AnimatePresence mode="wait">
               {!selectedCommunity ? (
                 <motion.div
@@ -202,91 +202,88 @@ export default function CommunitiesPage() {
                   className="flex-1 min-h-0 flex flex-col overflow-hidden"
                 >
                   {/* HEADER & TOGGLE */}
-             {/* HEADER & TOGGLE */}
-<div className="p-4 sm:p-5 border-b border-white/5 bg-slate-900/20 backdrop-blur-md">
-  <div className="flex flex-col md:flex-row md:items-center justify-between gap-5">
-    
-    {/* Navigation & Community Info */}
-    <div className="flex flex-col gap-3 min-w-0">
-      {/* Back Button for Mobile - Now outside and labeled */}
-      <button 
-        onClick={() => setSelectedCommunity(null)}
-        className="lg:hidden flex items-center gap-2 w-fit px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-slate-400 active:scale-95 transition-all text-[10px] font-bold uppercase tracking-widest"
-      >
-        <ArrowLeft size={14} />
-        Back
-      </button>
+                  {/* HEADER & TOGGLE */}
+                  <div className="p-4 sm:p-5 border-b border-white/5 bg-slate-900/20 backdrop-blur-md">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-5">
 
-      <div className="flex items-start gap-3">
-        <div className="space-y-0.5 min-w-0">
-          <h2 className="text-lg font-semibold text-slate-100 flex items-center gap-2 truncate">
-            {selectedCommunity.name}
-          </h2>
-          <div className="flex items-center gap-2">
-            <span className="flex h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-500 animate-pulse" />
-            <p className="text-[11px] text-slate-400 mt-0.5 uppercase tracking-wider font-medium truncate">
-              {selectedCommunity.description || "Official Community"}
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
+                      {/* Navigation & Community Info */}
+                      <div className="flex flex-col gap-3 min-w-0">
+                        {/* Back Button for Mobile - Now outside and labeled */}
+                        <button
+                          onClick={() => setSelectedCommunity(null)}
+                          className="lg:hidden flex items-center gap-2 w-fit px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-slate-400 active:scale-95 transition-all text-[10px] font-bold uppercase tracking-widest"
+                        >
+                          <ArrowLeft size={14} />
+                          Backsefse
+                        </button>
 
-    {/* ACTIONS CONTAINER: Balanced on mobile */}
-    <div className="flex items-center justify-between md:justify-end gap-3 shrink-0">
-      
-      {/* ALWAYS VISIBLE ACTION BUTTON (Left on mobile, Right on desktop) */}
-      <div className="order-1 md:order-2">
-        {isMember ? (
-          <button
-            onClick={() => setIsPostModalOpen(true)}
-            className="flex items-center gap-2 px-4 py-2.5 text-[11px] md:text-xs font-bold rounded-xl bg-brand-500 text-white shadow-[0_0_20px_rgba(20,184,166,0.2)] hover:shadow-[0_0_25px_rgba(20,184,166,0.4)] transition-all active:scale-95 whitespace-nowrap"
-          >
-            <Plus size={14} strokeWidth={3} />
-            Create Post
-          </button>
-        ) : (
-          <button
-            onClick={() => handleJoin(selectedCommunity._id)}
-            className="flex items-center gap-2 px-4 py-2.5 text-[11px] md:text-xs font-bold rounded-xl bg-emerald-600 text-white shadow-lg transition-all active:scale-95 ring-1 ring-emerald-400/20 whitespace-nowrap"
-          >
-            <Users size={14} />
-            Join Space
-          </button>
-        )}
-      </div>
+                        <div className="flex items-start gap-3">
+                          <div className="space-y-0.5 min-w-0">
+                            <h2 className="text-lg font-semibold text-slate-100 flex items-center gap-2 truncate">
+                              {selectedCommunity.name}
+                            </h2>
+                            <div className="flex items-center gap-2">
+                              <span className="flex h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-500 animate-pulse" />
+                              <p className="text-[11px] text-slate-400 mt-0.5 uppercase tracking-wider font-medium truncate">
+                                {selectedCommunity.description || "Official Community"}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
 
-      {/* POSTS / CHAT TOGGLE (Right on mobile, Left on desktop) */}
-      <div className="flex p-1 bg-slate-900/50 rounded-xl border border-white/10 shrink-0 order-2 md:order-1">
-        <button
-          onClick={() => setView("posts")}
-          className={`flex items-center gap-2 px-4 py-1.5 text-[11px] md:text-xs font-bold rounded-lg transition-all ${
-            view === "posts" 
-              ? "bg-white text-black shadow-xl" 
-              : "text-slate-400 hover:text-slate-200"
-          }`}
-        >
-          <FileText size={14} />
-          Posts
-        </button>
-        <button
-          onClick={() => isMember && setView("chat")}
-          className={`flex items-center gap-2 px-4 py-1.5 text-[11px] md:text-xs font-bold rounded-lg transition-all ${
-            !isMember ? "opacity-30 cursor-not-allowed" : ""
-          } ${
-            view === "chat" 
-              ? "bg-white text-black shadow-xl" 
-              : "text-slate-400 hover:text-slate-200"
-          }`}
-        >
-          <MessageSquare size={14} />
-          Chat
-        </button>
-      </div>
+                      {/* ACTIONS CONTAINER: Balanced on mobile */}
+                      <div className="flex items-center justify-between md:justify-end gap-3 shrink-0">
 
-    </div>
-  </div>
-</div>
+                        {/* ALWAYS VISIBLE ACTION BUTTON (Left on mobile, Right on desktop) */}
+                        <div className="order-1 md:order-2">
+                          {isMember ? (
+                            <button
+                              onClick={() => setIsPostModalOpen(true)}
+                              className="flex items-center gap-2 px-4 py-2.5 text-[11px] md:text-xs font-bold rounded-xl bg-brand-500 text-white shadow-[0_0_20px_rgba(20,184,166,0.2)] hover:shadow-[0_0_25px_rgba(20,184,166,0.4)] transition-all active:scale-95 whitespace-nowrap"
+                            >
+                              <Plus size={14} strokeWidth={3} />
+                              Create Post
+                            </button>
+                          ) : (
+                            <button
+                              onClick={() => handleJoin(selectedCommunity._id)}
+                              className="flex items-center gap-2 px-4 py-2.5 text-[11px] md:text-xs font-bold rounded-xl bg-emerald-600 text-white shadow-lg transition-all active:scale-95 ring-1 ring-emerald-400/20 whitespace-nowrap"
+                            >
+                              <Users size={14} />
+                              Join Space
+                            </button>
+                          )}
+                        </div>
+
+                        {/* POSTS / CHAT TOGGLE (Right on mobile, Left on desktop) */}
+                        <div className="flex p-1 bg-slate-900/50 rounded-xl border border-white/10 shrink-0 order-2 md:order-1">
+                          <button
+                            onClick={() => setView("posts")}
+                            className={`flex items-center gap-2 px-4 py-1.5 text-[11px] md:text-xs font-bold rounded-lg transition-all ${view === "posts"
+                              ? "bg-white text-black shadow-xl"
+                              : "text-slate-400 hover:text-slate-200"
+                              }`}
+                          >
+                            <FileText size={14} />
+                            Posts
+                          </button>
+                          <button
+                            onClick={() => isMember && setView("chat")}
+                            className={`flex items-center gap-2 px-4 py-1.5 text-[11px] md:text-xs font-bold rounded-lg transition-all ${!isMember ? "opacity-30 cursor-not-allowed" : ""
+                              } ${view === "chat"
+                                ? "bg-white text-black shadow-xl"
+                                : "text-slate-400 hover:text-slate-200"
+                              }`}
+                          >
+                            <MessageSquare size={14} />
+                            Chat
+                          </button>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
 
                   {/* CONTENT AREA */}
                   <div className="flex-1 min-h-0 overflow-y-auto scrollbar-hide p-3 md:p-5">

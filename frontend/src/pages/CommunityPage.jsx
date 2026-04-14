@@ -114,7 +114,7 @@ export default function CommunityPage() {
         </div>
       ) : (
         <div className="glass rounded-2xl p-4 bg-white/5 border-dashed border-white/10 text-center">
-           <p className="text-gray-500 text-sm">Join this community to start posting and chatting.</p>
+          <p className="text-gray-500 text-sm">Join this community to start posting and chatting.</p>
         </div>
       )}
 

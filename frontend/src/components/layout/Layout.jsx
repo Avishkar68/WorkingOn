@@ -64,7 +64,7 @@ export default function Layout({ children }) {
             <motion.main
               className={`flex-1 min-w-0 overflow-y-auto scrollbar-hide ${isFullBleed
                 ? "overflow-hidden"
-                : "rounded-[2rem] glass p-6 lg:p-8 space-y-8"
+                : "rounded-[2rem] glass p-0 lg:p-8 space-y-8"
                 }`}
               variants={fadeInUp}
               initial="hidden"

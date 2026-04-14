@@ -127,7 +127,7 @@
 //                 <h2 className="text-2xl font-bold text-white group-hover:text-indigo-400 transition-colors tracking-tight leading-snug">
 //                   {c.name}
 //                 </h2>
-                
+
 //                 <p className="text-sm text-gray-400 mb-2 leading-relaxed font-medium opacity-90 line-clamp-2">
 //                   {c.description}
 //                 </p>
@@ -269,7 +269,7 @@ export default function Home() {
   if (loading) {
     return (
       <PageShell eyebrow="Communities" title="Explore communities" subtitle="Join focused spaces and collaborate with people in your domain.">
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <div className="grid grid-cols-1  gap-4 md:grid-cols-2">
           {[1, 2, 3, 4].map(i => (
             <div key={i} className="glass-card p-6 flex flex-col min-h-[220px] justify-between">
               <Skeleton className="absolute top-4 right-4 w-12 h-6 rounded-full" />
@@ -295,10 +295,10 @@ export default function Home() {
       title="Explore communities"
       subtitle="Join focused spaces and collaborate with people in your domain."
       actions={
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 ">
           <button
             onClick={() => navigate("/communities")}
-            className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-slate-300 hover:text-white transition-all bg-white/5 hover:bg-white/10 rounded-xl border border-white/10"
+            className="flex items-center gap-2 px-4 py-2  text-sm font-semibold text-slate-300 hover:text-white transition-all bg-white/5 hover:bg-white/10 rounded-xl border border-white/10"
           >
             <LayoutGrid size={16} />
             Communities Hub
@@ -308,9 +308,9 @@ export default function Home() {
     >
       {showWelcome && <WelcomeModal close={() => setShowWelcome(false)} />}
       {showChallengeSuccess && (
-        <ChallengeSuccessModal 
-          rank={userRank} 
-          close={() => setShowChallengeSuccess(false)} 
+        <ChallengeSuccessModal
+          rank={userRank}
+          close={() => setShowChallengeSuccess(false)}
         />
       )}
 
@@ -319,7 +319,7 @@ export default function Home() {
         variants={container}
         initial="hidden"
         animate="show"
-        className="grid grid-cols-1 gap-4 md:grid-cols-2"
+        className="grid grid-cols-1 gap-4 md:grid-cols-2 "
       >
         {communities.map((c) => {
           const isJoined = c.members?.includes(userId)
@@ -329,7 +329,7 @@ export default function Home() {
               key={c._id}
               variants={item}
               onClick={() => navigate("/communities", { state: { selectedCommunityId: c._id } })}
-              className="group relative glass-card p-6 cursor-pointer flex flex-col min-h-[220px] justify-between overflow-hidden"
+              className="group relative glass-card p-6  cursor-pointer flex flex-col min-h-[220px] justify-between overflow-hidden"
             >
               {/* MEMBER COUNT */}
               <div className="absolute top-4 right-4 pill-badge z-20 shadow-sm border-white/5 bg-black/40 backdrop-blur-md">
@@ -352,11 +352,10 @@ export default function Home() {
               <div className="relative z-10 flex items-center justify-between mt-auto pt-5 border-t border-white/10">
                 <button
                   onClick={(e) => handleJoin(e, c._id)}
-                  className={`px-4 py-2 text-xs font-semibold rounded-xl transition ${
-                    isJoined
-                      ? "bg-emerald-500/16 text-emerald-300 border border-emerald-400/30"
-                      : "btn-primary"
-                  }`}
+                  className={`px-4 py-2 text-xs font-semibold rounded-xl transition ${isJoined
+                    ? "bg-emerald-500/16 text-emerald-300 border border-emerald-400/30"
+                    : "btn-primary"
+                    }`}
                 >
                   {isJoined ? "Joined" : "Join now"}
                 </button>

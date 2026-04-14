@@ -86,7 +86,7 @@ export default function Profile() {
   if (!profile) return null;
 
   return (
-    <div className="space-y-6 md:px-0">
+    <div className="space-y-6 p-2 md:p-0 md:px-0">
 
       {/* PROFILE CARD - Responsive stack */}
       <div className="glass p-5 md:p-6 rounded-2xl flex flex-col md:flex-row items-start md:items-start gap-4 md:gap-6 text-left md:text-left">
