@@ -1064,23 +1064,53 @@ button:disabled {
 }
 
 /* ── Mobile responsive ── */
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .ah-root {
     grid-template-columns: 1fr;
-    border-radius: 0;
-    border: none;
+    border-radius: 0.75rem; /* Soften corner slightly on mobile */
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    height: 100%;
+    background: rgba(0, 0, 0, 0.2);
   }
 
+  /* Logic to show only one panel at a time */
   .ah-sidebar {
+    width: 100%;
+    height: 100%;
     border-right: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    max-height: 45vh;
+    display: flex; 
   }
 
   .ah-chat {
-    min-height: 55vh;
+    width: 100%;
+    height: 100%;
+    display: none;
+  }
+
+  /* Toggle visibility when a thread is active */
+  .ah-root--has-active .ah-sidebar {
+    display: none;
+  }
+
+  .ah-root--has-active .ah-chat {
+    display: flex;
+    background: transparent;
+  }
+
+  .ah-chat-header {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 0.6rem 0.85rem;
+  }
+
+  .ah-messages {
+    padding: 0.75rem 0.85rem;
+  }
+
+  .ah-root:not(.ah-root--has-active) .ah-sidebar {
+    max-height: none;
   }
 }
+
 
 .academic-header-text {
   display: flex;

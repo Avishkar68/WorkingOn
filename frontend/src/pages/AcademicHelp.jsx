@@ -141,7 +141,7 @@ export default function AcademicHelp() {
   };
 
   return (
-    <div className="ah-root">
+    <div className={`ah-root ${activePost ? "ah-root--has-active" : ""}`}>
       {/* ─── THREADS SIDEBAR (30%) ─── */}
       <div className="ah-sidebar">
         {/* Header */}
