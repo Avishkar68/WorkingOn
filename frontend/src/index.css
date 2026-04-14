@@ -1107,8 +1107,17 @@ button:disabled {
   }
 
   .ah-root--has-active .ah-chat {
-    display: flex;
-    background: transparent;
+    display: flex !important;
+    /* Ensure it overrides any other hidden states */
+    position: absolute;
+    /* Optional: ensures it covers the screen properly */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    background: #04090b;
+    /* Match your body background so it's not transparent */
   }
 
   .ah-chat-header {

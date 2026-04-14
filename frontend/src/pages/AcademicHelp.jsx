@@ -60,12 +60,12 @@ export default function AcademicHelp() {
         prev.map((p) =>
           p._id === postId
             ? {
-                ...p,
-                replies: [
-                  ...(p.replies || []).filter((r) => r._id !== reply._id),
-                  reply,
-                ],
-              }
+              ...p,
+              replies: [
+                ...(p.replies || []).filter((r) => r._id !== reply._id),
+                reply,
+              ],
+            }
             : p
         )
       );
@@ -101,14 +101,34 @@ export default function AcademicHelp() {
   }, [posts, activePost]);
 
   const create = async () => {
+    // 1. Validation check to prevent empty submissions
     if (!title.trim() || !desc.trim()) return;
+
     setIsCreating(true);
     try {
+      // 2. Perform the API request
       const res = await api.post("/academic", { title, description: desc });
+
+      // 3. Clear the input fields
       setTitle("");
       setDesc("");
       setShowComposer(false);
+
+      /**
+       * 4. CRITICAL FIX FOR MOBILE:
+       * Manually update the posts state with the new data from the server.
+       * This ensures that when we call 'setActivePost' in the next line,
+       * 'activePostData' will NOT be null, preventing the blank screen on mobile.
+       */
+      setPosts((prev) => {
+        // Prevent duplicate if socket already added it
+        if (prev.some((p) => p._id === res.data._id)) return prev;
+        return [res.data, ...prev];
+      });
+
+      // 5. Switch the view to the newly created post
       setActivePost(res.data._id);
+
       toast.success("Discussion started!");
     } catch (err) {
       console.error(err);
@@ -268,7 +288,7 @@ export default function AcademicHelp() {
       </div>
 
       {/* ─── CHAT PANEL (70%) ─── */}
-      <div className="ah-chat">
+      <div className="ah-chat pt-20 md:pt-0">
         {!activePostData ? (
           <div className="ah-chat-placeholder">
             <div className="ah-chat-placeholder-inner">

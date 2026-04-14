@@ -8,13 +8,22 @@ export const useSocket = () => useContext(SocketContext);
 export default function SocketProvider({ children }) {
   const [socket, setSocket] = useState(null);
 
+  // Extract token here so we can watch it for changes
+  const token = localStorage.getItem("token");
+
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) return;
+    // If no token is found, ensure any existing socket is closed and exit
+    if (!token) {
+      if (socket) {
+        socket.disconnect();
+        setSocket(null);
+      }
+      return;
+    }
 
     const SOCKET_URL = import.meta.env.VITE_API_BASE_URL
       ? import.meta.env.VITE_API_BASE_URL.replace("/api", "")
-      : "http://localhost:4000";
+      : "https://spitconnect.onrender.com";
 
     const s = io(SOCKET_URL, {
       auth: { token },
@@ -31,10 +40,17 @@ export default function SocketProvider({ children }) {
 
     setSocket(s);
 
+    // Cleanup: disconnect when component unmounts or token changes
     return () => {
       s.disconnect();
     };
-  }, []);
+
+    /**
+     * Dependency: [token]
+     * This ensures that when the user logs in and the token is set, 
+     * this effect re-runs and establishes the connection without a page reload.
+     */
+  }, [token]);
 
   return (
     <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>
