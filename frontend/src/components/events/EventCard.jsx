@@ -10,7 +10,6 @@ import { useState } from "react";
 export default function EventCard({ event, refresh }) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-  // ✅ GET CURRENT USER
   const token = localStorage.getItem("token");
   let currentUserId = null;
   if (token) {
@@ -25,18 +24,13 @@ export default function EventCard({ event, refresh }) {
   const formatDate = (date) => {
     const d = new Date(date)
     return d.toLocaleString("en-IN", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-      hour: "numeric",
-      minute: "2-digit"
+      month: "short", day: "numeric", year: "numeric",
+      hour: "numeric", minute: "2-digit"
     })
   }
 
   const register = () => {
-    if (event.registrationLink) {
-      window.open(event.registrationLink, "_blank")
-    }
+    if (event.registrationLink) window.open(event.registrationLink, "_blank")
   }
 
   const handleShare = async (e) => {
@@ -44,7 +38,7 @@ export default function EventCard({ event, refresh }) {
     const url = `${window.location.origin}/events/${event._id}`;
     try {
       await navigator.clipboard.writeText(url);
-      toast.success("Link copied to clipboard!");
+      toast.success("Link copied!");
     } catch {
       toast.error("Failed to copy link");
     }
@@ -57,13 +51,11 @@ export default function EventCard({ event, refresh }) {
       if (refresh) refresh();
       setShowDeleteConfirm(false);
     } catch (err) {
-      console.error(err);
       toast.error("Failed to delete event");
     }
   };
 
   return (
-
     <motion.div
       className="glass-card overflow-hidden"
       variants={fadeInUp}
@@ -72,100 +64,59 @@ export default function EventCard({ event, refresh }) {
       viewport={{ once: true, amount: 0.2 }}
       whileHover={cardHover}
     >
-
-      {/* IMAGE */}
-      {/* <img
-        src="https://images.unsplash.com/photo-1552664730-d307ca884978"
-        className="w-full h-48 object-cover"
-      /> */}
       {event.image ? (
-        <img
-          src={event.image}
-          alt="event"
-          className="w-full h-48 object-cover"
-        />
+        <img src={event.image} alt="event" className="w-full h-40 md:h-48 object-cover" />
       ) : (
-        <img
-          src="https://images.unsplash.com/photo-1552664730-d307ca884978"
-          alt="fallback"
-          className="w-full h-48 object-cover"
-        />
+        <img src="https://images.unsplash.com/photo-1552664730-d307ca884978" alt="fallback" className="w-full h-40 md:h-48 object-cover" />
       )}
-      <div className="p-6 space-y-4">
 
-        {/* TITLE */}
-        <h2 className="text-lg font-semibold text-white">
-          {event.title}
-        </h2>
-
-        {/* DESC */}
-        <p className="text-gray-300 text-sm whitespace-pre-wrap">
+      <div className="p-4 md:p-6 space-y-4">
+        <h2 className="text-lg font-semibold text-white">{event.title}</h2>
+        <p className="text-gray-300 text-sm whitespace-pre-wrap line-clamp-3 md:line-clamp-none">
           {event.description}
         </p>
 
-        {/* TAGS */}
         <div className="flex gap-2 flex-wrap">
           {event.tags?.flatMap(t => t.split(",")).map(t => t.trim()).filter(Boolean).map(tag => (
-            <span
-              key={tag}
-              className="pill-badge"
-            >
-              #{tag}
-            </span>
+            <span key={tag} className="pill-badge text-[10px] md:text-xs">#{tag}</span>
           ))}
         </div>
 
-        {/* INFO */}
         <div className="text-gray-400 text-sm space-y-1">
-
-          <p className="flex items-center gap-2">
-            <CalendarDays size={14} className="text-[#2DD4BF]" />
-            {formatDate(event.date)}
-          </p>
-
-          <p className="flex items-center gap-2">
-            <MapPin size={14} className="text-rose-400" />
-            {event.location}
-          </p>
-
-          {/* <p className="flex items-center gap-2">
-            <Users size={14} className="text-blue-400" />
-            {event.registeredUsers?.length || 0} attending
-          </p> */}
-
+          <p className="flex items-center gap-2"><CalendarDays size={14} className="text-[#2DD4BF]" /> {formatDate(event.date)}</p>
+          <p className="flex items-center gap-2"><MapPin size={14} className="text-rose-400" /> {event.location}</p>
         </div>
 
-        <div className="border-t border-white/10 pt-4 flex gap-3">
+        <div className="border-t border-white/10 pt-4 flex flex-col sm:flex-row gap-3">
           <motion.button
             onClick={register}
-            whileHover={{ scale: 1.03 }}
+            whileHover={{ scale: 1.02 }}
             whileTap={buttonTap}
-            className="flex-1 btn-primary font-semibold text-sm py-3 rounded-xl transition-all"
+            className="flex-1 btn-primary font-semibold text-sm py-3 rounded-xl"
           >
             Register Interest
           </motion.button>
 
-          <motion.button
-            onClick={handleShare}
-            whileTap={buttonTap}
-            title="Share Event"
-            className="p-3 rounded-xl border border-white/10 bg-white/5 text-slate-400 hover:text-white hover:bg-white/10 transition-all flex items-center justify-center shrink-0"
-          >
-            <Share2 size={18} />
-          </motion.button>
-
-          {(event.organizer?._id || event.organizer)?.toString() === currentUserId?.toString() && (
+          <div className="flex gap-3 justify-center">
             <motion.button
-              onClick={() => setShowDeleteConfirm(true)}
+              onClick={handleShare}
               whileTap={buttonTap}
-              title="Delete Event"
-              className="p-3 rounded-xl border border-white/10 bg-white/5 text-red-400 hover:text-red-500 hover:bg-white/10 transition-all flex items-center justify-center shrink-0"
+              className="p-3 rounded-xl border border-white/10 bg-white/5 text-slate-400 hover:text-white flex-1 sm:flex-none flex justify-center"
             >
-              <Trash2 size={18} />
+              <Share2 size={18} />
             </motion.button>
-          )}
-        </div>
 
+            {(event.organizer?._id || event.organizer)?.toString() === currentUserId?.toString() && (
+              <motion.button
+                onClick={() => setShowDeleteConfirm(true)}
+                whileTap={buttonTap}
+                className="p-3 rounded-xl border border-white/10 bg-white/5 text-red-400 hover:text-red-500 flex-1 sm:flex-none flex justify-center"
+              >
+                <Trash2 size={18} />
+              </motion.button>
+            )}
+          </div>
+        </div>
       </div>
 
       <ConfirmationModal
@@ -173,10 +124,9 @@ export default function EventCard({ event, refresh }) {
         onClose={() => setShowDeleteConfirm(false)}
         onConfirm={handleDelete}
         title="Delete Event"
-        message="Are you sure you want to delete this event? This action cannot be undone."
+        message="Are you sure you want to delete this event?"
         confirmText="Confirm Delete"
       />
     </motion.div>
-
   )
 }

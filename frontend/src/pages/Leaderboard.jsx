@@ -26,9 +26,12 @@ export default function Leaderboard() {
   const others = leaders.slice(3);
 
   const podiumThemes = [
-    { rank: 1, text: "text-amber-400", border: "border-amber-500/30", glow: "shadow-amber-500/10", icon: Crown, order: "order-2" },
-    { rank: 2, text: "text-slate-300", border: "border-slate-400/20", glow: "shadow-slate-500/5", icon: Trophy, order: "order-1" },
-    { rank: 3, text: "text-orange-400", border: "border-orange-500/20", glow: "shadow-orange-500/5", icon: Trophy, order: "order-3" },
+    // rank 1: First on mobile (order-1), Middle on desktop (md:order-2)
+    { rank: 1, text: "text-amber-400", border: "border-amber-500/30", glow: "shadow-amber-500/10", icon: Crown, order: "order-1 md:order-2" },
+    // rank 2: Second on mobile (order-2), Left on desktop (md:order-1)
+    { rank: 2, text: "text-slate-300", border: "border-slate-400/20", glow: "shadow-slate-500/5", icon: Trophy, order: "order-2 md:order-1" },
+    // rank 3: Third on mobile and desktop
+    { rank: 3, text: "text-orange-400", border: "border-orange-500/20", glow: "shadow-orange-500/5", icon: Trophy, order: "order-3 md:order-3" },
   ];
 
   return (
@@ -37,9 +40,10 @@ export default function Leaderboard() {
       title="Streak Leaderboard"
       subtitle="The defining rankings for campus engagement and mastery."
     >
-      <div className="max-w-[1000px] mx-auto space-y-8">
+      <div className="max-w-[1000px] mx-auto space-y-8 px-4 md:px-0">
+
         {/* Podium - Responsive Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end pt-8">
+        <div className="flex flex-col md:grid md:grid-cols-3 gap-8 md:gap-4 items-center md:items-end pt-8">
           {topThree.map((user, index) => {
             const theme = podiumThemes[index];
             const isFirst = theme.rank === 1;
@@ -47,7 +51,7 @@ export default function Leaderboard() {
             return (
               <div
                 key={user._id}
-                className={`${theme.order} relative group`}
+                className={`${theme.order} relative group w-full max-w-[400px] md:max-w-none`}
               >
                 {/* Ranking Badge */}
                 <div className={`absolute -top-4 left-1/2 -translate-x-1/2 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-[#1a1f2e] border-2 ${theme.border} ${theme.text} font-bold text-sm shadow-xl`}>
@@ -56,14 +60,14 @@ export default function Leaderboard() {
 
                 <div className={`
                   relative overflow-hidden glass-card p-5
-                  ${isFirst ? "min-h-[320px] md:scale-105 z-10 border-amber-500/40" : "min-h-[280px] border-white/5"}
+                  ${isFirst ? "min-h-[300px] md:min-h-[320px] scale-[1.02] md:scale-105 z-10 border-amber-500/40" : "min-h-[260px] md:min-h-[280px] border-white/5"}
                   ${theme.glow} shadow-2xl
                 `}>
                   {/* Subtle Top Light Glow */}
                   <div className={`absolute top-0 left-0 right-0 h-24 bg-gradient-to-b ${isFirst ? 'from-amber-500/10' : 'from-white/5'} to-transparent opacity-50`} />
 
                   <div className="relative z-10 flex flex-col items-center text-center h-full">
-                    <Link 
+                    <Link
                       to={`/user/${user._id}`}
                       className={`mb-4 mt-2 flex h-14 w-14 items-center justify-center rounded-2xl bg-white/5 border border-white/10 ${theme.text} hover:scale-110 transition-transform`}
                     >
@@ -71,7 +75,7 @@ export default function Leaderboard() {
                     </Link>
 
                     <Link to={`/user/${user._id}`} className="hover:text-indigo-400 transition-colors w-full px-2">
-                       <h3 className="text-lg font-bold text-white truncate">{user.name}</h3>
+                      <h3 className="text-lg font-bold text-white truncate">{user.name}</h3>
                     </Link>
                     <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-4">Ranked {theme.rank}</p>
 
@@ -106,9 +110,9 @@ export default function Leaderboard() {
         </div>
 
         {/* List for the rest */}
-        <div className="rounded-[2rem] border border-white/5 bg-white/[0.02] p-6">
+        <div className="rounded-[1.5rem] md:rounded-[2rem] border border-white/5 bg-white/[0.02] p-4 md:p-6">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-sm font-bold text-slate-400 uppercase tracking-widest">Arena Standings</h2>
+            <h2 className="text-xs font-bold text-slate-400 uppercase tracking-widest">Arena Standings</h2>
             <Sparkles size={16} className="text-indigo-400 opacity-50" />
           </div>
 
@@ -117,21 +121,21 @@ export default function Leaderboard() {
               <p className="text-slate-500 text-sm text-center py-4">Calculating rankings...</p>
             ) : (
               others.map((user, index) => (
-                <div key={user._id} className="group flex items-center justify-between rounded-2xl border border-white/5 bg-white/[0.01] px-4 py-3 hover:bg-white/[0.04] transition-all">
-                  <div className="flex items-center gap-4">
-                    <span className="text-xs font-bold text-slate-600 w-6">#{index + 4}</span>
-                    <Link to={`/user/${user._id}`} className="flex items-center gap-4 group/row">
-                      <div>
-                        <p className="text-sm font-bold text-white group-hover/row:text-indigo-400 transition-colors">{user.name}</p>
+                <div key={user._id} className="group flex items-center justify-between rounded-2xl border border-white/5 bg-white/[0.01] px-3 md:px-4 py-3 hover:bg-white/[0.04] transition-all">
+                  <div className="flex items-center gap-3 md:gap-4 overflow-hidden">
+                    <span className="text-[10px] md:text-xs font-bold text-slate-600 w-5 md:w-6 shrink-0">#{index + 4}</span>
+                    <Link to={`/user/${user._id}`} className="flex items-center gap-3 md:gap-4 group/row overflow-hidden">
+                      <div className="overflow-hidden">
+                        <p className="text-sm font-bold text-white group-hover/row:text-indigo-400 transition-colors truncate">{user.name}</p>
                         <div className="flex items-center gap-2 mt-0.5">
-                          <span className="text-[10px] text-slate-500">Streak: {user.streakCount || 0}d</span>
+                          <span className="text-[9px] md:text-[10px] text-slate-500 whitespace-nowrap">Streak: {user.streakCount || 0}d</span>
                           <span className="text-[10px] text-slate-700">•</span>
-                          <span className="text-[10px] text-slate-500">{user.totalPosts || 0} posts</span>
+                          <span className="text-[9px] md:text-[10px] text-slate-500 whitespace-nowrap">{user.totalPosts || 0} posts</span>
                         </div>
                       </div>
                     </Link>
                   </div>
-                  <div className="text-sm font-bold text-indigo-400">{user.score}</div>
+                  <div className="text-sm font-bold text-indigo-400 ml-2 shrink-0">{user.score}</div>
                 </div>
               ))
             )}
