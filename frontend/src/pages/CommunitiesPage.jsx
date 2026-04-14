@@ -214,7 +214,7 @@ export default function CommunitiesPage() {
                           className="lg:hidden flex items-center gap-2 w-fit px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-slate-400 active:scale-95 transition-all text-[10px] font-bold uppercase tracking-widest"
                         >
                           <ArrowLeft size={14} />
-                          Backsefse
+                          Back
                         </button>
 
                         <div className="flex items-start gap-3">
