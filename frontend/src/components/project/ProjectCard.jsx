@@ -131,22 +131,31 @@ export default function ProjectCard({ project, refresh }) {
       {/* ACTIONS */}
       <div className="border-t border-white/10 pt-4 flex flex-col sm:flex-row gap-3">
         {isMember ? (
-          <button className="flex-1 bg-green-500/20 text-green-400 py-2 rounded-xl">
+          <button className="flex-1 bg-green-500/20 text-green-400 py-2 rounded-xl cursor-default">
             Joined
           </button>
         ) : request?.status === "pending" ? (
-          <button className="flex-1 bg-yellow-500/20 text-yellow-400 py-2 rounded-xl">
+          <button className="flex-1 bg-yellow-500/20 text-yellow-400 py-2 rounded-xl cursor-default">
             Pending
           </button>
         ) : request?.status === "accepted" ? (
-          <button className="flex-1 bg-green-500/20 text-green-400 py-2 rounded-xl">
+          <button className="flex-1 bg-green-500/20 text-green-400 py-2 rounded-xl cursor-default">
             Accepted
           </button>
         ) : request?.status === "rejected" ? (
-          <button className="flex-1 bg-red-500/20 text-red-400 py-2 rounded-xl text-sm font-semibold">
+          <button className="flex-1 bg-red-500/20 text-red-400 py-2 rounded-xl text-sm font-semibold cursor-default">
             Rejected
           </button>
+        ) : project.teamSize.current >= project.teamSize.needed ? (
+          /* ✅ TEAM FULL STATE */
+          <button
+            disabled
+            className="flex-1 bg-slate-500/20 text-slate-400 py-2 rounded-xl text-sm font-semibold cursor-not-allowed border border-white/5"
+          >
+            Team Full
+          </button>
         ) : (
+          /* ✅ JOIN ALLOWED */
           <motion.button
             onClick={() => setShowJoin(true)}
             whileHover={{ scale: 1.03 }}
