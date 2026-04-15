@@ -23,8 +23,8 @@ export default function SocketProvider({ children }) {
 
     const SOCKET_URL = import.meta.env.VITE_API_BASE_URL
       ? import.meta.env.VITE_API_BASE_URL.replace("/api", "")
-      : "https://spitconnect.onrender.com";
-    // : "http://localhost:4000";
+      // : "https://spitconnect.onrender.com";
+      : "http://localhost:4000";
 
     const s = io(SOCKET_URL, {
       auth: { token },

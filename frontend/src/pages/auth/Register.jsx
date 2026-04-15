@@ -76,7 +76,7 @@ export default function Register() {
         <div className="space-y-0">
           {/* PROFILE IMAGE UPLOAD */}
           <div className="space-y-2.5">
-            <label className="label">Profile Image</label>
+            <label className="label">Profile Image (Optional)</label>
             <div
               onClick={() => document.getElementById("fileInput").click()}
               className="group relative w-full h-30 rounded-2xl overflow-hidden glass border-dashed border-2 border-white/10 flex flex-col items-center justify-center cursor-pointer hover:border-brand-400 transition-all duration-300"

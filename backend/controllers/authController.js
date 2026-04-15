@@ -28,21 +28,20 @@ export const registerUser = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     // ✅ HANDLE IMAGE
-    let profileImage = "";
-
-    if (req.file) {
-      profileImage = await uploadImage(req.file.path);
-    }
-
-    // ✅ CREATE USER
-    const user = await User.create({
+    const userData = {
       name,
       email,
       password: hashedPassword,
       branch,
       year,
-      profileImage
-    });
+    };
+
+    if (req.file) {
+      userData.profileImage = await uploadImage(req.file.path);
+    }
+
+    // ✅ CREATE USER
+    const user = await User.create(userData);
 
     res.status(201).json({
       _id: user._id,

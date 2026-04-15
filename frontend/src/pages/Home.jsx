@@ -8,11 +8,12 @@ import { jwtDecode } from "jwt-decode"
 import { ArrowUpRight, Plus, Users, LayoutGrid } from "lucide-react"
 import { motion } from "framer-motion"
 import toast from "react-hot-toast"
-
 import WelcomeModal from "../components/dialogueboxes/WelcomeModal"
 import ChallengeSuccessModal from "../components/dialogueboxes/ChallengeSuccessModal"
 import PageShell from "../components/layout/PageShell"
 import Skeleton from "../components/ui/Skeleton"
+import { useContext } from "react" // Add this to your React imports
+import { AuthContext } from "../context/AuthContext"
 
 export default function Home() {
   const [communities, setCommunities] = useState([])
@@ -20,6 +21,8 @@ export default function Home() {
   const [showWelcome, setShowWelcome] = useState(false)
   const [showChallengeSuccess, setShowChallengeSuccess] = useState(false)
   const [userRank, setUserRank] = useState(0)
+  const { getUser } = useContext(AuthContext)
+  const [joiningId, setJoiningId] = useState(null)
 
   const navigate = useNavigate()
   const location = useLocation()
@@ -77,23 +80,26 @@ export default function Home() {
   // Inside handleJoin in Home.jsx
   const handleJoin = async (e, id) => {
     e.stopPropagation()
+    setJoiningId(id) // Start loading for this specific card
+
     try {
       await api.post(`/communities/${id}/join`)
+      await getUser()
+
       toast.success("Joined community successfully!")
+      await fetchCommunities()
 
-      // Refresh local state
-      fetchCommunities()
-
-      // Navigate with a flag to trigger a refresh on the next page
       navigate("/communities", {
         state: {
           selectedCommunityId: id,
-          justJoined: true // Add this flag
+          justJoined: true
         }
       })
     } catch (err) {
       console.error(err)
       toast.error("Failed to join community")
+    } finally {
+      setJoiningId(null) // Reset loading state
     }
   }
 
@@ -171,6 +177,7 @@ export default function Home() {
       >
         {communities.map((c) => {
           const isJoined = c.members?.includes(userId)
+          const isThisCardLoading = joiningId === c._id // Check if this specific card is joining
 
           return (
             <motion.div
@@ -199,13 +206,23 @@ export default function Home() {
               {/* ACTION BAR */}
               <div className="relative z-10 flex items-center justify-between mt-auto pt-5 border-t border-white/10">
                 <button
-                  onClick={(e) => handleJoin(e, c._id)}
-                  className={`px-4 py-2 text-xs font-semibold rounded-xl transition ${isJoined
+                  onClick={(e) => !isThisCardLoading && handleJoin(e, c._id)}
+                  disabled={isThisCardLoading}
+                  className={`px-4 py-2 text-xs font-semibold rounded-xl transition flex items-center gap-2 ${isJoined
                     ? "bg-emerald-500/16 text-emerald-300 border border-emerald-400/30"
                     : "btn-primary"
-                    }`}
+                    } ${isThisCardLoading ? "opacity-70 cursor-not-allowed" : ""}`}
                 >
-                  {isJoined ? "Joined" : "Join now"}
+                  {isThisCardLoading ? (
+                    <>
+                      <div className="h-3 w-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      Joining...
+                    </>
+                  ) : isJoined ? (
+                    "Joined"
+                  ) : (
+                    "Join now"
+                  )}
                 </button>
 
                 <div className="text-slate-500 group-hover:text-slate-200 transition-all flex items-center gap-1.5 text-xs font-medium tracking-wide">
