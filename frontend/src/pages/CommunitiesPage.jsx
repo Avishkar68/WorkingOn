@@ -53,6 +53,7 @@ export default function CommunitiesPage() {
 
   const handleSelectCommunity = (community) => {
     setSelectedCommunity(community)
+    // Default to posts view to ensure a clean UI state
     setView("posts")
     loadPosts(community._id)
   }
@@ -61,10 +62,18 @@ export default function CommunitiesPage() {
     try {
       await api.post(`/communities/${id}/join`)
       toast.success("Joined community successfully!")
+
+      // 1. Refresh the sidebar list to update member counts and filters
       await loadCommunities()
+
+      // 2. CRITICAL: Update the currently active view object immediately
+      // This flips isMember to true and enables the Chat tab/Create Post button
       setSelectedCommunity(prev => {
         if (!prev || prev._id !== id) return prev
-        return { ...prev, members: [...(prev.members || []), user?._id] }
+        return {
+          ...prev,
+          members: [...(prev.members || []), user?._id]
+        }
       })
     } catch (err) {
       console.error(err)
@@ -76,21 +85,49 @@ export default function CommunitiesPage() {
     loadCommunities()
   }, [])
 
+  // 1. Keep your initial load (Optional, but good for direct visits)
   useEffect(() => {
-    if (location.state?.selectedCommunityId && communities.length > 0) {
-      const target = communities.find(c => c._id === location.state.selectedCommunityId)
-      if (target) {
-        handleSelectCommunity(target)
-        window.history.replaceState({}, document.title)
+    loadCommunities()
+  }, [])
+
+  // 2. REPLACED: This handles the navigation and membership sync
+  useEffect(() => {
+    const syncCommunityState = async () => {
+      // If we have a community ID coming from the Home page navigation
+      if (location.state?.selectedCommunityId) {
+        const targetId = location.state.selectedCommunityId
+
+        try {
+          setLoadingCommunities(true)
+          // We fetch fresh data because the user might have JUST joined 
+          // on the previous page, and the local state is stale.
+          const res = await api.get("/communities")
+          const freshCommunities = res.data || []
+          setCommunities(freshCommunities)
+
+          const target = freshCommunities.find(c => c._id === targetId)
+          if (target) {
+            // Now handleSelectCommunity uses the community object 
+            // that actually contains the user in the members array.
+            handleSelectCommunity(target)
+          }
+        } catch (err) {
+          console.error("Error syncing community state:", err)
+        } finally {
+          setLoadingCommunities(false)
+          // Clear state so a refresh doesn't trigger a re-fetch loop
+          window.history.replaceState({}, document.title)
+        }
       }
     }
-  }, [location.state, communities])
+
+    syncCommunityState()
+  }, [location.state]) // Only runs when navigation state exists
 
   const filteredCommunities = communities.filter(c => {
     if (filter === "joined") return c.members?.includes(user?._id)
     return true
   })
-
   const isMember = selectedCommunity?.members?.includes(user?._id)
 
   return (
