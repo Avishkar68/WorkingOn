@@ -39,6 +39,7 @@ export default function NotificationProvider({ children }) {
     if (!socket || !user) return;
 
     const handleNewNotification = (notification) => {
+      console.log("🔔 New notification received:", notification);
       // ✅ PREMIUM TOAST UI
       toast.custom((t) => (
         <div

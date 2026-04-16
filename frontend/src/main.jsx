@@ -7,17 +7,5 @@ import App from './App.jsx'
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <App />
-    <Toaster
-      position="top-right"
-      toastOptions={{
-        duration: 2600,
-        className: "glass toast-enter",
-        style: {
-          color: "#e5e7eb",
-          borderRadius: "12px",
-          border: "1px solid rgba(255,255,255,0.1)"
-        }
-      }}
-    />
   </StrictMode>,
 )
