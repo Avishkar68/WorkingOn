@@ -20,28 +20,28 @@ const fadeInUp = {
 const teamMembers = [
     {
         name: "Avishkar Kakade",
-        role: "Full Stack Lead & Founder",
-        image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Avishkar",
-        bio: "Second-year Computer Engineering student at SPIT. Passionate about MERN and high-end UI/UX.",
+        role: " Co-Founder & Developer",
+        image: "https://res.cloudinary.com/dgof8mfp3/image/upload/v1776371819/Screenshot_2026-04-17_at_2.04.32_AM_renebx.png",
+        bio: "Second-year Computer Engineering student at SPIT. Specialized in building Full-Stack Applications.",
         links: { github: "#", linkedin: "#", twitter: "#" },
     },
     {
         name: "Falashree Shirodkar",
-        role: "Co-Founder & Data Architect",
-        image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Parth",
+        role: "Co-Founder & Developer ",
+        image: "https://res.cloudinary.com/dgof8mfp3/image/upload/v1776371611/WhatsApp_Image_2026-04-17_at_01.54.13_kwlcvi.jpg",
         bio: "Specializes in data analytics and system architecture. Building the backbone of SPITConnect.",
         links: { github: "#", linkedin: "#", twitter: "#" },
     },
     {
-        name: "Pratiksha",
-        role: "Frontend Specialist",
+        name: "Pratiksha Hekare",
+        role: "Developer & Marketing",
         image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Nitin",
         bio: "Crafting seamless user experiences with React and Framer Motion. UI polish enthusiast.",
         links: { github: "#", linkedin: "#", twitter: "#" },
     },
     {
         name: "Manasvi More",
-        role: "Research & UX Lead",
+        role: "Developer & Marketing",
         image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Falashree",
         bio: "Focusing on user behavior and AI workplace productivity within the campus ecosystem.",
         links: { github: "#", linkedin: "#", twitter: "#" },
@@ -134,9 +134,9 @@ export default function OurTeam() {
                                 <a href={member.links.linkedin} className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-all">
                                     <Linkedin size={18} />
                                 </a>
-                                <a href={member.links.twitter} className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-all">
+                                {/* <a href={member.links.twitter} className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-all">
                                     <Twitter size={18} />
-                                </a>
+                                </a> */}
                             </div>
                         </motion.div>
                     ))}
