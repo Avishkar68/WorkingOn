@@ -23,14 +23,14 @@ const teamMembers = [
         role: " Co-Founder & Developer",
         image: "https://res.cloudinary.com/dgof8mfp3/image/upload/v1776371819/Screenshot_2026-04-17_at_2.04.32_AM_renebx.png",
         bio: "Second-year Computer Engineering student at SPIT. Specialized in building Full-Stack Applications.",
-        links: { github: "#", linkedin: "#", twitter: "#" },
+        links: { github: "https://github.com/Avishkar68", linkedin: "https://www.linkedin.com/in/avishkar-kakade-16536124b/", twitter: "#" },
     },
     {
         name: "Falashree Shirodkar",
         role: "Co-Founder & Developer ",
         image: "https://res.cloudinary.com/dgof8mfp3/image/upload/v1776371611/WhatsApp_Image_2026-04-17_at_01.54.13_kwlcvi.jpg",
-        bio: "Specializes in data analytics and system architecture. Building the backbone of SPITConnect.",
-        links: { github: "#", linkedin: "#", twitter: "#" },
+        bio: "Works on AI-driven features. Analyzes user behavior. Improves productivity and experience.",
+        links: { github: "https://github.com/ShirodkarFalashree", linkedin: "https://www.linkedin.com/in/shirodkarfalashree/", twitter: "#" },
     },
     {
         name: "Pratiksha Hekare",
