@@ -82,7 +82,7 @@ export default function CreateEventModal({ close, refresh }) {
         <div className="flex justify-between items-center">
           <div>
             <h2 className="text-xl font-semibold flex items-center gap-2">
-              <Calendar size={20} className="text-indigo-400" /> Create Event
+              <Calendar size={20} className="text-white" /> Create Event
             </h2>
             <p className="text-sm text-zinc-400">
               Share events happening in your college
@@ -137,14 +137,14 @@ export default function CreateEventModal({ close, refresh }) {
           {/* DATE + LOCATION */}
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-white ml-1 flex items-center gap-1">
-                <Calendar size={12} /> Date & Time
+              <label className="text-[10px]  font-bold uppercase tracking-widest text-white ml-1 flex items-center gap-1">
+                <Calendar size={12} className="text-white" /> Date & Time
               </label>
               <input
                 type="datetime-local"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="input"
+                className="input text-white bg-white"
               />
             </div>
             <div className="space-y-1.5">
