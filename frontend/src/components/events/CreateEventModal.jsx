@@ -72,7 +72,9 @@ export default function CreateEventModal({ close, refresh }) {
   const eventTypes = ["workshop", "hackathon", "seminar", "competition"]
 
   return createPortal(
-    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div
+    
+    className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
 
       <div className="w-[540px] max-h-[90vh] overflow-y-auto rounded-2xl p-6 text-white space-y-5
         bg-white/5 backdrop-blur-xl border border-white/10 

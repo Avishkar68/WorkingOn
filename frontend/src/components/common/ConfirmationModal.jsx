@@ -17,12 +17,16 @@ export default function ConfirmationModal({
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"  onClick={(e) => {
+        e.stopPropagation(); // 🔥 prevents card click
+        onClose();
+      }}>
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.9, opacity: 0 }}
           className="glass-card w-full max-w-sm p-6 rounded-3xl space-y-6 border border-white/10 shadow-2xl"
+           onClick={(e) => e.stopPropagation()} 
         >
           {/* Header */}
           <div className="flex items-center justify-between">
@@ -30,7 +34,10 @@ export default function ConfirmationModal({
               <AlertTriangle size={24} />
             </div>
             <button 
-              onClick={onClose}
+               onClick={(e) => {
+              e.stopPropagation();
+              onClose();
+            }}
               className="p-2 hover:bg-white/5 rounded-xl transition text-slate-500"
             >
               <X size={20} />
@@ -50,8 +57,10 @@ export default function ConfirmationModal({
           {/* Actions */}
           <div className="flex gap-3 pt-2">
             <button
-              onClick={onClose}
-              className="flex-1 px-4 py-3 rounded-2xl bg-white/5 hover:bg-white/10 text-slate-300 font-bold text-sm transition-all"
+onClick={(e) => {
+              e.stopPropagation();
+              onClose();
+            }}              className="flex-1 px-4 py-3 rounded-2xl bg-white/5 hover:bg-white/10 text-slate-300 font-bold text-sm transition-all"
             >
               {cancelText}
             </button>

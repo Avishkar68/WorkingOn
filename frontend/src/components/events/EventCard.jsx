@@ -1,6 +1,6 @@
-import { motion } from "framer-motion"
-import { jwtDecode } from "jwt-decode"
-import { buttonTap, cardHover, fadeInUp } from "../../lib/motion"
+import { motion } from "framer-motion";
+import { jwtDecode } from "jwt-decode";
+import { buttonTap, cardHover, fadeInUp } from "../../lib/motion";
 import { CalendarDays, MapPin, Users, Share2, Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
 import api from "../../api/axios";
@@ -22,16 +22,19 @@ export default function EventCard({ event, refresh }) {
   }
 
   const formatDate = (date) => {
-    const d = new Date(date)
+    const d = new Date(date);
     return d.toLocaleString("en-IN", {
-      month: "short", day: "numeric", year: "numeric",
-      hour: "numeric", minute: "2-digit"
-    })
-  }
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+    });
+  };
 
   const register = () => {
-    if (event.registrationLink) window.open(event.registrationLink, "_blank")
-  }
+    if (event.registrationLink) window.open(event.registrationLink, "_blank");
+  };
 
   const handleShare = async (e) => {
     e.stopPropagation();
@@ -55,19 +58,35 @@ export default function EventCard({ event, refresh }) {
     }
   };
 
+  const handleCardClick = () => {
+    if (showDeleteConfirm) return;
+    if (event.registrationLink) {
+      window.open(event.registrationLink, "_blank");
+    }
+  };
+
   return (
     <motion.div
-      className="glass-card overflow-hidden"
+      className="glass-card overflow-hidden cursor-pointer"
       variants={fadeInUp}
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
       whileHover={cardHover}
+      onClick={handleCardClick}
     >
       {event.image ? (
-        <img src={event.image} alt="event" className="w-full h-40 md:h-48 object-cover" />
+        <img
+          src={event.image}
+          alt="event"
+          className="w-full h-40 md:h-48 object-cover"
+        />
       ) : (
-        <img src="https://images.unsplash.com/photo-1552664730-d307ca884978" alt="fallback" className="w-full h-40 md:h-48 object-cover" />
+        <img
+          src="https://images.unsplash.com/photo-1552664730-d307ca884978"
+          alt="fallback"
+          className="w-full h-40 md:h-48 object-cover"
+        />
       )}
 
       <div className="p-4 md:p-6 space-y-4">
@@ -77,14 +96,25 @@ export default function EventCard({ event, refresh }) {
         </p>
 
         <div className="flex gap-2 flex-wrap">
-          {event.tags?.flatMap(t => t.split(",")).map(t => t.trim()).filter(Boolean).map(tag => (
-            <span key={tag} className="pill-badge text-[10px] md:text-xs">#{tag}</span>
-          ))}
+          {event.tags
+            ?.flatMap((t) => t.split(","))
+            .map((t) => t.trim())
+            .filter(Boolean)
+            .map((tag) => (
+              <span key={tag} className="pill-badge text-[10px] md:text-xs">
+                #{tag}
+              </span>
+            ))}
         </div>
 
         <div className="text-gray-400 text-sm space-y-1">
-          <p className="flex items-center gap-2"><CalendarDays size={14} className="text-[#2DD4BF]" /> {formatDate(event.date)}</p>
-          <p className="flex items-center gap-2"><MapPin size={14} className="text-rose-400" /> {event.location}</p>
+          <p className="flex items-center gap-2">
+            <CalendarDays size={14} className="text-[#2DD4BF]" />{" "}
+            {formatDate(event.date)}
+          </p>
+          <p className="flex items-center gap-2">
+            <MapPin size={14} className="text-rose-400" /> {event.location}
+          </p>
         </div>
 
         <div className="border-t border-white/10 pt-4 flex flex-col sm:flex-row gap-3">
@@ -106,9 +136,13 @@ export default function EventCard({ event, refresh }) {
               <Share2 size={18} />
             </motion.button>
 
-            {(event.organizer?._id || event.organizer)?.toString() === currentUserId?.toString() && (
+            {(event.organizer?._id || event.organizer)?.toString() ===
+              currentUserId?.toString() && (
               <motion.button
-                onClick={() => setShowDeleteConfirm(true)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowDeleteConfirm(true);
+                }}
                 whileTap={buttonTap}
                 className="p-3 rounded-xl border border-white/10 bg-white/5 text-red-400 hover:text-red-500 flex-1 sm:flex-none flex justify-center"
               >
@@ -128,5 +162,5 @@ export default function EventCard({ event, refresh }) {
         confirmText="Confirm Delete"
       />
     </motion.div>
-  )
+  );
 }
