@@ -63,19 +63,19 @@ export default function LandingPage() {
       </div>
 
       {/* Nav */}
-      <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-white/5 px-6 py-4 flex items-center justify-between bg-[#020609]/80 backdrop-blur-xl">
+      <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-white/5 px-2 md:px-6 py-4 flex items-center justify-between bg-[#020609]/80 backdrop-blur-xl">
         <div
-          className="flex items-center gap-3 group cursor-pointer"
+          className="flex items-center gap-2 group cursor-pointer"
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
         >
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center shadow-[0_0_20px_rgba(20,184,166,0.3)] group-hover:scale-110 transition-transform">
-            <Globe className="w-5 h-5 text-black" />
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-400  to-brand-600 flex items-center justify-center shadow-[0_0_20px_rgba(20,184,166,0.3)] group-hover:scale-110 transition-transform">
+            <Globe className="w-4 md:w-5 h-4 md:h-5 text-black" />
           </div>
-          <span className="font-bold text-xl tracking-tighter">
+          <span className="font-bold text-lg md:text-xl tracking-tighter">
             SPITConnect
           </span>
         </div>
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-3 md:gap-6">
           {/* Add this link */}
           <button
             onClick={() => navigate("/landing/our-team")}
@@ -84,18 +84,18 @@ export default function LandingPage() {
             Our Team
           </button>
 
-    <button
-      onClick={() => navigate("/login")}
-      className="
+          <button
+            onClick={() => navigate("/login")}
+            className="
         text-sm font-bold transition-all
         /* Mobile Styles */
         px-5 py-2.5 rounded-xl bg-white/10 border border-white/10 text-white active:scale-95
         /* Desktop Reset (md: prefix) */
         md:bg-transparent md:border-none md:p-0 md:text-gray-400 md:hover:text-white md:active:scale-100
       "
-    >
-      Log in
-    </button>
+          >
+            Log in
+          </button>
           <button
             onClick={() => navigate("/register")}
             className="text-sm hidden md:block font-bold btn-primary px-6 py-2.5 rounded-xl shadow-[0_0_25px_rgba(20,184,166,0.2)] hover:shadow-[0_0_35px_rgba(20,184,166,0.5)] transition-all hover:scale-105"
