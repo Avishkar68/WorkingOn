@@ -168,7 +168,7 @@ export default function Register() {
               </div>
 
               <div className="space-y-1.5 md:w-[164px]">
-                <label className="label">Graduation Year</label>
+                <label className="label">Current Year</label>
                 <select
                   className="input appearance-none bg-no-repeat bg-[right_1rem_center]"
                   style={{
