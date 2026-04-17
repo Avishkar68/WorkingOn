@@ -67,9 +67,10 @@ export default function LandingPage() {
         <div
           className="flex items-center gap-2 group cursor-pointer"
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          aria-label="SPITConnect Home"
         >
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-400  to-brand-600 flex items-center justify-center shadow-[0_0_20px_rgba(20,184,166,0.3)] group-hover:scale-110 transition-transform">
-            <Globe className="w-4 md:w-5 h-4 md:h-5 text-black" />
+            <Globe className="w-4 md:w-5 h-4 md:h-5 text-black" aria-hidden="true" />
           </div>
           <span className="font-bold text-lg md:text-xl tracking-tighter">
             SPITConnect
@@ -86,6 +87,7 @@ export default function LandingPage() {
 
           <button
             onClick={() => navigate("/login")}
+            aria-label="Login to SPITConnect"
             className="
         text-sm font-bold transition-all
         /* Mobile Styles */
@@ -98,6 +100,7 @@ export default function LandingPage() {
           </button>
           <button
             onClick={() => navigate("/register")}
+            aria-label="Join the SPIT Campus"
             className="text-sm hidden md:block font-bold btn-primary px-6 py-2.5 rounded-xl shadow-[0_0_25px_rgba(20,184,166,0.2)] hover:shadow-[0_0_35px_rgba(20,184,166,0.5)] transition-all hover:scale-105"
           >
             Join the Campus
@@ -155,12 +158,14 @@ export default function LandingPage() {
               >
                 <button
                   onClick={() => navigate("/register")}
+                  aria-label="Register for SPITConnect"
                   className="w-full sm:w-auto btn-primary py-4 px-10 rounded-2xl font-black text-lg flex items-center justify-center gap-2 transition-all hover:scale-[1.03] shadow-[0_0_40px_rgba(20,184,166,0.3)]"
                 >
                   Join SPITConnect
                 </button>
                 <button
                   onClick={() => navigate("/login")}
+                  aria-label="Explore the SPIT Campus Pulse"
                   className="w-full sm:w-auto px-8 py-4 rounded-2xl font-bold bg-white/5 border border-white/10 hover:bg-white/10 transition-all flex items-center justify-center gap-2"
                 >
                   Explore Campus Pulse

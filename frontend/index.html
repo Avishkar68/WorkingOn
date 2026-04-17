@@ -2,15 +2,95 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Primary Meta Tags -->
+    <title>SPITConnect - Student Collaboration Platform for SPIT</title>
+    <meta name="title" content="SPITConnect - Student Collaboration Platform for SPIT" />
+    <meta name="description" content="Connect with SPIT students for internships, academic help, projects, and campus discussions. The ultimate student community platform for Sardar Patel Institute of Technology." />
+    <meta name="keywords" content="SPIT students platform, SPIT internships, SPIT projects collaboration, student community platform India, college networking platform, SPITConnect, Sardar Patel Institute of Technology, SPIT Mumbai" />
+    <meta name="author" content="SPITConnect Team" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://www.spitconnect.favmedia.in/" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.spitconnect.favmedia.in/" />
+    <meta property="og:title" content="SPITConnect - Everything happening in SPIT, in one place." />
+    <meta property="og:description" content="Join the exclusive platform for SPIT students. Collaborate on projects, find internships, and participate in campus discussions." />
+    <meta property="og:image" content="/og-image.png" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://www.spitconnect.favmedia.in/" />
+    <meta property="twitter:title" content="SPITConnect - Student Collaboration Platform for SPIT" />
+    <meta property="twitter:description" content="Join the exclusive platform for SPIT students. Collaborate on projects, find internships, and participate in campus discussions." />
+    <meta property="twitter:image" content="/og-image.png" />
+
+    <!-- Favicon & Icons -->
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/favicon.png" />
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- Performance: Preconnect & Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <title>spit</title>
+
+    <!-- Structured Data: WebSite -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "SPITConnect",
+      "url": "https://www.spitconnect.favmedia.in/",
+      "description": "A student-only platform for SPIT students to connect for internships, projects, and academic help.",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://www.spitconnect.favmedia.in/search?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+
+    <!-- Structured Data: Organization -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "SPITConnect",
+      "url": "https://www.spitconnect.favmedia.in/",
+      "logo": "https://www.spitconnect.favmedia.in/favicon.png",
+      "description": "Connecting Sardar Patel Institute of Technology students for academic and professional growth.",
+      "sameAs": []
+    }
+    </script>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- SEO Pre-hydration Content (Hidden to users, visible to crawlers) -->
+      <section style="display:none">
+        <h1>SPITConnect - The Heart of Sardar Patel Institute of Technology (SPIT)</h1>
+        <p>Welcome to SPITConnect, the exclusive platform for students of Sardar Patel Institute of Technology. Our mission is to centralize campus life and empower students through collaboration.</p>
+        
+        <h2>SPIT Internships & Projects</h2>
+        <p>Find the best internships and project collaboration opportunities within the SPIT community. Connect with seniors and peers to build real-world applications and gain industry exposure.</p>
+        
+        <h2>Academic Help & Student Communities</h2>
+        <p>Get academic help from your fellow students, join interest-based communities, and participate in campus-wide discussions. Whether you are looking for study partners or technical advice, SPITConnect is your go-to resource.</p>
+        
+        <h2>Campus Pulse & Leaderboard</h2>
+        <p>Stay updated with the campus pulse, anonymous discussions, and see who's topping the campus leaderboard. Engage with the community and build your reputation within SPIT.</p>
+        
+        <nav>
+          <ul>
+            <li><a href="/login">Login to SPITConnect</a></li>
+            <li><a href="/register">Register/Join the Campus</a></li>
+            <li><a href="/landing/our-team">Our Team</a></li>
+          </ul>
+        </nav>
+      </section>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
