@@ -124,38 +124,74 @@ export const reactToPulse = async (req, res) => {
 export const voteInPoll = async (req, res) => {
   try {
     const { optionId } = req.body;
+    const userId = req.user._id.toString();
     const pulse = await Pulse.findById(req.params.id);
 
     if (!pulse || pulse.type !== "poll") {
       return res.status(404).json({ message: "Poll not found" });
     }
 
-    // 🧹 CLEAN LEGACY DATA
-    ensureArrayReactions(pulse);
+    // 🧹 Maintenance: Ensure voters arrays exist
+    pulse.pollOptions.forEach(opt => {
+      if (!opt.voters) opt.voters = [];
+    });
 
-    // Check if user already voted
-    if (pulse.votedUsers.includes(req.user._id)) {
-      return res.status(400).json({ message: "You have already voted" });
-    }
+    // 1. Identify which option the user currently has a RECORDED vote for
+    let currentVotedOptionIndex = -1;
+    pulse.pollOptions.forEach((opt, idx) => {
+      if (opt.voters.some(v => v.toString() === userId)) {
+        currentVotedOptionIndex = idx;
+      }
+    });
 
-    // Update vote count for specific option
-    const optionIndex = pulse.pollOptions.findIndex(opt => opt._id.toString() === optionId);
-    if (optionIndex === -1) {
+    // 2. Identify if they are a legacy voter (in votedUsers but no specific option record)
+    const isLegacyVoter = currentVotedOptionIndex === -1 && pulse.votedUsers.some(v => v.toString() === userId);
+
+    const newOptionIndex = pulse.pollOptions.findIndex(opt => opt._id.toString() === optionId);
+    if (newOptionIndex === -1) {
       return res.status(400).json({ message: "Invalid option" });
     }
 
-    pulse.pollOptions[optionIndex].votes += 1;
-    pulse.votedUsers.push(req.user._id);
+    // 3. Handle the vote change
+    if (currentVotedOptionIndex !== -1) {
+      // Swapping from a known option
+      if (currentVotedOptionIndex === newOptionIndex) {
+        return res.json(pulse); // No change
+      }
+      
+      // Decrement old
+      pulse.pollOptions[currentVotedOptionIndex].votes = Math.max(0, pulse.pollOptions[currentVotedOptionIndex].votes - 1);
+      pulse.pollOptions[currentVotedOptionIndex].voters = pulse.pollOptions[currentVotedOptionIndex].voters.filter(
+        v => v.toString() !== userId
+      );
 
-    // Save with versioning check handled by Mongoose
+      // Increment new
+      pulse.pollOptions[newOptionIndex].votes += 1;
+      pulse.pollOptions[newOptionIndex].voters.push(userId);
+    } else {
+      // New vote OR Legacy switch
+      // If legacy, we can't decrement the old (unknown) option, but we now record the new one properly
+      pulse.pollOptions[newOptionIndex].votes += 1;
+      pulse.pollOptions[newOptionIndex].voters.push(userId);
+
+      // Add to votedUsers if not already there
+      if (!pulse.votedUsers.some(v => v.toString() === userId)) {
+        pulse.votedUsers.push(userId);
+      }
+    }
+
     await pulse.save();
 
     // 🔥 EMIT REAL-TIME
-    getIO().emit("poll-update", { pulseId: pulse._id, pollOptions: pulse.pollOptions, votedUsers: pulse.votedUsers });
+    getIO().emit("poll-update", { 
+      pulseId: pulse._id, 
+      pollOptions: pulse.pollOptions, 
+      votedUsers: pulse.votedUsers 
+    });
 
     res.json(pulse);
   } catch (err) {
-    console.error(err);
+    console.error("Voting error:", err);
     res.status(500).json({ message: "Voting failed" });
   }
 };

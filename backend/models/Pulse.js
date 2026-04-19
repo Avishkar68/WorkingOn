@@ -29,7 +29,8 @@ const pulseSchema = new mongoose.Schema(
     pollOptions: [
       {
         text: String,
-        votes: { type: Number, default: 0 }
+        votes: { type: Number, default: 0 },
+        voters: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }]
       }
     ],
     votedUsers: [

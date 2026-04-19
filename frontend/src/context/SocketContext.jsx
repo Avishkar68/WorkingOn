@@ -1,12 +1,15 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { io } from "socket.io-client";
 
+import { AuthContext } from "./AuthContext";
+
 const SocketContext = createContext(null);
 
 export const useSocket = () => useContext(SocketContext);
 
 export default function SocketProvider({ children }) {
   const [socket, setSocket] = useState(null);
+  const { user } = useContext(AuthContext);
 
   // Extract token here so we can watch it for changes
   const token = localStorage.getItem("token");
@@ -23,8 +26,8 @@ export default function SocketProvider({ children }) {
 
     const SOCKET_URL = import.meta.env.VITE_API_BASE_URL
       ? import.meta.env.VITE_API_BASE_URL.replace("/api", "")
-      : "https://spitconnect.onrender.com";
-    // : "http://localhost:4000";
+      // : "https://spitconnect.onrender.com";
+      : "http://localhost:4000";
 
     const s = io(SOCKET_URL, {
       auth: { token },
@@ -51,7 +54,7 @@ export default function SocketProvider({ children }) {
      * This ensures that when the user logs in and the token is set, 
      * this effect re-runs and establishes the connection without a page reload.
      */
-  }, [token]);
+  }, [token, user]);
 
   return (
     <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>

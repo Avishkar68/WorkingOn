@@ -62,7 +62,7 @@ export default function PulseCard({ post }) {
     if (post.status) setStatus(post.status);
     
     if (post.votedUsers) {
-      setVoted(post.votedUsers.includes(currentUserId));
+      setVoted(post.votedUsers.some(v => (v._id || v).toString() === currentUserId?.toString()));
     }
   }, [post.reactions, post.upvotes, post.downvotes, post.status, post.votedUsers, currentUserId]);
 
@@ -90,7 +90,6 @@ export default function PulseCard({ post }) {
 
   const handleVote = async (optionId) => {
     if (!currentUserId) return toast.error("Login to vote!");
-    if (voted) return;
     
     // Optimistic lock
     setVoted(true);
@@ -139,19 +138,28 @@ export default function PulseCard({ post }) {
             {post.pollOptions?.map((opt) => {
               const totalVotes = post.pollOptions.reduce((acc, curr) => acc + (curr.votes || 0), 0);
               const percentage = totalVotes === 0 ? 0 : Math.round((opt.votes / totalVotes) * 100);
+              const isMyChoice = opt.voters?.some(v => (v._id || v || v.toString()).toString() === currentUserId?.toString());
 
               return (
                 <button
                   key={opt._id}
                   onClick={() => handleVote(opt._id)}
-                  disabled={voted}
                   className="w-full relative group overflow-hidden"
                 >
                   <div className={`relative z-10 p-3.5 flex justify-between items-center rounded-xl border transition-all duration-300 ${
-                    voted ? "border-white/5 bg-white/[0.03]" : "border-white/10 bg-white/[0.05] hover:border-brand-500/40 hover:bg-brand-500/[0.02]"
+                    isMyChoice 
+                      ? "border-brand-500 bg-brand-500/10 shadow-[0_0_15px_rgba(20,184,166,0.2)]" 
+                      : voted 
+                        ? "border-white/5 bg-white/[0.03]" 
+                        : "border-white/10 bg-white/[0.05] hover:border-brand-500/40 hover:bg-brand-500/[0.02]"
                   }`}>
-                    <span className="text-sm font-medium text-text-primary/90">{opt.text}</span>
-                    {voted && <span className="text-xs font-bold text-brand-400 tracking-tight">{percentage}%</span>}
+                    <div className="flex items-center gap-2">
+                       <span className={`text-sm font-medium ${isMyChoice ? "text-brand-400" : "text-text-primary/90"}`}>
+                         {opt.text}
+                       </span>
+                       {isMyChoice && <span className="h-1.5 w-1.5 rounded-full bg-brand-400" />}
+                    </div>
+                    {voted && <span className={`text-xs font-bold tracking-tight ${isMyChoice ? "text-brand-400" : "text-text-muted"}`}>{percentage}%</span>}
                   </div>
                   {/* Progress Bar */}
                   {voted && (

@@ -44,6 +44,9 @@ export default function Register() {
       localStorage.setItem("token", res.data.token)
       localStorage.setItem("showWelcomeModal", "true")
 
+      // Sync global auth state before navigating
+      await getUser()
+
       navigate("/")
 
     } catch (err) {

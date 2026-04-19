@@ -85,11 +85,6 @@ export default function CommunitiesPage() {
     loadCommunities()
   }, [])
 
-  // 1. Keep your initial load (Optional, but good for direct visits)
-  useEffect(() => {
-    loadCommunities()
-  }, [])
-
   // 2. REPLACED: This handles the navigation and membership sync
   useEffect(() => {
     const syncCommunityState = async () => {
