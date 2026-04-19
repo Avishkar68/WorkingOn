@@ -34,18 +34,18 @@ const teamMembers = [
     },
     {
         name: "Pratiksha Hekare",
-        role: "Developer & Marketing",
-        image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Nitin",
-        bio: "Crafting seamless user experiences with React and Framer Motion. UI polish enthusiast.",
-        links: { github: "#", linkedin: "#", twitter: "#" },
+        role: "FULL-STACK DEVELOPER",
+        image: "https://res.cloudinary.com/dgof8mfp3/image/upload/v1776621043/Screenshot_2026-04-19_at_11.19.48_PM_wthv2a.png",
+        bio: "Engineering student passionate about developing user-focused applications.",
+        links: { github: "https://github.com/pratikshahekare1312", linkedin: "https://www.linkedin.com/in/pratiksha-hekare-7b9475377/", twitter: "#" },
     },
-    {
-        name: "Manasvi More",
-        role: "Developer & Marketing",
-        image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Falashree",
-        bio: "Focusing on user behavior and AI workplace productivity within the campus ecosystem.",
-        links: { github: "#", linkedin: "#", twitter: "#" },
-    },
+    // {
+    //     name: "Manasvi More",
+    //     role: "Developer & Marketing",
+    //     image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Falashree",
+    //     bio: "Focusing on user behavior and AI workplace productivity within the campus ecosystem.",
+    //     links: { github: "#", linkedin: "#", twitter: "#" },
+    // },
 ];
 
 export default function OurTeam() {
@@ -101,7 +101,7 @@ export default function OurTeam() {
                     variants={staggerContainer}
                     initial="hidden"
                     animate="visible"
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
+                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
                 >
                     {teamMembers.map((member, index) => (
                         <motion.div
