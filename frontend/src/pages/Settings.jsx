@@ -235,14 +235,7 @@ export default function Settings() {
         </div>
       </div>
 
-      {/* DANGER ZONE */}
-      <div className="glass p-5 md:p-6 rounded-2xl border border-red-500/20 space-y-4">
-        <h2 className="text-red-400 font-semibold flex items-center gap-2">
-          Danger Zone
-        </h2>
-        <p className="text-xs text-gray-500 px-1">Sign out of your session on this device.</p>
-       
-      </div>
+     
 
     </div>
   )
