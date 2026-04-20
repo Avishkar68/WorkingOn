@@ -241,12 +241,7 @@ export default function Settings() {
           Danger Zone
         </h2>
         <p className="text-xs text-gray-500 px-1">Sign out of your session on this device.</p>
-        <button
-          onClick={logout}
-          className="w-full bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white border border-red-500/20 py-3 rounded-xl transition-all"
-        >
-          Log Out
-        </button>
+       
       </div>
 
     </div>

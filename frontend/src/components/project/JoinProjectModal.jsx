@@ -52,7 +52,7 @@ export default function JoinProjectModal({ projectId, close, refresh }) {
 
           <button
             onClick={sendRequest}
-            className="bg-[#22d3ee] hover:bg-[#0891b2] text-[#083344] px-6 py-2 rounded-lg font-bold transition-all shadow-[0_0_20px_rgba(34,211,238,0.3)]"
+            className="btn-primary  text-[#083344] px-6 py-2 rounded-lg font-bold transition-all shadow-[0_0_20px_rgba(34,211,238,0.3)]"
           >
             Send Request
           </button>

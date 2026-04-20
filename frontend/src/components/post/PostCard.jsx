@@ -19,6 +19,7 @@ export default function PostCard({ post, refreshFeed }) {
   const [showReport, setShowReport] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
+const [expanded, setExpanded] = useState(false);
   // ✅ GET CURRENT USER
   const token = localStorage.getItem("token")
 
@@ -148,10 +149,23 @@ export default function PostCard({ post, refreshFeed }) {
       </Link>
 
       {/* 📝 CONTENT */}
-      <p className="text-gray-300 text-sm leading-relaxed whitespace-pre-wrap">
-        {post.content}
-      </p>
+     <p
+  className={`text-gray-300 text-sm leading-relaxed whitespace-pre-wrap transition-all ${
+    expanded ? "" : "line-clamp-4"
+  }`}
+>
+  {post.content}
+</p>
 
+{/* READ MORE BUTTON */}
+{post.content?.length > 150 && (
+  <button
+    onClick={() => setExpanded(!expanded)}
+    className="text-indigo-400 text-xs hover:underline mt-1"
+  >
+    {expanded ? "Show less" : "Read more"}
+  </button>
+)}
       {/* 🖼 IMAGE */}
       {post.image && (
         <img
