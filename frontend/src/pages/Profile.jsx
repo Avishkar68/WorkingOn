@@ -3,7 +3,7 @@ import { jwtDecode } from "jwt-decode";
 import api from "../api/axios";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { Trash2 } from "lucide-react";
+import { CheckCircle2, Flame, Trash2 } from "lucide-react";
 
 import EditProfileModal from "../components/profile/EditProfileModal";
 import PostCard from "../components/post/PostCard";
@@ -29,6 +29,23 @@ export default function Profile() {
   const [showFollowing, setShowFollowing] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [deleteData, setDeleteData] = useState({ type: null, id: null });
+  const [streakStatus, setStreakStatus] = useState(null);
+
+  const loadStreak = async () => {
+    try {
+      const res = await api.get("/streak/status");
+      setStreakStatus(res.data);
+    } catch (err) {
+      console.error("Streak fetch error:", err);
+    }
+  };
+
+  useEffect(() => {
+    loadStreak();
+    // Listen for the same event your desktop card uses
+    window.addEventListener("streak-status-updated", loadStreak);
+    return () => window.removeEventListener("streak-status-updated", loadStreak);
+  }, []);
 
   const loadAll = async () => {
     try {
@@ -184,7 +201,45 @@ export default function Profile() {
 </div>
         </div>
       </div>
+      {/* Streak and Daily Tasks Section */}
+      <div className="flex gap-3 mt-[-16px] mb-[10px] md:hidden">
+        {/* Left: Streak Count */}
+        <div className="flex-1 glass p-4 rounded-2xl flex flex-col items-center justify-center border border-orange-500/20 bg-gradient-to-br from-orange-500/5 to-transparent">
+          <div className="flex items-center gap-2">
+            <span className="text-3xl font-black text-white">
+              {streakStatus?.streakCount || 0}
+            </span>
+            <div className="h-8 w-8 flex items-center justify-center rounded-lg bg-orange-500 shadow-[0_0_15px_rgba(249,115,22,0.4)]">
+              <Flame size={18} className="text-white fill-current" />
+            </div>
+          </div>
+          <p className="text-[10px] font-bold uppercase tracking-tighter text-orange-400 mt-1">
+            Day Streak
+          </p>
+        </div>
 
+        {/* Right: Daily Challenges */}
+        <div className="flex-[1.5] glass p-3 rounded-2xl flex flex-col justify-center gap-2 border border-white/5">
+          {[
+            { label: "Daily Challenge", done: streakStatus?.dailyTasksCompleted?.quizCompleted },
+            { label: "Community Post", done: streakStatus?.dailyTasksCompleted?.postCreated }
+          ].map((task, i) => (
+            <div key={i} className="flex items-center justify-between px-2 py-1.5 rounded-lg bg-white/5">
+              <span className={`text-[11px] font-medium ${task.done ? "text-slate-200" : "text-slate-500"}`}>
+                {task.label}
+              </span>
+              <div className={`
+          h-4 w-4 rounded-md flex items-center justify-center border
+          ${task.done
+                  ? "bg-emerald-500 border-emerald-400 shadow-[0_0_8px_rgba(16,185,129,0.4)]"
+                  : "border-white/10 bg-white/5"}
+        `}>
+                {task.done && <CheckCircle2 size={10} className="text-white" />}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
       {/* TABS - Horizontal scroll on mobile */}
       <div className="flex gap-2 md:gap-4 glass p-2 rounded-2xl overflow-x-auto scrollbar-hide">
         {["posts", "projects", "events", "opportunities"].map((tab) => (
