@@ -5,13 +5,13 @@ import { useLocation } from 'react-router-dom';
  * Google Analytics component to track page views
  * Replace G-XXXXXXXXXX with your actual GA4 Measurement ID
  */
-const GA_MEASUREMENT_ID = 'G-XXXXXXXXXX'; // TODO: Replace with real ID
+const GA_MEASUREMENT_ID = 'G-HBB7Z753E6'; // TODO: Replace with real ID
 
 const GoogleAnalytics = () => {
   const location = useLocation();
 
   useEffect(() => {
-    if (GA_MEASUREMENT_ID === 'G-XXXXXXXXXX') return;
+    if (GA_MEASUREMENT_ID === 'G-HBB7Z753E6') return;
 
     // Initialize GA if not already done
     if (!window.gtag) {
