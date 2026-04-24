@@ -47,7 +47,7 @@ export default function Register() {
       // Sync global auth state before navigating
       await getUser()
 
-      navigate("/")
+      navigate("/home")
 
     } catch (err) {
       toast.error(err?.response?.data?.message || "Registration failed")

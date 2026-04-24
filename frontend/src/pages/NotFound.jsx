@@ -29,7 +29,7 @@ const NotFound = () => {
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link 
-            to="/"
+            to="/home"
             className="flex items-center justify-center gap-2 px-6 py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-xl transition-all duration-300 shadow-lg shadow-teal-900/20"
           >
             <Home size={18} />

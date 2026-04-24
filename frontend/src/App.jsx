@@ -136,8 +136,8 @@ function AnimatedRoutes() {
           <Routes location={location} key={pathKey}>
 
             {/* ================= PUBLIC ROUTES ================= */}
-            <Route path="/landing" element={<RouteFrame><LandingPage /></RouteFrame>} />
-            <Route path="/landing/our-team" element={<RouteFrame><OurTeam /></RouteFrame>} />
+            <Route path="/" element={<RouteFrame><LandingPage /></RouteFrame>} />
+            <Route path="/our-team" element={<RouteFrame><OurTeam /></RouteFrame>} />
             <Route path="/login" element={<RouteFrame><Login /></RouteFrame>} />
             <Route path="/register" element={<RouteFrame><Register /></RouteFrame>} />
             <Route path="/blog" element={<RouteFrame><BlogHome /></RouteFrame>} />
@@ -145,7 +145,7 @@ function AnimatedRoutes() {
 
             {/* ================= PROTECTED ROUTES ================= */}
             <Route
-              path="/"
+              path="/home"
               element={
                 <RouteFrame>
                   <ProtectedRoute>

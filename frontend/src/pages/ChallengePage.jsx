@@ -68,7 +68,7 @@ export default function ChallengePage() {
 
       // 🏆 Redirect to Home with Rank
       setTimeout(() => {
-        navigate("/", { state: { challengeSuccess: true, rank: res.data.rank } });
+        navigate("/home", { state: { challengeSuccess: true, rank: res.data.rank } });
       }, 1500);
 
     } catch (err) {
@@ -129,7 +129,7 @@ export default function ChallengePage() {
 
               <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
                 <button
-                  onClick={() => navigate("/")}
+                  onClick={() => navigate("/home")}
                   className="flex items-center gap-2 rounded-2xl bg-indigo-500 px-6 py-3 font-semibold text-white transition hover:bg-indigo-400 hover:shadow-[0_0_20px_rgba(99,102,241,0.4)]"
                 >
                   Return Home

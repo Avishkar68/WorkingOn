@@ -30,7 +30,7 @@ export default function Login() {
       // Update AuthContext immediately
       await getUser()
 
-      navigate("/")
+      navigate("/home")
 
     } catch {
       toast.error("Invalid credentials")

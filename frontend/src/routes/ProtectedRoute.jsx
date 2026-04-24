@@ -54,7 +54,7 @@ export default function ProtectedRoute({ children }) {
   }
 
   if (!isAuth) {
-    return <Navigate to="/landing" replace />
+    return <Navigate to="/" replace />
   }
 
   return children

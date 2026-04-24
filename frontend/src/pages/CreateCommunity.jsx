@@ -18,7 +18,7 @@ export default function CreateCommunity(){
     try{
       await api.post("/communities", { name, description })
       toast.success("Community created successfully!")
-      navigate("/")
+      navigate("/home")
     }catch(err){
       console.error(err)
       toast.error("Failed to create community")

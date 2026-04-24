@@ -27,7 +27,7 @@ export default function Sidebar({ close }) {
     "flex items-center gap-3 px-3 py-2.5 rounded-xl bg-indigo-500/10 text-indigo-200 shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)] border border-indigo-500/20 transition-all duration-200 font-medium"
 
   const primaryLinks = [
-    { to: "/", label: "Home", icon: Home },
+    { to: "/home", label: "Home", icon: Home },
     { to: "/opportunities", label: "Opportunities", icon: Briefcase },
     { to: "/academic-help", label: "Academic Help", icon: GraduationCap },
     { to: "/projects", label: "Projects", icon: FolderKanban },
@@ -50,7 +50,7 @@ export default function Sidebar({ close }) {
       <div>
         <div className="px-5 py-5 border-b border-white/10">
           <NavLink
-            to="/"
+            to="/home"
             onClick={close}
             className="font-bold tracking-tighter text-2xl text-text-primary"
           >

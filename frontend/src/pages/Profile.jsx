@@ -82,7 +82,7 @@ export default function Profile() {
 
   const logout = () => {
     localStorage.removeItem("token");
-    navigate("/landing");
+    navigate("/");
   };
   const handleDelete = (type, id) => {
     setDeleteData({ type, id });

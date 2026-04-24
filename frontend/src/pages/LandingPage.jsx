@@ -51,7 +51,7 @@ export default function LandingPage() {
     else setIsAuth(false);
   }, []);
 
-  if (isAuth === true) return <Navigate to="/" replace />;
+  if (isAuth === true) return <Navigate to="/home" replace />;
   if (isAuth === null) return null;
 
   return (
@@ -85,7 +85,7 @@ export default function LandingPage() {
         <div className="flex items-center gap-3 md:gap-6">
           {/* Add this link */}
           <button
-            onClick={() => navigate("/landing/our-team")}
+            onClick={() => navigate("/our-team")}
             className="text-sm font-semibold text-gray-400 hover:text-white transition-colors"
           >
             Our Team
