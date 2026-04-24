@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom"
+import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom"
 import { AnimatePresence, motion } from "framer-motion"
 import { useEffect, useState, lazy, Suspense } from "react"
 import { Toaster } from "react-hot-toast"
@@ -43,12 +43,12 @@ import { pageTransition, pageVariants } from "./lib/motion"
 import SocketProvider from "./context/SocketContext"
 import NotificationProvider from "./context/NotificationContext"
 import { AuthProvider } from "./context/AuthContext"
-// import GoogleAnalytics from "./components/common/GoogleAnalytics"
+import GoogleAnalytics from "./components/common/GoogleAnalytics"
 
 function App() {
   return (
     <BrowserRouter>
-      {/* <GoogleAnalytics /> */}
+      <GoogleAnalytics />
       <AuthProvider>
         <SocketProvider>
           <NotificationProvider>
@@ -91,7 +91,7 @@ function RouteFrame({ children }) {
 }
 
 // ✅ Only show loader for protected/heavy routes
-const noLoaderRoutes = ["/landing", "/login", "/register", "/blog"]
+const noLoaderRoutes = ["/", "/our-team", "/login", "/register", "/blog"]
 
 function RouteLoader({ pathKey }) {
   const [loading, setLoading] = useState(false)
@@ -125,14 +125,24 @@ function AnimatedRoutes() {
   const location = useLocation()
   const pathKey = location.pathname
 
+  useEffect(() => {
+    console.log(`[Navigation] to: ${pathKey}`)
+  }, [pathKey])
+
   return (
     <>
       {/* ✅ loader only for protected */}
       <RouteLoader pathKey={pathKey} />
 
-      <AnimatePresence mode="wait">
-        {/* ✅ no suspense loader for public */}
-        <Suspense fallback={null}>
+      <AnimatePresence mode="wait" onExitComplete={() => {
+        console.log(`[Animation] Exit complete for: ${pathKey}`)
+        window.scrollTo(0, 0)
+      }}>
+        <Suspense fallback={
+          <div className="min-h-screen bg-[#020609] flex items-center justify-center">
+            <div className="h-8 w-8 animate-spin rounded-full border-2 border-brand-500 border-t-transparent" />
+          </div>
+        }>
           <Routes location={location} key={pathKey}>
 
             {/* ================= PUBLIC ROUTES ================= */}
@@ -218,7 +228,7 @@ function AnimatedRoutes() {
             ))}
 
             {/* ================= 404 ================= */}
-            <Route path="*" element={<NotFound />} />
+            <Route path="*" element={<Navigate to="/home" replace />} />
 
           </Routes>
         </Suspense>

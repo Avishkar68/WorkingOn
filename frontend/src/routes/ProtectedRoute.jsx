@@ -34,6 +34,7 @@ export default function ProtectedRoute({ children }) {
       }
 
       setLoading(false)
+      console.log(`[Auth] Check complete. isAuth: ${isAuth}`)
     }
 
     checkAuth()
