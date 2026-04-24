@@ -6,9 +6,15 @@ import { Toaster } from "react-hot-toast"
 import Layout from "./components/layout/Layout"
 import ProtectedRoute from "./routes/ProtectedRoute"
 
-// Lazy loaded components for better performance
-const Login = lazy(() => import("./pages/auth/Login"))
-const Register = lazy(() => import("./pages/auth/Register"))
+// ✅ NOT lazy (important for speed + SEO)
+import LandingPage from "./pages/LandingPage"
+import Login from "./pages/auth/Login"
+import Register from "./pages/auth/Register"
+import BlogHome from "./pages/blogs/BlogHome"
+import BlogDetail from "./pages/blogs/BlogDetail"
+import OurTeam from "./pages/OurTeam.jsx"
+
+// ✅ Lazy load only heavy/protected pages
 const Home = lazy(() => import("./pages/Home"))
 const Opportunities = lazy(() => import("./pages/Opportunities"))
 const AcademicHelp = lazy(() => import("./pages/AcademicHelp"))
@@ -30,11 +36,7 @@ const ChallengePage = lazy(() => import("./pages/ChallengePage"))
 const Leaderboard = lazy(() => import("./pages/Leaderboard"))
 const CommunityPage = lazy(() => import("./pages/CommunityPage"))
 const CommunitiesPage = lazy(() => import("./pages/CommunitiesPage"))
-const LandingPage = lazy(() => import("./pages/LandingPage"))
 const CampusPulse = lazy(() => import("./pages/CampusPulse.jsx"))
-const OurTeam = lazy(() => import("./pages/OurTeam.jsx"))
-const BlogHome = lazy(() => import("./pages/blogs/BlogHome"))
-const BlogDetail = lazy(() => import("./pages/blogs/BlogDetail"))
 const NotFound = lazy(() => import("./pages/NotFound"))
 
 import { pageTransition, pageVariants } from "./lib/motion"
@@ -58,26 +60,13 @@ function App() {
                   color: "#ededed",
                   border: "1px solid rgba(255, 255, 255, 0.1)",
                   backdropFilter: "blur(12px)",
-                  WebkitBackdropFilter: "blur(12px)",
                   padding: "16px",
                   fontSize: "14px",
                   borderRadius: "16px",
-                  boxShadow: "0 4px 30px rgba(0, 0, 0, 0.5)",
-                },
-                success: {
-                  iconTheme: {
-                    primary: "#14b8a6",
-                    secondary: "#09090b",
-                  },
-                },
-                error: {
-                  iconTheme: {
-                    primary: "#ef4444",
-                    secondary: "#09090b",
-                  },
                 },
               }}
             />
+
             <AnimatedRoutes />
           </NotificationProvider>
         </SocketProvider>
@@ -101,14 +90,21 @@ function RouteFrame({ children }) {
   )
 }
 
+// ✅ Only show loader for protected/heavy routes
+const noLoaderRoutes = ["/landing", "/login", "/register", "/blog"]
+
 function RouteLoader({ pathKey }) {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
+    if (noLoaderRoutes.includes(pathKey)) return
+
     setLoading(true)
-    const timer = setTimeout(() => setLoading(false), 260)
+    const timer = setTimeout(() => setLoading(false), 150)
     return () => clearTimeout(timer)
   }, [pathKey])
+
+  if (noLoaderRoutes.includes(pathKey)) return null
 
   return (
     <AnimatePresence>
@@ -118,7 +114,7 @@ function RouteLoader({ pathKey }) {
           initial={{ opacity: 0, scaleX: 0.2 }}
           animate={{ opacity: 1, scaleX: 1 }}
           exit={{ opacity: 0, scaleX: 0.8 }}
-          transition={{ duration: 0.24 }}
+          transition={{ duration: 0.2 }}
         />
       )}
     </AnimatePresence>
@@ -131,21 +127,23 @@ function AnimatedRoutes() {
 
   return (
     <>
+      {/* ✅ loader only for protected */}
       <RouteLoader pathKey={pathKey} />
+
       <AnimatePresence mode="wait">
-        <Suspense fallback={<RouteLoader pathKey={pathKey} />}>
+        {/* ✅ no suspense loader for public */}
+        <Suspense fallback={null}>
           <Routes location={location} key={pathKey}>
+
             {/* ================= PUBLIC ROUTES ================= */}
-            <Route path="/login" element={<RouteFrame><Login /></RouteFrame>} />
-            <Route path="/register" element={<RouteFrame><Register /></RouteFrame>} />
             <Route path="/landing" element={<RouteFrame><LandingPage /></RouteFrame>} />
             <Route path="/landing/our-team" element={<RouteFrame><OurTeam /></RouteFrame>} />
-          <Route path="/blog" element={<RouteFrame><BlogHome /></RouteFrame>} />
-          <Route path="/blog/:id" element={<RouteFrame><BlogDetail /></RouteFrame>} />
+            <Route path="/login" element={<RouteFrame><Login /></RouteFrame>} />
+            <Route path="/register" element={<RouteFrame><Register /></RouteFrame>} />
+            <Route path="/blog" element={<RouteFrame><BlogHome /></RouteFrame>} />
+            <Route path="/blog/:id" element={<RouteFrame><BlogDetail /></RouteFrame>} />
 
             {/* ================= PROTECTED ROUTES ================= */}
-
-            {/* HOME */}
             <Route
               path="/"
               element={
@@ -159,7 +157,6 @@ function AnimatedRoutes() {
               }
             />
 
-            {/* ⭐ COMMUNITY PAGE */}
             <Route
               path="/community/:id"
               element={
@@ -186,7 +183,6 @@ function AnimatedRoutes() {
               }
             />
 
-            {/* ================= EXISTING ROUTES ================= */}
             {[
               { path: "/opportunities", element: <Opportunities /> },
               { path: "/academic-help", element: <AcademicHelp /> },
@@ -221,8 +217,9 @@ function AnimatedRoutes() {
               />
             ))}
 
-            {/* ================= 404 NOT FOUND ================= */}
+            {/* ================= 404 ================= */}
             <Route path="*" element={<NotFound />} />
+
           </Routes>
         </Suspense>
       </AnimatePresence>
