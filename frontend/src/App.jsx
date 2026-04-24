@@ -43,12 +43,12 @@ import { pageTransition, pageVariants } from "./lib/motion"
 import SocketProvider from "./context/SocketContext"
 import NotificationProvider from "./context/NotificationContext"
 import { AuthProvider } from "./context/AuthContext"
-import GoogleAnalytics from "./components/common/GoogleAnalytics"
+// import GoogleAnalytics from "./components/common/GoogleAnalytics"
 
 function App() {
   return (
     <BrowserRouter>
-      <GoogleAnalytics />
+      {/* <GoogleAnalytics /> */}
       <AuthProvider>
         <SocketProvider>
           <NotificationProvider>
