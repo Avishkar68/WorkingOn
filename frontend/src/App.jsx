@@ -1,49 +1,52 @@
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom"
 import { AnimatePresence, motion } from "framer-motion"
-import { useEffect, useState } from "react"
+import { useEffect, useState, lazy, Suspense } from "react"
 import { Toaster } from "react-hot-toast"
 
 import Layout from "./components/layout/Layout"
 import ProtectedRoute from "./routes/ProtectedRoute"
 
-import Login from "./pages/auth/Login"
-import Register from "./pages/auth/Register"
+// Lazy loaded components for better performance
+const Login = lazy(() => import("./pages/auth/Login"))
+const Register = lazy(() => import("./pages/auth/Register"))
+const Home = lazy(() => import("./pages/Home"))
+const Opportunities = lazy(() => import("./pages/Opportunities"))
+const AcademicHelp = lazy(() => import("./pages/AcademicHelp"))
+const Projects = lazy(() => import("./pages/Projects"))
+const Events = lazy(() => import("./pages/Events"))
+const Explore = lazy(() => import("./pages/Explore"))
+const Search = lazy(() => import("./pages/Search"))
+const Profile = lazy(() => import("./pages/Profile"))
+const Notifications = lazy(() => import("./pages/Notifications"))
+const Settings = lazy(() => import("./pages/Settings"))
+const AdminPanel = lazy(() => import("./pages/AdminPanel"))
+const UserProfile = lazy(() => import("./pages/UserProfile"))
+const EventDetail = lazy(() => import("./pages/EventDetail"))
+const OpportunityDetail = lazy(() => import("./pages/OpportunityDetail"))
+const ProjectDetail = lazy(() => import("./pages/ProjectDetail"))
+const PostDetail = lazy(() => import("./pages/PostDetail"))
+const Opportunity = lazy(() => import("./pages/try/Opportunity"))
+const ChallengePage = lazy(() => import("./pages/ChallengePage"))
+const Leaderboard = lazy(() => import("./pages/Leaderboard"))
+const CommunityPage = lazy(() => import("./pages/CommunityPage"))
+const CommunitiesPage = lazy(() => import("./pages/CommunitiesPage"))
+const LandingPage = lazy(() => import("./pages/LandingPage"))
+const CampusPulse = lazy(() => import("./pages/CampusPulse.jsx"))
+const OurTeam = lazy(() => import("./pages/OurTeam.jsx"))
+const BlogHome = lazy(() => import("./pages/blogs/BlogHome"))
+const BlogDetail = lazy(() => import("./pages/blogs/BlogDetail"))
+const NotFound = lazy(() => import("./pages/NotFound"))
 
-import Home from "./pages/Home"
-import Opportunities from "./pages/Opportunities"
-import AcademicHelp from "./pages/AcademicHelp"
-import Projects from "./pages/Projects"
-import Events from "./pages/Events"
-import Explore from "./pages/Explore"
-import Search from "./pages/Search"
-import Profile from "./pages/Profile"
-import Notifications from "./pages/Notifications"
-import Settings from "./pages/Settings"
-import AdminPanel from "./pages/AdminPanel"
-import UserProfile from "./pages/UserProfile"
-import EventDetail from "./pages/EventDetail"
-import OpportunityDetail from "./pages/OpportunityDetail"
-import ProjectDetail from "./pages/ProjectDetail"
-import PostDetail from "./pages/PostDetail"
-import Opportunity from "./pages/try/Opportunity"
-import ChallengePage from "./pages/ChallengePage"
-import Leaderboard from "./pages/Leaderboard"
 import { pageTransition, pageVariants } from "./lib/motion"
-
-// ⭐ NEW IMPORTS
-import CommunityPage from "./pages/CommunityPage"
-// import CreateCommunity from "./pages/CreateCommunity"
-import CommunitiesPage from "./pages/CommunitiesPage"
-import LandingPage from "./pages/LandingPage"
-import CampusPulse from "./pages/CampusPulse.jsx" // 🔥 Force re-scan
 import SocketProvider from "./context/SocketContext"
 import NotificationProvider from "./context/NotificationContext"
 import { AuthProvider } from "./context/AuthContext"
-import OurTeam from "./pages/OurTeam.jsx"
+import GoogleAnalytics from "./components/common/GoogleAnalytics"
 
 function App() {
   return (
     <BrowserRouter>
+      <GoogleAnalytics />
       <AuthProvider>
         <SocketProvider>
           <NotificationProvider>
@@ -130,105 +133,98 @@ function AnimatedRoutes() {
     <>
       <RouteLoader pathKey={pathKey} />
       <AnimatePresence mode="wait">
-        <Routes location={location} key={pathKey}>
-          {/* ================= PUBLIC ROUTES ================= */}
-          <Route path="/login" element={<RouteFrame><Login /></RouteFrame>} />
-          <Route path="/register" element={<RouteFrame><Register /></RouteFrame>} />
-          <Route path="/landing" element={<RouteFrame><LandingPage /></RouteFrame>} />
-          <Route path="/landing/our-team" element={<RouteFrame><OurTeam /></RouteFrame>} />
+        <Suspense fallback={<RouteLoader pathKey={pathKey} />}>
+          <Routes location={location} key={pathKey}>
+            {/* ================= PUBLIC ROUTES ================= */}
+            <Route path="/login" element={<RouteFrame><Login /></RouteFrame>} />
+            <Route path="/register" element={<RouteFrame><Register /></RouteFrame>} />
+            <Route path="/landing" element={<RouteFrame><LandingPage /></RouteFrame>} />
+            <Route path="/landing/our-team" element={<RouteFrame><OurTeam /></RouteFrame>} />
+          <Route path="/blog" element={<RouteFrame><BlogHome /></RouteFrame>} />
+          <Route path="/blog/:id" element={<RouteFrame><BlogDetail /></RouteFrame>} />
 
-          {/* ================= PROTECTED ROUTES ================= */}
+            {/* ================= PROTECTED ROUTES ================= */}
 
-          {/* HOME */}
-          <Route
-            path="/"
-            element={
-              <RouteFrame>
-                <ProtectedRoute>
-                  <Layout>
-                    <Home />
-                  </Layout>
-                </ProtectedRoute>
-              </RouteFrame>
-            }
-          />
-
-          {/* ⭐ COMMUNITY PAGE */}
-          <Route
-            path="/community/:id"
-            element={
-              <RouteFrame>
-                <ProtectedRoute>
-                  <Layout>
-                    <CommunityPage />
-                  </Layout>
-                </ProtectedRoute>
-              </RouteFrame>
-            }
-          />
-
-          {/* ⭐ CREATE COMMUNITY (REPLACED BY MODAL) */}
-          {/* <Route
-            path="/create-community"
-            element={
-              <RouteFrame>
-                <ProtectedRoute>
-                  <Layout>
-                    <CreateCommunity />
-                  </Layout>
-                </ProtectedRoute>
-              </RouteFrame>
-            }
-          /> */}
-
-          <Route
-            path="/communities"
-            element={
-              <RouteFrame>
-                <ProtectedRoute>
-                  <Layout>
-                    <CommunitiesPage />
-                  </Layout>
-                </ProtectedRoute>
-              </RouteFrame>
-            }
-          />
-
-          {/* ================= EXISTING ROUTES ================= */}
-          {[
-            { path: "/opportunities", element: <Opportunities /> },
-            { path: "/academic-help", element: <AcademicHelp /> },
-            { path: "/projects", element: <Projects /> },
-            { path: "/events", element: <Events /> },
-            { path: "/explore", element: <Explore /> },
-            { path: "/campus-pulse", element: <CampusPulse /> },
-            { path: "/search", element: <Search /> },
-            { path: "/profile", element: <Profile /> },
-            { path: "/notifications", element: <Notifications /> },
-            { path: "/settings", element: <Settings /> },
-            { path: "/admin", element: <AdminPanel /> },
-            { path: "/challenge", element: <ChallengePage /> },
-            { path: "/leaderboard", element: <Leaderboard /> },
-            { path: "/user/:id", element: <UserProfile /> },
-            { path: "/posts/:id", element: <PostDetail /> },
-            { path: "/events/:id", element: <EventDetail /> },
-            { path: "/projects/:id", element: <ProjectDetail /> },
-            { path: "/opportunities/:id", element: <OpportunityDetail /> },
-            { path: "/opportunity", element: <Opportunity /> }
-          ].map(({ path, element }) => (
+            {/* HOME */}
             <Route
-              key={path}
-              path={path}
+              path="/"
               element={
                 <RouteFrame>
                   <ProtectedRoute>
-                    <Layout>{element}</Layout>
+                    <Layout>
+                      <Home />
+                    </Layout>
                   </ProtectedRoute>
                 </RouteFrame>
               }
             />
-          ))}
-        </Routes>
+
+            {/* ⭐ COMMUNITY PAGE */}
+            <Route
+              path="/community/:id"
+              element={
+                <RouteFrame>
+                  <ProtectedRoute>
+                    <Layout>
+                      <CommunityPage />
+                    </Layout>
+                  </ProtectedRoute>
+                </RouteFrame>
+              }
+            />
+
+            <Route
+              path="/communities"
+              element={
+                <RouteFrame>
+                  <ProtectedRoute>
+                    <Layout>
+                      <CommunitiesPage />
+                    </Layout>
+                  </ProtectedRoute>
+                </RouteFrame>
+              }
+            />
+
+            {/* ================= EXISTING ROUTES ================= */}
+            {[
+              { path: "/opportunities", element: <Opportunities /> },
+              { path: "/academic-help", element: <AcademicHelp /> },
+              { path: "/projects", element: <Projects /> },
+              { path: "/events", element: <Events /> },
+              { path: "/explore", element: <Explore /> },
+              { path: "/campus-pulse", element: <CampusPulse /> },
+              { path: "/search", element: <Search /> },
+              { path: "/profile", element: <Profile /> },
+              { path: "/notifications", element: <Notifications /> },
+              { path: "/settings", element: <Settings /> },
+              { path: "/admin", element: <AdminPanel /> },
+              { path: "/challenge", element: <ChallengePage /> },
+              { path: "/leaderboard", element: <Leaderboard /> },
+              { path: "/user/:id", element: <UserProfile /> },
+              { path: "/posts/:id", element: <PostDetail /> },
+              { path: "/events/:id", element: <EventDetail /> },
+              { path: "/projects/:id", element: <ProjectDetail /> },
+              { path: "/opportunities/:id", element: <OpportunityDetail /> },
+              { path: "/opportunity", element: <Opportunity /> }
+            ].map(({ path, element }) => (
+              <Route
+                key={path}
+                path={path}
+                element={
+                  <RouteFrame>
+                    <ProtectedRoute>
+                      <Layout>{element}</Layout>
+                    </ProtectedRoute>
+                  </RouteFrame>
+                }
+              />
+            ))}
+
+            {/* ================= 404 NOT FOUND ================= */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
       </AnimatePresence>
     </>
   )

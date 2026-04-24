@@ -28,6 +28,7 @@ import communityRoutes from "./routes/communityRoutes.js";
 import messageRoutes from "./routes/messageRoutes.js";
 import pulseRoutes from "./routes/pulseRoutes.js";
 import reportRoutes from "./routes/reportRoutes.js";
+import seoRoutes from "./routes/seoRoutes.js";
 import { initSocket } from "./socket.js";
 dotenv.config();
 
@@ -65,6 +66,7 @@ app.use("/api/communities", communityRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/pulses", pulseRoutes);
 app.use("/api/reports", reportRoutes);
+app.use("/api/seo", seoRoutes);
 
 app.get("/api/health", (req, res) => res.json({ status: "ok", version: "1.2", time: new Date() }));
 

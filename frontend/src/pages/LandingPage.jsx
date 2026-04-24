@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import SEO from "../components/common/SEO";
 import {
   Users,
   Flame,
@@ -55,6 +56,11 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-[#020609] text-[#ededed] overflow-x-hidden selection:bg-brand-500/30 font-sans tracking-tight">
+      <SEO 
+        title="SPITConnect - Sardar Patel Institute of Technology Student Collaboration Platform" 
+        description="The ultimate community for Sardar Patel Institute of Technology (SPIT) students. Join SPITConnect for internships, academic help, project collaboration, and campus pulse."
+        keywords="SPIT Mumbai, Sardar Patel Institute of Technology, SPIT student portal, SPIT internships, SPIT projects, SPIT campus pulse"
+      />
       {/* Dynamic Background */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-brand-600/10 blur-[180px] rounded-full animate-pulse" />
@@ -129,9 +135,10 @@ export default function LandingPage() {
                 className="text-5xl md:text-7xl font-black tracking-tighter leading-[0.95] mb-3"
               >
                 Everything happening <br />
-                in SPIT.
+                at <span className="text-brand-400">SPIT</span> Mumbai.
+                <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-300 via-brand-500 to-indigo-500">
-                  One place.
+                  All in one place.
                 </span>
               </motion.h1>
 
@@ -142,11 +149,8 @@ export default function LandingPage() {
                 transition={{ delay: 0.2 }}
                 className="text-lg md:text-xl text-gray-400 max-w-xl mb-10 leading-relaxed font-medium"
               >
-                No more scattered WhatsApp groups. No more missed opportunities.{" "}
-                <br />
-                <span className="text-white">
-                  SPITConnect brings your entire campus together.
-                </span>
+                Connect with peers at <span className="text-white">Sardar Patel Institute of Technology</span>. 
+                Collaborate on projects, find internships, and stay updated with the campus pulse.
               </motion.p>
 
               <motion.div
