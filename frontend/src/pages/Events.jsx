@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import api from "../api/axios"
 import { motion } from "framer-motion"
 import { staggerContainer } from "../lib/motion"
+import { trackEvent } from "../utils/analytics"
 
 import EventCard from "../components/events/EventCard"
 import CreateEventModal from "../components/events/CreateEventModal"
@@ -25,6 +26,7 @@ export default function Events() {
   }
 
   useEffect(() => {
+    trackEvent('page_view_component', { page: 'Events' });
     loadEvents()
     window.addEventListener("global-refresh", loadEvents)
     return () => window.removeEventListener("global-refresh", loadEvents)
@@ -37,7 +39,10 @@ export default function Events() {
       subtitle="Discover workshops, competitions, and meetups across your network."
       actions={
         <button
-          onClick={() => setShowCreate(true)}
+          onClick={() => {
+            trackEvent('button_click', { button_name: 'create_event_open' });
+            setShowCreate(true);
+          }}
           className="btn-primary text-sm font-medium px-4 py-2 rounded-xl w-full md:w-auto"
         >
           Create Event

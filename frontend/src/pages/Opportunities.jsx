@@ -8,6 +8,7 @@ import PageShell from "../components/layout/PageShell"
 import Skeleton from "../components/ui/Skeleton"
 import { CalendarDays, Hourglass, Share2 } from "lucide-react";
 import toast from "react-hot-toast";
+import { trackEvent } from "../utils/analytics"
 
 const EXTERNAL_USER_ID = "000000000000000000000001"
 
@@ -63,6 +64,7 @@ export default function Opportunities() {
       }
       const res = await api.get("/opportunities")
       setOpportunities(res.data)
+      trackEvent('view_opportunity_list', { count: res.data.length });
     } catch (err) {
       console.error(err)
     }
@@ -70,6 +72,7 @@ export default function Opportunities() {
   }
 
   useEffect(() => {
+    trackEvent('page_view_component', { page: 'Opportunities' });
     loadData()
     window.addEventListener("global-refresh", loadData)
     return () => window.removeEventListener("global-refresh", loadData)
@@ -124,7 +127,10 @@ export default function Opportunities() {
       subtitle="Find internships, external roles, and student-shared openings."
       actions={
         <button
-          onClick={() => setShowModal(true)}
+          onClick={() => {
+            trackEvent('button_click', { button_name: 'post_opportunity_open' });
+            setShowModal(true);
+          }}
           className="btn-primary w-full md:w-auto px-4 py-2 rounded-xl text-sm font-medium"
         >
           Post Opportunity
@@ -235,12 +241,16 @@ export default function Opportunities() {
                   href={op.registrationLink || op.link}
                   target="_blank"
                   rel="noreferrer"
+                  onClick={() => trackEvent('apply_opportunity', { id: op._id, title: op.title, company: op.company })}
                   className="flex-1 block text-center py-2.5 md:py-3 rounded-xl text-sm font-medium btn-primary transition-all active:scale-[0.98]"
                 >
                   Apply Now
                 </a>
                 <button
-                  onClick={() => handleShare(op._id)}
+                  onClick={() => {
+                    trackEvent('button_click', { button_name: 'share_opportunity', id: op._id });
+                    handleShare(op._id);
+                  }}
                   className="p-2.5 md:p-3 rounded-xl border border-white/10 bg-white/5 text-slate-400 hover:text-white transition-all flex items-center justify-center shrink-0"
                 >
                   <Share2 size={18} />

@@ -1,8 +1,9 @@
-import { useState, useContext } from "react"
+import { useState, useContext, useEffect } from "react"
 import api from "../../api/axios"
 import { useNavigate } from "react-router-dom"
 import toast from "react-hot-toast"
 import { AuthContext } from "../../context/AuthContext"
+import { trackEvent } from "../../utils/analytics"
 
 export default function Login() {
 
@@ -12,6 +13,10 @@ export default function Login() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    trackEvent('page_view_component', { page: 'Login' });
+  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault()
@@ -30,6 +35,7 @@ export default function Login() {
       // Update AuthContext immediately
       await getUser()
 
+      trackEvent('login_success', { method: 'email' });
       navigate("/home")
 
     } catch {

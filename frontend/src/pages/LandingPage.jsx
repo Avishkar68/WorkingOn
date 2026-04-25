@@ -24,6 +24,7 @@ import {
   Megaphone,
   Calendar,
 } from "lucide-react";
+import { trackEvent } from "../utils/analytics";
 
 // Animation Variants
 const fadeInUp = {
@@ -46,6 +47,7 @@ export default function LandingPage() {
   const [isAuth, setIsAuth] = useState(null);
 
   useEffect(() => {
+    trackEvent('page_view_component', { page: 'LandingPage' });
     const token = localStorage.getItem("token");
     if (token) setIsAuth(true);
     else setIsAuth(false);
@@ -72,7 +74,10 @@ export default function LandingPage() {
       <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-white/5 px-2 md:px-6 py-4 flex items-center justify-between bg-[#020609]/80 backdrop-blur-xl">
         <div
           className="flex items-center gap-2 group cursor-pointer"
-          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          onClick={() => {
+            trackEvent('navigation_click', { destination: 'top' });
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
           aria-label="SPITConnect Home"
         >
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-400  to-brand-600 flex items-center justify-center shadow-[0_0_20px_rgba(20,184,166,0.3)] group-hover:scale-110 transition-transform">
@@ -85,14 +90,20 @@ export default function LandingPage() {
         <div className="flex items-center gap-3 md:gap-6">
           {/* Add this link */}
           <button
-            onClick={() => navigate("/our-team")}
+            onClick={() => {
+              trackEvent('navigation_click', { destination: '/our-team' });
+              navigate("/our-team");
+            }}
             className="text-sm font-semibold text-gray-400 hover:text-white transition-colors"
           >
             Our Team
           </button>
 
           <button
-            onClick={() => navigate("/login")}
+            onClick={() => {
+              trackEvent('button_click', { button_name: 'login_nav', page: 'LandingPage' });
+              navigate("/login");
+            }}
             aria-label="Login to SPITConnect"
             className="
         text-sm font-bold transition-all
@@ -105,7 +116,10 @@ export default function LandingPage() {
             Log in
           </button>
           <button
-            onClick={() => navigate("/register")}
+            onClick={() => {
+              trackEvent('button_click', { button_name: 'join_campus_nav', page: 'LandingPage' });
+              navigate("/register");
+            }}
             aria-label="Join the SPIT Campus"
             className="text-sm hidden md:block font-bold btn-primary px-6 py-2.5 rounded-xl shadow-[0_0_25px_rgba(20,184,166,0.2)] hover:shadow-[0_0_35px_rgba(20,184,166,0.5)] transition-all hover:scale-105"
           >
@@ -161,14 +175,20 @@ export default function LandingPage() {
                 className="flex flex-wrap items-center gap-4 w-full -mt-4 mb-8"
               >
                 <button
-                  onClick={() => navigate("/register")}
+                  onClick={() => {
+                    trackEvent('button_click', { button_name: 'join_spitconnect_hero', page: 'LandingPage' });
+                    navigate("/register");
+                  }}
                   aria-label="Register for SPITConnect"
                   className="w-full sm:w-auto btn-primary py-4 px-10 rounded-2xl font-black text-lg flex items-center justify-center gap-2 transition-all hover:scale-[1.03] shadow-[0_0_40px_rgba(20,184,166,0.3)]"
                 >
                   Join SPITConnect
                 </button>
                 <button
-                  onClick={() => navigate("/login")}
+                  onClick={() => {
+                    trackEvent('button_click', { button_name: 'explore_campus_pulse_hero', page: 'LandingPage' });
+                    navigate("/login");
+                  }}
                   aria-label="Explore the SPIT Campus Pulse"
                   className="w-full sm:w-auto px-8 py-4 rounded-2xl font-bold bg-white/5 border border-white/10 hover:bg-white/10 transition-all flex items-center justify-center gap-2"
                 >

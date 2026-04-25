@@ -62,7 +62,6 @@ function App() {
                 },
               }}
             />
-
             <AnimatedRoutes />
           </NotificationProvider>
         </SocketProvider>

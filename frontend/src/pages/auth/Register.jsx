@@ -1,8 +1,9 @@
-import { useState, useContext } from "react"
+import { useState, useContext, useEffect } from "react"
 import api from "../../api/axios"
 import { useNavigate } from "react-router-dom"
 import toast from "react-hot-toast"
 import { AuthContext } from "../../context/AuthContext"
+import { trackEvent } from "../../utils/analytics"
 
 export default function Register() {
 
@@ -20,6 +21,10 @@ export default function Register() {
   const [file, setFile] = useState(null)
   const [preview, setPreview] = useState(null)
   const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    trackEvent('page_view_component', { page: 'Register' });
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -47,6 +52,7 @@ export default function Register() {
       // Sync global auth state before navigating
       await getUser()
 
+      trackEvent('register_success', { branch: form.branch, year: form.year });
       navigate("/home")
 
     } catch (err) {

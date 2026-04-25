@@ -8,6 +8,7 @@ import { Users, Share2, Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
 import ConfirmationModal from "../common/ConfirmationModal";
 import api from "../../api/axios";
+import { trackEvent } from "../../utils/analytics";
 
 export default function ProjectCard({ project, refresh }) {
   const [showJoin, setShowJoin] = useState(false);
@@ -58,12 +59,13 @@ export default function ProjectCard({ project, refresh }) {
 
   return (
     <motion.div
-      className="glass-card p-4 sm:p-6 space-y-4"
+      className="glass-card p-4 sm:p-6 space-y-4 cursor-pointer"
       variants={fadeInUp}
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
       whileHover={cardHover}
+      onClick={() => trackEvent('card_click', { card_type: 'project', id: project._id, title: project.title })}
     >
       {/* TITLE */}
       <h2 className="text-base sm:text-lg font-semibold text-white">
@@ -157,7 +159,11 @@ export default function ProjectCard({ project, refresh }) {
         ) : (
           /* ✅ JOIN ALLOWED */
           <motion.button
-            onClick={() => setShowJoin(true)}
+            onClick={(e) => {
+              e.stopPropagation();
+              trackEvent('button_click', { button_name: 'join_project_open', id: project._id });
+              setShowJoin(true);
+            }}
             whileHover={{ scale: 1.03 }}
             whileTap={buttonTap}
             className="flex-1 btn-primary py-2 rounded-xl text-sm font-semibold"

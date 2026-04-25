@@ -4,6 +4,7 @@ import api from "../api/axios";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { CheckCircle2, Flame, Trash2 } from "lucide-react";
+import { trackEvent } from "../utils/analytics";
 
 import EditProfileModal from "../components/profile/EditProfileModal";
 import PostCard from "../components/post/PostCard";
@@ -75,12 +76,14 @@ export default function Profile() {
   };
 
   useEffect(() => {
+    trackEvent('page_view_component', { page: 'Profile' });
     loadAll();
     window.addEventListener("global-refresh", loadAll);
     return () => window.removeEventListener("global-refresh", loadAll);
   }, []);
 
   const logout = () => {
+    trackEvent('button_click', { button_name: 'logout' });
     localStorage.removeItem("token");
     navigate("/");
   };
@@ -184,7 +187,10 @@ export default function Profile() {
 
   {/* EDIT PROFILE */}
   <button
-    onClick={() => setShowEdit(true)}
+    onClick={() => {
+      trackEvent('edit_profile_open');
+      setShowEdit(true);
+    }}
     className="flex-1 md:flex-none bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-2.5 rounded-xl text-sm font-semibold transition-all shadow-md hover:shadow-indigo-500/30"
   >
     Edit Profile

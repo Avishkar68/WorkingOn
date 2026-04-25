@@ -15,10 +15,16 @@ import {
   Trophy,
   Zap
 } from "lucide-react"
+import { trackEvent } from "../../utils/analytics"
 
 export default function Sidebar({ close }) {
   const { user } = useContext(AuthContext)
   const { unreadCount } = useNotifications()
+
+  const handleLinkClick = (label, to) => {
+    trackEvent('navigation_click', { destination: to, label: label });
+    close && close();
+  };
 
   const link =
     "flex items-center gap-3 px-3 py-2.5 rounded-xl text-zinc-400 hover:text-zinc-100 hover:bg-white/5 transition-all duration-200 font-medium"
@@ -51,7 +57,7 @@ export default function Sidebar({ close }) {
         <div className="px-5 py-5 border-b border-white/10">
           <NavLink
             to="/home"
-            onClick={close}
+            onClick={() => handleLinkClick('Logo', '/home')}
             className="font-bold tracking-tighter text-2xl text-text-primary"
           >
             SPITConnect
@@ -66,7 +72,7 @@ export default function Sidebar({ close }) {
             <NavLink
               key={to}
               to={to}
-              onClick={close}
+              onClick={() => handleLinkClick(label, to)}
               className={({ isActive }) => (isActive ? active : link)}
             >
               <Icon size={16} />
@@ -82,7 +88,7 @@ export default function Sidebar({ close }) {
           <NavLink
             key={to}
             to={to}
-            onClick={close}
+            onClick={() => handleLinkClick(label, to)}
             className={({ isActive }) => (isActive ? active : link)}
           >
             <div className="relative">

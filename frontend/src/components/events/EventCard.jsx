@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import api from "../../api/axios";
 import ConfirmationModal from "../common/ConfirmationModal";
 import { useState } from "react";
+import { trackEvent } from "../../utils/analytics";
 
 export default function EventCard({ event, refresh }) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -73,7 +74,10 @@ export default function EventCard({ event, refresh }) {
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
       whileHover={cardHover}
-      onClick={handleCardClick}
+      onClick={() => {
+        trackEvent('card_click', { card_type: 'event', id: event._id, title: event.title });
+        handleCardClick();
+      }}
     >
       {event.image ? (
         <img
@@ -119,7 +123,11 @@ export default function EventCard({ event, refresh }) {
 
         <div className="border-t border-white/10 pt-4 flex flex-col sm:flex-row gap-3">
           <motion.button
-            onClick={register}
+            onClick={(e) => {
+              e.stopPropagation();
+              trackEvent('join_event', { id: event._id, title: event.title });
+              register();
+            }}
             whileHover={{ scale: 1.02 }}
             whileTap={buttonTap}
             className="flex-1 btn-primary font-semibold text-sm py-3 rounded-xl"

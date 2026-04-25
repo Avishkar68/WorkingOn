@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import { useSearchParams } from "react-router-dom"
 import api from "../api/axios"
 import PageShell from "../components/layout/PageShell"
+import { trackEvent } from "../utils/analytics"
 
 import SearchPostCard from "../components/search/SearchPostCard"
 import SearchUserCard from "../components/search/SearchUserCard"
@@ -16,6 +17,7 @@ export default function Search() {
 
   // Sync local query with URL param
   useEffect(() => {
+    trackEvent('page_view_component', { page: 'Search' });
     setQuery(q)
   }, [q])
 
@@ -59,7 +61,10 @@ export default function Search() {
         <div className="glass rounded-2xl p-2 flex gap-2 border border-white/10">
 
           <button
-            onClick={() => setActiveTab("posts")}
+            onClick={() => {
+              trackEvent('button_click', { button_name: 'search_tab_posts' });
+              setActiveTab("posts");
+            }}
             className={`px-4 py-2 rounded-xl text-sm transition ${activeTab === "posts"
                 ? "bg-indigo-500/90 text-white border border-indigo-400/40"
                 : "text-slate-400 hover:bg-white/8"
@@ -69,7 +74,10 @@ export default function Search() {
           </button>
 
           <button
-            onClick={() => setActiveTab("users")}
+            onClick={() => {
+              trackEvent('button_click', { button_name: 'search_tab_users' });
+              setActiveTab("users");
+            }}
             className={`px-4 py-2 rounded-xl text-sm transition ${activeTab === "users"
                 ? "bg-indigo-500/90 text-white border border-indigo-400/40"
                 : "text-slate-400 hover:bg-white/8"

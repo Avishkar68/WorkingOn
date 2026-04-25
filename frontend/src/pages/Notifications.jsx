@@ -5,6 +5,7 @@ import PageShell from "../components/layout/PageShell";
 import { AnimatePresence, motion } from "framer-motion";
 import toast from "react-hot-toast";
 import { useNotifications } from "../context/NotificationContext";
+import { trackEvent } from "../utils/analytics";
 
 const Notifications = () => {
   const [notifications, setNotifications] = useState([]);
@@ -23,12 +24,14 @@ const Notifications = () => {
   };
 
   useEffect(() => {
+    trackEvent('page_view_component', { page: 'Notifications' });
     loadNotifications();
   }, []);
 
   const markRead = async (id) => {
     try {
       await api.put(`/notifications/${id}/read`);
+      trackEvent('notification_mark_read', { id: id });
       setNotifications(prev =>
         prev.map(n => (n._id === id ? { ...n, read: true } : n))
       );
@@ -103,7 +106,10 @@ const Notifications = () => {
       subtitle="Track updates and project requests."
       actions={
         <button
-          onClick={markAllRead}
+          onClick={() => {
+            trackEvent('notification_mark_all_read');
+            markAllRead();
+          }}
           className="btn-primary px-3 py-2 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm font-medium whitespace-nowrap"
         >
           Mark all read

@@ -1,7 +1,7 @@
 
 
 
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { useNavigate, useLocation } from "react-router-dom"
 import api from "../api/axios"
 import { jwtDecode } from "jwt-decode"
@@ -12,8 +12,8 @@ import WelcomeModal from "../components/dialogueboxes/WelcomeModal"
 import ChallengeSuccessModal from "../components/dialogueboxes/ChallengeSuccessModal"
 import PageShell from "../components/layout/PageShell"
 import Skeleton from "../components/ui/Skeleton"
-import { useContext } from "react" // Add this to your React imports
 import { AuthContext } from "../context/AuthContext"
+import { trackEvent } from "../utils/analytics"
 
 export default function Home() {
   const [communities, setCommunities] = useState([])
@@ -86,6 +86,7 @@ export default function Home() {
       await api.post(`/communities/${id}/join`)
       await getUser()
 
+      trackEvent('join_community', { id: id });
       toast.success("Joined community successfully!")
       await fetchCommunities()
 
@@ -104,6 +105,7 @@ export default function Home() {
   }
 
   useEffect(() => {
+    trackEvent('page_view_component', { page: 'Home' });
     fetchCommunities()
     const showWelcome = localStorage.getItem("showWelcomeModal")
     if (showWelcome === "true") {
@@ -113,6 +115,7 @@ export default function Home() {
 
     // 🏆 CHECK CHALLENGE SUCCESS
     if (location.state?.challengeSuccess) {
+      trackEvent('challenge_success', { rank: location.state.rank });
       setShowChallengeSuccess(true)
       setUserRank(location.state.rank)
       // Clear location state so it doesn't show again on refresh
@@ -183,7 +186,10 @@ export default function Home() {
             <motion.div
               key={c._id}
               variants={item}
-              onClick={() => navigate("/communities", { state: { selectedCommunityId: c._id } })}
+              onClick={() => {
+                trackEvent('card_click', { card_type: 'community', id: c._id, name: c.name });
+                navigate("/communities", { state: { selectedCommunityId: c._id } });
+              }}
               className="group relative glass-card p-6  cursor-pointer flex flex-col min-h-[220px] justify-between overflow-hidden"
             >
               {/* MEMBER COUNT */}

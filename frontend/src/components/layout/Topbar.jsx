@@ -11,6 +11,7 @@ import CreateEventModal from "../events/CreateEventModal"
 import CreateOpportunityModal from "../opportunity/CreateOpportunityModal"
 import ChallengeModal from "../dialogueboxes/ChallengeModal"
 import { buttonTap } from "../../lib/motion"
+import { trackEvent } from "../../utils/analytics"
 
 export default function Topbar({ openSidebar }) {
   const [showMenu, setShowMenu] = useState(false)
@@ -135,10 +136,14 @@ export default function Topbar({ openSidebar }) {
               const val = e.target.value
               setSearchQuery(val)
               if (val.trim() || location.pathname === "/search") {
+                trackEvent('search_query', { query: val });
                 navigate(`/search?q=${val}`, { replace: true })
               }
             }}
-            onFocus={() => location.pathname !== "/search" && navigate("/search")}
+            onFocus={() => {
+              trackEvent('button_click', { button_name: 'search_focus' });
+              location.pathname !== "/search" && navigate("/search")
+            }}
           />
         </div>
 
@@ -156,7 +161,10 @@ export default function Topbar({ openSidebar }) {
           {/* CREATE BUTTON - Icon only on mobile */}
 
           <motion.button
-            onClick={() => setShowMenu(true)}
+            onClick={() => {
+              trackEvent('button_click', { button_name: 'create_menu_open' });
+              setShowMenu(true);
+            }}
             whileHover={{ scale: 1.02 }}
             whileTap={buttonTap}
             className="hidden md:flex btn-primary flex items-center justify-center gap-2 p-2 sm:px-4 sm:py-2 rounded-xl text-sm min-w-[36px] sm:min-w-auto"
@@ -190,7 +198,10 @@ export default function Topbar({ openSidebar }) {
           <motion.button
             whileHover={{ scale: 1.06 }}
             whileTap={buttonTap}
-            onClick={() => navigate("/notifications")}
+            onClick={() => {
+              trackEvent('open_notifications');
+              navigate("/notifications");
+            }}
             className="p-1"
           >
             <Bell className="text-slate-300 icon-interactive" size={20} />

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import api from "../api/axios"
 import { motion } from "framer-motion"
 import { staggerContainer } from "../lib/motion"
+import { trackEvent } from "../utils/analytics"
 
 import ProjectCard from "../components/project/ProjectCard"
 import CreateProjectModal from "../components/project/CreateProjectModal"
@@ -25,6 +26,7 @@ export default function Projects(){
   }
 
   useEffect(()=>{
+    trackEvent('page_view_component', { page: 'Projects' });
     loadProjects()
     window.addEventListener("global-refresh", loadProjects)
     return () => window.removeEventListener("global-refresh", loadProjects)
@@ -37,7 +39,10 @@ export default function Projects(){
       subtitle="Build products together and find teammates with matching skills."
       actions={
         <button
-          onClick={()=>setShowCreate(true)}
+          onClick={()=>{
+            trackEvent('button_click', { button_name: 'create_project_open' });
+            setShowCreate(true);
+          }}
           className="w-full sm:w-auto btn-primary px-4 py-2 rounded-xl text-sm font-medium"
         >
           Create Project
