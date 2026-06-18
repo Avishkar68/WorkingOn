@@ -88,7 +88,7 @@ const AdminPanel = () => {
     >
       
       {/* TOP SCROLLABLE TABS */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-4 no-scrollbar">
+      <div className="flex items-center gap-2 overflow-x-auto pb-4 -mx-4 px-4 sm:mx-0 sm:px-0 no-scrollbar">
         {[
           { id: "dashboard", icon: LayoutDashboard, label: "Overview" },
           { id: "users", icon: Users, label: "Users" },
@@ -100,7 +100,7 @@ const AdminPanel = () => {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`flex items-center gap-2 px-6 py-3 rounded-2xl transition text-[13px] font-bold whitespace-nowrap border-2
+            className={`flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-2xl transition text-[12px] sm:text-[13px] font-bold whitespace-nowrap border-2
               ${activeTab === tab.id 
                 ? "bg-indigo-500/10 text-indigo-400 border-indigo-500/50 shadow-lg shadow-indigo-500/10" 
                 : "bg-white/5 text-text-muted border-transparent hover:bg-white/10 hover:text-white"

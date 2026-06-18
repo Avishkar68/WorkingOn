@@ -25,41 +25,79 @@ export default function ContentTable({ type, data, onRefresh }) {
   }
 
   return (
-    <div className="overflow-x-auto rounded-[2rem] border border-white/10 glass-card">
-      <table className="w-full text-left text-sm">
-        <thead className="bg-white/5 border-b border-white/10">
-          <tr>
-            <th className="px-8 py-5 text-[10px] uppercase font-black tracking-[0.2em] text-text-muted">Title / Name</th>
-            <th className="px-8 py-5 text-[10px] uppercase font-black tracking-[0.2em] text-text-muted">Owner</th>
-            <th className="px-8 py-5 text-[10px] uppercase font-black tracking-[0.2em] text-text-muted">Created Date</th>
-            <th className="px-8 py-5 text-[10px] uppercase font-black tracking-[0.2em] text-text-muted text-right">Actions</th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-white/5">
-          {data.map((item) => (
-            <tr key={item._id} className="group hover:bg-white/[0.03] transition-colors duration-200">
-              <td className="px-8 py-5 font-bold text-text-primary max-w-[300px] truncate group-hover:text-indigo-400 transition-colors">
-                {item.title || item.name || "Untitled"}
-              </td>
-              <td className="px-8 py-5 text-text-secondary font-medium">
-                {item.postedBy?.name || item.creator?.name || item.admin?.name || "System"}
-              </td>
-              <td className="px-8 py-5 text-text-muted font-medium">
-                {new Date(item.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
-              </td>
-              <td className="px-8 py-5 text-right">
-                <button
-                  onClick={() => handleDelete(item._id)}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-xl text-xs font-bold transition-all transform hover:scale-105"
-                >
-                  <Trash2 size={14} />
-                  Delete
-                </button>
-              </td>
+    <div className="space-y-4">
+      {/* MOBILE CARD VIEW */}
+      <div className="grid grid-cols-1 gap-4 md:hidden">
+        {data.map((item) => (
+          <div key={item._id} className="glass p-5 rounded-2xl space-y-4 border border-white/5">
+            <div className="flex justify-between items-start gap-4">
+              <div className="min-w-0 flex-1">
+                <p className="text-[10px] uppercase font-bold text-text-muted tracking-widest mb-1">Title / Name</p>
+                <p className="text-white font-bold truncate">{item.title || item.name || "Untitled"}</p>
+              </div>
+              <button
+                onClick={() => handleDelete(item._id)}
+                className="p-2 bg-red-500/10 text-red-400 rounded-xl transition-all"
+              >
+                <Trash2 size={16} />
+              </button>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-4 pt-4 border-t border-white/5">
+              <div>
+                <p className="text-[10px] uppercase font-bold text-text-muted tracking-widest mb-1">Owner</p>
+                <p className="text-text-secondary text-xs font-medium truncate">
+                   {item.postedBy?.name || item.creator?.name || item.admin?.name || "System"}
+                </p>
+              </div>
+              <div>
+                <p className="text-[10px] uppercase font-bold text-text-muted tracking-widest mb-1">Created</p>
+                <p className="text-text-muted text-xs font-medium">
+                  {new Date(item.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                </p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* DESKTOP TABLE VIEW */}
+      <div className="hidden md:block overflow-x-auto rounded-[2rem] border border-white/10 glass-card">
+        <table className="w-full text-left text-sm">
+          <thead className="bg-white/5 border-b border-white/10">
+            <tr>
+              <th className="px-8 py-5 text-[10px] uppercase font-black tracking-[0.2em] text-text-muted">Title / Name</th>
+              <th className="px-8 py-5 text-[10px] uppercase font-black tracking-[0.2em] text-text-muted">Owner</th>
+              <th className="px-8 py-5 text-[10px] uppercase font-black tracking-[0.2em] text-text-muted">Created Date</th>
+              <th className="px-8 py-5 text-[10px] uppercase font-black tracking-[0.2em] text-text-muted text-right">Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="divide-y divide-white/5">
+            {data.map((item) => (
+              <tr key={item._id} className="group hover:bg-white/[0.03] transition-colors duration-200">
+                <td className="px-8 py-5 font-bold text-text-primary max-w-[300px] truncate group-hover:text-indigo-400 transition-colors">
+                  {item.title || item.name || "Untitled"}
+                </td>
+                <td className="px-8 py-5 text-text-secondary font-medium">
+                  {item.postedBy?.name || item.creator?.name || item.admin?.name || "System"}
+                </td>
+                <td className="px-8 py-5 text-text-muted font-medium">
+                  {new Date(item.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                </td>
+                <td className="px-8 py-5 text-right">
+                  <button
+                    onClick={() => handleDelete(item._id)}
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-xl text-xs font-bold transition-all transform hover:scale-105"
+                  >
+                    <Trash2 size={14} />
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

@@ -79,7 +79,7 @@ const ChallengesManager = () => {
               <input type="file" accept=".json" onChange={handleFileUpload} className="hidden" />
             </label>
           </div>
-          
+
           <textarea
             value={jsonInput}
             onChange={handleJsonChange}
@@ -107,7 +107,7 @@ const ChallengesManager = () => {
             <Calendar className="text-emerald-400" size={20} />
             Data Preview
           </h3>
-          
+
           <div className="flex-1 overflow-y-auto space-y-3 pr-2 no-scrollbar">
             {preview ? (
               preview.map((ch, idx) => (
@@ -134,7 +134,7 @@ const ChallengesManager = () => {
       <div className="p-4 rounded-2xl bg-indigo-500/5 border border-indigo-500/20">
         <h4 className="text-xs font-bold text-indigo-300 uppercase tracking-widest mb-2">JSON Format Required</h4>
         <pre className="text-[10px] text-indigo-200/70 font-mono">
-{`[
+          {`[
   {
     "date": "2026-04-11",
     "title": "Topic Name",

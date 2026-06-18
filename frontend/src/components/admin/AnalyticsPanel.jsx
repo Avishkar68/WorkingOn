@@ -104,14 +104,14 @@ const AnalyticsPanel = ({ stats }) => {
         </BarChart>
       </ChartCard>
 
-      <div className="glass p-6 rounded-3xl flex flex-col justify-center gap-6">
+      <div className="glass p-6 rounded-3xl flex flex-col justify-center gap-6 lg:col-span-2 xl:col-span-1">
          <h2 className="text-text-primary text-lg font-bold tracking-tight">Health Summary</h2>
-         <div className="grid grid-cols-2 gap-4">
-            <div className="p-4 rounded-2xl bg-white/5 border border-white/5">
+         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="p-4 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-between sm:block">
                <p className="text-[10px] text-text-muted font-bold uppercase tracking-widest mb-1">Stability</p>
                <p className="text-xl font-bold text-emerald-400">99.9%</p>
             </div>
-            <div className="p-4 rounded-2xl bg-white/5 border border-white/5">
+            <div className="p-4 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-between sm:block">
                <p className="text-[10px] text-text-muted font-bold uppercase tracking-widest mb-1">Latency</p>
                <p className="text-xl font-bold text-indigo-400">42ms</p>
             </div>
