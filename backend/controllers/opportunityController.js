@@ -1,5 +1,7 @@
 import Opportunity from "../models/Opportunity.js";
+import User from "../models/User.js";
 import { createNotification } from "../services/notificationService.js";
+import { sendOpportunityEmail } from "../services/emailService.js";
 
 
 export const createOpportunity = async (req, res) => {
@@ -28,6 +30,17 @@ export const createOpportunity = async (req, res) => {
     registrationLink,
     postedBy: req.user._id
   });
+
+  // Notify active, non-banned users via email in the background
+  (async () => {
+    try {
+      const users = await User.find({ isBanned: false, email: { $exists: true } }).select("email name");
+      const platformUrl = req.headers.origin || process.env.FRONTEND_URL || "http://localhost:5173";
+      await sendOpportunityEmail(opportunity, users, platformUrl);
+    } catch (err) {
+      console.error("Error in background email notification:", err);
+    }
+  })();
 
   res.status(201).json(opportunity);
 
