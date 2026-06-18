@@ -1,4 +1,10 @@
 import nodemailer from "nodemailer";
+import dns from "dns";
+
+// Force Node.js to prioritize IPv4 DNS resolutions to prevent ENETUNREACH errors on cloud host environments like Render
+if (dns && typeof dns.setDefaultResultOrder === "function") {
+  dns.setDefaultResultOrder("ipv4first");
+}
 
 let transporter = null;
 
