@@ -23,16 +23,11 @@ const getTransporter = () => {
 
   try {
     transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 465,
-      secure: true,
+      service: "gmail",
       auth: {
         user,
         pass,
       },
-      connectionTimeout: 30000,
-      greetingTimeout: 30000,
-      socketTimeout: 30000,
     });
     return transporter;
   } catch (error) {
