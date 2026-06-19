@@ -23,13 +23,16 @@ const getTransporter = () => {
 
   try {
     transporter = nodemailer.createTransport({
-      host: process.env.EMAIL_HOST || "smtp.gmail.com",
-      port: parseInt(process.env.EMAIL_PORT, 10) || 587,
-      secure: process.env.EMAIL_SECURE === "true",
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
       auth: {
         user,
         pass,
       },
+      connectionTimeout: 30000,
+      greetingTimeout: 30000,
+      socketTimeout: 30000,
     });
     return transporter;
   } catch (error) {
@@ -142,7 +145,7 @@ export const sendOpportunityEmail = async (opportunity, users, platformUrl) => {
   try {
     const info = await client.sendMail({
       from,
-      to: from,
+      to: process.env.EMAIL_USER,
       bcc: emails,
       subject,
       html: htmlContent,
