@@ -1,51 +1,45 @@
-import nodemailer from "nodemailer";
-import dns from "dns";
+import { Resend } from "resend";
 
-// Force Node.js to prioritize IPv4 DNS resolutions to prevent ENETUNREACH errors on cloud host environments like Render
-if (dns && typeof dns.setDefaultResultOrder === "function") {
-  dns.setDefaultResultOrder("ipv4first");
-}
+let resendClient = null;
 
-let transporter = null;
+const getResendClient = () => {
+  if (resendClient) return resendClient;
 
-const getTransporter = () => {
-  if (transporter) return transporter;
+  // REQUIRED environment variable for Resend integration
+  const apiKey = process.env.RESEND_API_KEY;
 
-  const user = process.env.EMAIL_USER;
-  const pass = process.env.EMAIL_PASS;
-
-  if (!user || !pass) {
+  if (!apiKey) {
     console.warn(
-      "⚠️ Email warning: EMAIL_USER and EMAIL_PASS environment variables are not set. Emails will not be sent."
+      "⚠️ Email warning: RESEND_API_KEY environment variable is not set. Emails will not be sent."
     );
     return null;
   }
 
   try {
-    transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user,
-        pass,
-      },
-    });
-    return transporter;
+    resendClient = new Resend(apiKey);
+    return resendClient;
   } catch (error) {
-    console.error("❌ Failed to create email transporter:", error);
+    console.error("❌ Failed to initialize Resend client:", error);
     return null;
   }
 };
 
 /**
- * Sends a formatted opportunity email notification to multiple users.
+ * Sends a formatted opportunity email notification to multiple users using Resend API.
+ * 
+ * Required Environment Variables:
+ * - RESEND_API_KEY: The API token from Resend dashboard.
+ * - EMAIL_USER: The email of the account owner (used as fallback for onboarding domain).
+ * - EMAIL_FROM: The sender address (must be verified or onboarding@resend.dev).
+ * 
  * @param {Object} opportunity - The opportunity document.
  * @param {Array<Object>} users - List of users to receive the email.
  * @param {string} platformUrl - The base URL of the frontend platform.
  */
 export const sendOpportunityEmail = async (opportunity, users, platformUrl) => {
-  const client = getTransporter();
+  const client = getResendClient();
   if (!client) {
-    console.warn("⚠️ SMTP Transporter is not configured. Skipping email sending.");
+    console.warn("⚠️ Resend client is not configured. Skipping email sending.");
     return;
   }
 
@@ -60,7 +54,7 @@ export const sendOpportunityEmail = async (opportunity, users, platformUrl) => {
     return;
   }
 
-  const from = process.env.EMAIL_FROM || `"SPIT Opportunities" <no-reply@spit.ac.in>`;
+  const from = process.env.EMAIL_FROM || "onboarding@resend.dev";
   const subject = `🔥 New Opportunity: ${opportunity.title} at ${opportunity.company}`;
 
   const deadlineStr = opportunity.deadline
@@ -77,7 +71,7 @@ export const sendOpportunityEmail = async (opportunity, users, platformUrl) => {
   const htmlContent = `
     <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: auto; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; color: #1e293b; background-color: #ffffff; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
       <div style="text-align: center; margin-bottom: 24px; border-bottom: 2px solid #f1f5f9; padding-bottom: 16px;">
-        <h1 style="color: #4f46e5; margin: 0; font-size: 24px; font-weight: 700; letter-spacing: -0.025em;">SPITians Connect</h1>
+        <h1 style="color: #4f46e5; margin: 0; font-size: 24px; font-weight: 700; letter-spacing: -0.025em;">SPITConnect</h1>
         <p style="margin: 4px 0 0 0; font-size: 14px; color: #64748b;">New Internship/Job Opportunity Posted</p>
       </div>
       
@@ -137,16 +131,25 @@ export const sendOpportunityEmail = async (opportunity, users, platformUrl) => {
     </div>
   `;
 
+  const toRecipient = process.env.EMAIL_USER;
+  const bccRecipients = emails;
+
   try {
-    const info = await client.sendMail({
+    const payload = {
       from,
-      to: process.env.EMAIL_USER,
-      bcc: emails,
+      to: toRecipient, // you receive a copy
+      bcc: bccRecipients, // all users receive email
       subject,
       html: htmlContent,
-    });
-    console.log(`✉️ Opportunity notification emails sent successfully. Message ID: ${info.messageId}`);
+    };
+    const { data, error } = await client.emails.send(payload);
+
+    if (error) {
+      console.error("❌ Resend email sending failed:", error);
+    } else {
+      console.log("✉️ Opportunity notification emails sent successfully via Resend. ID:", data.id);
+    }
   } catch (error) {
-    console.error("❌ Failed to send opportunity email notifications:", error);
+    console.error("❌ Failed to send opportunity email notifications via Resend:", error);
   }
 };
