@@ -13,6 +13,10 @@ api.interceptors.request.use((config) => {
     config.headers.Authorization = `Bearer ${token}`;
   }
 
+  if (import.meta.env.DEV) {
+    config.headers["X-Dev-Bypass"] = "true";
+  }
+
   return config;
 
 });

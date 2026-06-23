@@ -53,7 +53,11 @@ export const AuthProvider = ({ children }) => {
         }
         await getUser()
       } else {
-        setLoading(false)
+        if (import.meta.env.DEV) {
+          await getUser()
+        } else {
+          setLoading(false)
+        }
       }
     })
 

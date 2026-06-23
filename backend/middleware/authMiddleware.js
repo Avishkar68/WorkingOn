@@ -3,6 +3,15 @@ import User from "../models/User.js";
 
 const protect = async (req, res, next) => {
   try {
+    // Development bypass for local testing
+    if (process.env.NODE_ENV !== "production" && req.headers["x-dev-bypass"] === "true") {
+      const user = await User.findById("6a396eaf88d3cb29f4cfc436").select("-password");
+      if (user) {
+        req.user = user;
+        return next();
+      }
+    }
+
     let token;
 
     if (
