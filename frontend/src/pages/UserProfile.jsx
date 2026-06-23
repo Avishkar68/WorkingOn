@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { jwtDecode } from "jwt-decode";
 import api from "../api/axios";
 import toast from "react-hot-toast";
 
@@ -28,9 +27,7 @@ export default function UserProfile() {
   const [showFollowing, setShowFollowing] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
 
-  const token = localStorage.getItem("token");
-  const decoded = token ? jwtDecode(token) : null;
-  const currentUserId = decoded?.id || decoded?._id;
+  const currentUserId = localStorage.getItem("userId");
 
   const loadAll = useCallback(async () => {
     try {

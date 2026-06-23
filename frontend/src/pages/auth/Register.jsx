@@ -4,9 +4,9 @@ import { useNavigate } from "react-router-dom"
 import toast from "react-hot-toast"
 import { AuthContext } from "../../context/AuthContext"
 import { trackEvent } from "../../utils/analytics"
+import { supabase } from "../../lib/supabaseClient"
 
 export default function Register() {
-
   const navigate = useNavigate()
   const { getUser } = useContext(AuthContext)
 
@@ -21,45 +21,106 @@ export default function Register() {
   const [file, setFile] = useState(null)
   const [preview, setPreview] = useState(null)
   const [loading, setLoading] = useState(false)
+  const [isSyncing, setIsSyncing] = useState(false)
 
   useEffect(() => {
     trackEvent('page_view_component', { page: 'Register' });
-  }, []);
+
+    const checkSession = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession()
+        if (session && session.user) {
+          setIsSyncing(true)
+          setForm(f => ({
+            ...f,
+            email: session.user.email || "",
+            name: session.user.user_metadata?.full_name || ""
+          }))
+        }
+      } catch (err) {
+        console.error("Error checking Supabase session:", err)
+      }
+    }
+    checkSession()
+  }, [])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
 
+    if (!form.email.endsWith("@spit.ac.in")) {
+      toast.error("Only SPIT emails (@spit.ac.in) are allowed")
+      return
+    }
+
     try {
       setLoading(true)
 
-      const formData = new FormData()
+      let supabaseId = ""
 
-      Object.entries(form).forEach(([key, value]) => {
-        formData.append(key, value)
-      })
+      if (!isSyncing) {
+        // Step 1: Sign up in Supabase
+        const { data, error } = await supabase.auth.signUp({
+          email: form.email,
+          password: form.password
+        })
+
+        if (error) throw error
+        if (!data?.user) throw new Error("Supabase signup failed.")
+
+        supabaseId = data.user.id
+      } else {
+        // Already authenticated in Supabase, retrieve user details
+        const { data: { user }, error } = await supabase.auth.getUser()
+        if (error) throw error
+        supabaseId = user.id
+
+        // If they provided a password during profile completion, set it in Supabase
+        if (form.password) {
+          const { error: updateError } = await supabase.auth.updateUser({
+            password: form.password
+          })
+          if (updateError) throw updateError
+        }
+      }
+
+      // Step 2: Create user profile in MongoDB
+      const formData = new FormData()
+      formData.append("name", form.name)
+      formData.append("email", form.email)
+      formData.append("branch", form.branch)
+      formData.append("year", form.year)
+      formData.append("supabaseId", supabaseId)
+      if (form.password && !isSyncing) {
+        formData.append("password", form.password)
+      }
 
       if (file) {
         formData.append("profileImage", file)
       }
 
-      const res = await api.post("/auth/register", formData, {
+      await api.post("/auth/register", formData, {
         headers: { "Content-Type": "multipart/form-data" }
       })
 
-      localStorage.setItem("token", res.data.token)
-      localStorage.setItem("showWelcomeModal", "true")
-
-      // Sync global auth state before navigating
-      await getUser()
-
-      trackEvent('register_success', { branch: form.branch, year: form.year });
-      navigate("/home")
+      if (!isSyncing) {
+        toast.success("Verification email sent! Please check your inbox and verify your email before logging in.")
+        // Sign out Supabase session until they verify email
+        await supabase.auth.signOut()
+        navigate("/login")
+      } else {
+        localStorage.setItem("showWelcomeModal", "true")
+        await getUser() // Refresh context to load the new MongoDB profile
+        trackEvent('register_success', { branch: form.branch, year: form.year });
+        toast.success("Profile registration completed successfully!")
+        navigate("/home")
+      }
 
     } catch (err) {
-      toast.error(err?.response?.data?.message || "Registration failed")
+      console.error(err)
+      toast.error(err?.response?.data?.message || err.message || "Registration failed")
+    } finally {
+      setLoading(false)
     }
-
-    setLoading(false)
   }
 
   return (
@@ -75,10 +136,10 @@ export default function Register() {
         {/* HEADER */}
         <div className="text-center space-y-2">
           <h2 className="text-3xl font-bold tracking-tight text-text-primary">
-            Create Account
+            {isSyncing ? "Complete Profile" : "Create Account"}
           </h2>
           <p className="text-text-secondary text-sm">
-            Join your campus network and start connecting
+            {isSyncing ? "Complete your profile details to finish setting up your account." : "Join your campus network and start connecting"}
           </p>
         </div>
 
@@ -130,6 +191,7 @@ export default function Register() {
                 placeholder="Spitian User"
                 className="input"
                 required
+                value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
               />
             </div>
@@ -141,17 +203,22 @@ export default function Register() {
                 placeholder="you@spit.ac.in"
                 className="input"
                 required
+                disabled={isSyncing}
+                value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="label">Password</label>
+              <label className="label">
+                {isSyncing ? "Password (Optional - to enable email login later)" : "Password"}
+              </label>
               <input
                 type="password"
                 placeholder="••••••••"
                 className="input"
-                required
+                required={!isSyncing}
+                value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
               />
             </div>
@@ -163,8 +230,8 @@ export default function Register() {
                   className="input appearance-none bg-no-repeat bg-[right_1rem_center]"
                   style={{
                     backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E")`,
-                    backgroundRepeat: "no-repeat",        // ✅ FIX
-                    backgroundPosition: "right 1rem center", // ✅ FIX
+                    backgroundRepeat: "no-repeat",
+                    backgroundPosition: "right 1rem center",
                     backgroundSize: "1.25rem"
                   }}
                   value={form.branch}
@@ -182,8 +249,8 @@ export default function Register() {
                   className="input appearance-none bg-no-repeat bg-[right_1rem_center]"
                   style={{
                     backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E")`,
-                    backgroundRepeat: "no-repeat",        // ✅ FIX
-                    backgroundPosition: "right 1rem center", // ✅ FIX
+                    backgroundRepeat: "no-repeat",
+                    backgroundPosition: "right 1rem center",
                     backgroundSize: "1.25rem"
                   }}
                   value={form.year}
@@ -201,27 +268,29 @@ export default function Register() {
 
         <button
           disabled={loading}
-          className="btn-primary w-full py-4 rounded-xl font-bold text-sm tracking-wide"
+          className="btn-primary w-full py-4 rounded-xl font-bold text-sm tracking-wide cursor-pointer"
         >
           {loading ? (
             <div className="flex items-center justify-center gap-2">
               <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-              <span>Creating your profile...</span>
+              <span>{isSyncing ? "Saving your profile..." : "Creating your profile..."}</span>
             </div>
           ) : (
-            "Create Spitian Account"
+            isSyncing ? "Complete Profile" : "Create Spitian Account"
           )}
         </button>
 
-        <p className="text-sm text-text-muted text-center pt-2">
-          Already have an account?{" "}
-          <span
-            onClick={() => navigate("/login")}
-            className="text-brand-400 font-medium cursor-pointer hover:underline underline-offset-4"
-          >
-            Sign in instead
-          </span>
-        </p>
+        {!isSyncing && (
+          <p className="text-sm text-text-muted text-center pt-2">
+            Already have an account?{" "}
+            <span
+              onClick={() => navigate("/login")}
+              className="text-brand-400 font-medium cursor-pointer hover:underline underline-offset-4"
+            >
+              Sign in instead
+            </span>
+          </p>
+        )}
       </form>
     </div>
   )

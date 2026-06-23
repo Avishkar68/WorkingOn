@@ -1,7 +1,6 @@
 import { useState } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import { Heart, MessageCircle, Share2, ShieldAlert } from "lucide-react"
-import { jwtDecode } from "jwt-decode"
 import api from "../../api/axios"
 import CommentSection from "../post/CommentSection"
 import toast from "react-hot-toast"
@@ -19,17 +18,7 @@ const [expanded, setExpanded] = useState(false);
   }
 
   // ✅ GET CURRENT USER
-  const token = localStorage.getItem("token")
-
-  let currentUserId = null
-  if(token){
-    try{
-      const decoded = jwtDecode(token)
-      currentUserId = decoded.id || decoded._id
-    }catch{
-      currentUserId = null
-    }
-  }
+  const currentUserId = localStorage.getItem("userId")
 
   // ✅ LOCAL LIKE STATE
   const [likes,setLikes] = useState(post.likes || [])

@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
-import { jwtDecode } from "jwt-decode";
+import { useEffect, useState, useContext } from "react";
 import api from "../api/axios";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { CheckCircle2, Flame, Trash2 } from "lucide-react";
 import { trackEvent } from "../utils/analytics";
+import { AuthContext } from "../context/AuthContext";
 
 import EditProfileModal from "../components/profile/EditProfileModal";
 import PostCard from "../components/post/PostCard";
@@ -15,6 +15,7 @@ import ConfirmationModal from "../components/common/ConfirmationModal";
 
 export default function Profile() {
   const navigate = useNavigate();
+  const { logout: contextLogout } = useContext(AuthContext);
   const [profile, setProfile] = useState(null);
   const [userId, setUserId] = useState(null);
 
@@ -53,8 +54,7 @@ export default function Profile() {
       const token = localStorage.getItem("token");
       if (!token) return;
 
-      const decoded = jwtDecode(token);
-      const id = decoded.id || decoded._id;
+      const id = localStorage.getItem("userId");
       setUserId(id);
 
       const [u, p1, p2, p3, p4] = await Promise.all([
@@ -82,9 +82,9 @@ export default function Profile() {
     return () => window.removeEventListener("global-refresh", loadAll);
   }, []);
 
-  const logout = () => {
+  const logout = async () => {
     trackEvent('button_click', { button_name: 'logout' });
-    localStorage.removeItem("token");
+    await contextLogout();
     navigate("/");
   };
   const handleDelete = (type, id) => {

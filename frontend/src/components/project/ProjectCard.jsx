@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { jwtDecode } from "jwt-decode";
 import { Link } from "react-router-dom";
 import JoinProjectModal from "./JoinProjectModal";
 import { motion } from "framer-motion";
@@ -15,16 +14,7 @@ export default function ProjectCard({ project, refresh }) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   // ✅ GET CURRENT USER
-  const token = localStorage.getItem("token");
-  let currentUserId = null;
-  if (token) {
-    try {
-      const decoded = jwtDecode(token);
-      currentUserId = decoded.id || decoded._id;
-    } catch {
-      currentUserId = null;
-    }
-  }
+  const currentUserId = localStorage.getItem("userId");
 
   const request = project.joinRequests?.find(
     (r) => (r.user?._id || r.user)?.toString() === currentUserId?.toString(),

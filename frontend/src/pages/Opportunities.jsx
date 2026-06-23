@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react"
 import api from "../api/axios"
-import { jwtDecode } from "jwt-decode"
 import CreateOpportunityModal from "../components/opportunity/CreateOpportunityModal"
 import { motion } from "framer-motion"
 import { fadeInUp, staggerContainer } from "../lib/motion"
@@ -56,8 +55,7 @@ export default function Opportunities() {
       const token = localStorage.getItem("token")
       let skills = []
       if (token) {
-        const decoded = jwtDecode(token)
-        const id = decoded.id || decoded._id
+        const id = localStorage.getItem("userId")
         const userRes = await api.get(`/users/${id}`)
         skills = userRes.data.skills || []
         setUserSkills(skills.map(s => normalize(s)))

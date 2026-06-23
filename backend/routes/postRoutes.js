@@ -1,6 +1,7 @@
 import express from "express";
 import protect from "../middleware/authMiddleware.js";
 import upload from "../middleware/upload.js";
+import { contentCreationLimiter } from "../middleware/rateLimiter.js";
 
 import {
   createPost,
@@ -17,7 +18,7 @@ import {
 const router = express.Router();
 
 // ✅ CREATE POST (WITH IMAGE + COMMUNITY)
-router.post("/", protect, upload.single("image"), createPost);
+router.post("/", protect, contentCreationLimiter, upload.single("image"), createPost);
 
 // ✅ GLOBAL FEED (optional)
 router.get("/feed", protect, getFeed);

@@ -4,7 +4,6 @@
 import { useContext, useEffect, useState } from "react"
 import { useNavigate, useLocation } from "react-router-dom"
 import api from "../api/axios"
-import { jwtDecode } from "jwt-decode"
 import { ArrowUpRight, Plus, Users, LayoutGrid } from "lucide-react"
 import { motion } from "framer-motion"
 import toast from "react-hot-toast"
@@ -27,17 +26,7 @@ export default function Home() {
   const navigate = useNavigate()
   const location = useLocation()
 
-  const token = localStorage.getItem("token")
-  let userId = null
-
-  if (token) {
-    try {
-      const decoded = jwtDecode(token)
-      userId = decoded.id || decoded._id
-    } catch {
-      userId = null
-    }
-  }
+  const userId = localStorage.getItem("userId")
 
   // ✅ STAGGER CONTAINER
   const container = {

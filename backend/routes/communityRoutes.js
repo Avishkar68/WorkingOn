@@ -1,5 +1,6 @@
 import express from "express";
 import protect from "../middleware/authMiddleware.js";
+import { contentCreationLimiter } from "../middleware/rateLimiter.js";
 
 import {
   createCommunity,
@@ -13,7 +14,7 @@ import {
 const router = express.Router();
 
 // ✅ CREATE
-router.post("/", protect, createCommunity);
+router.post("/", protect, contentCreationLimiter, createCommunity);
 
 // ✅ GET ALL (Home page)
 router.get("/", protect, getAllCommunities);

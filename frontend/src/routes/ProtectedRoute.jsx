@@ -1,45 +1,10 @@
 import { Navigate } from "react-router-dom"
-import { useEffect, useState } from "react"
+import { useContext } from "react"
 import { motion } from "framer-motion"
-import api from "../api/axios"
+import { AuthContext } from "../context/AuthContext"
 
 export default function ProtectedRoute({ children }) {
-
-  const [loading, setLoading] = useState(true)
-  const [isAuth, setIsAuth] = useState(false)
-
-  useEffect(() => {
-
-    const checkAuth = async () => {
-
-      const token = localStorage.getItem("token")
-
-      if (!token) {
-        setLoading(false)
-        setIsAuth(false)
-        return
-      }
-
-      try {
-
-        await api.get("/auth/me")
-
-        setIsAuth(true)
-
-      } catch {
-
-        localStorage.removeItem("token")
-        setIsAuth(false)
-
-      }
-
-      setLoading(false)
-      console.log(`[Auth] Check complete. isAuth: ${isAuth}`)
-    }
-
-    checkAuth()
-
-  }, [])
+  const { user, loading } = useContext(AuthContext)
 
   if (loading) {
     return (
@@ -54,7 +19,12 @@ export default function ProtectedRoute({ children }) {
     )
   }
 
-  if (!isAuth) {
+  // If user is authenticated in Supabase but MongoDB profile does not exist
+  if (user && user.profileExists === false) {
+    return <Navigate to="/register" replace />
+  }
+
+  if (!user) {
     return <Navigate to="/" replace />
   }
 

@@ -32,6 +32,7 @@ import pulseRoutes from "./routes/pulseRoutes.js";
 import reportRoutes from "./routes/reportRoutes.js";
 import seoRoutes from "./routes/seoRoutes.js";
 import { initSocket } from "./socket.js";
+import actionLogger from "./middleware/actionLogger.js";
 dotenv.config();
 
 const app = express();
@@ -44,6 +45,7 @@ cron.schedule("0 9 * * *", async () => {
   await scrapeInternshala();
 });
 app.use(express.json());
+app.use(actionLogger);
 app.use(cookieParser());
 app.use(cors());
 app.use((req, res, next) => {
@@ -54,7 +56,7 @@ app.use((req, res, next) => {
 });
 app.use(morgan("dev"));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-app.use("/api/auth/login", limiter)
+app.use("/api", limiter);
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);

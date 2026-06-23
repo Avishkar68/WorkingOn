@@ -3,7 +3,6 @@ import api from "../../api/axios"
 import CommentSection from "./CommentSection"
 import { useNavigate, Link } from "react-router-dom"
 import { Heart, MessageCircle, Share2, Trash2, ShieldAlert } from "lucide-react"
-import { jwtDecode } from "jwt-decode"
 import ReportModal from "../common/ReportModal"
 import { motion } from "framer-motion"
 import { buttonTap, cardHover, fadeInUp } from "../../lib/motion"
@@ -21,17 +20,7 @@ export default function PostCard({ post, refreshFeed }) {
 
 const [expanded, setExpanded] = useState(false);
   // ✅ GET CURRENT USER
-  const token = localStorage.getItem("token")
-
-  let currentUserId = null
-  if (token) {
-    try {
-      const decoded = jwtDecode(token)
-      currentUserId = decoded.id || decoded._id
-    } catch {
-      currentUserId = null
-    }
-  }
+  const currentUserId = localStorage.getItem("userId")
 
   // ✅ LOCAL LIKE STATE
   const [likes, setLikes] = useState(post.likes || [])

@@ -1,5 +1,4 @@
 import { motion } from "framer-motion";
-import { jwtDecode } from "jwt-decode";
 import { buttonTap, cardHover, fadeInUp } from "../../lib/motion";
 import { CalendarDays, MapPin, Users, Share2, Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
@@ -11,16 +10,7 @@ import { trackEvent } from "../../utils/analytics";
 export default function EventCard({ event, refresh }) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-  const token = localStorage.getItem("token");
-  let currentUserId = null;
-  if (token) {
-    try {
-      const decoded = jwtDecode(token);
-      currentUserId = decoded.id || decoded._id;
-    } catch {
-      currentUserId = null;
-    }
-  }
+  const currentUserId = localStorage.getItem("userId");
 
   const formatDate = (date) => {
     const d = new Date(date);

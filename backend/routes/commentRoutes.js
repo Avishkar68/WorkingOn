@@ -1,5 +1,6 @@
 import express from "express";
 import protect from "../middleware/authMiddleware.js";
+import { contentCreationLimiter } from "../middleware/rateLimiter.js";
 
 import {
   addComment,
@@ -10,7 +11,7 @@ import {
 
 const router = express.Router();
 
-router.post("/", protect, addComment);
+router.post("/", protect, contentCreationLimiter, addComment);
 router.get("/:postId", protect, getComments);
 
 router.delete("/:id", protect, deleteComment);

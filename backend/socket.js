@@ -1,7 +1,7 @@
 import { Server } from "socket.io";
-import jwt from "jsonwebtoken";
 import User from "./models/User.js";
 import Message from "./models/Message.js";
+import { supabase } from "./config/supabase.js";
 
 let io;
 
@@ -13,7 +13,7 @@ export const initSocket = (httpServer) => {
     },
   });
 
-  // Authenticate socket connections using JWT
+  // Authenticate socket connections using JWT (Supabase only)
   io.use(async (socket, next) => {
     try {
       const token = socket.handshake.auth?.token;
@@ -21,11 +21,22 @@ export const initSocket = (httpServer) => {
         return next(new Error("Authentication error"));
       }
 
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      const user = await User.findById(decoded.id).select("-password");
+      let user;
+
+      // Try Supabase verification via the Supabase client
+      try {
+        const { data: { user: supabaseUser }, error } = await supabase.auth.getUser(token);
+        if (!error && supabaseUser) {
+          if (supabaseUser.email && supabaseUser.email.endsWith("@spit.ac.in")) {
+            user = await User.findOne({ supabaseId: supabaseUser.id }).select("-password");
+          }
+        }
+      } catch (supabaseErr) {
+        // Fall through
+      }
 
       if (!user) {
-        return next(new Error("User not found"));
+        return next(new Error("User not found or unauthorized"));
       }
 
       socket.user = user;

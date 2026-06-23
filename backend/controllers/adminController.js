@@ -7,6 +7,7 @@ import Community from "../models/Community.js";
 import DailyChallenge from "../models/DailyChallenge.js";
 import Report from "../models/Report.js";
 import Pulse from "../models/Pulse.js";
+import UserActionLog from "../models/UserActionLog.js";
 
 const getIstStartOfDay = (date = new Date()) => {
   const istDateStr = new Date(date).toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" });
@@ -273,5 +274,41 @@ export const uploadChallenges = async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Failed to upload challenges" });
+  }
+};
+
+export const getActionLogs = async (req, res) => {
+  try {
+    const { page = 1, limit = 50, action, search } = req.query;
+    
+    let query = {};
+    if (action && action !== "ALL") {
+      query.action = action;
+    }
+    
+    if (search) {
+      query.$or = [
+        { userName: { $regex: search, $options: "i" } },
+        { action: { $regex: search, $options: "i" } },
+        { description: { $regex: search, $options: "i" } }
+      ];
+    }
+    
+    const logs = await UserActionLog.find(query)
+      .sort({ timestamp: -1 })
+      .skip((Number(page) - 1) * Number(limit))
+      .limit(Number(limit));
+      
+    const total = await UserActionLog.countDocuments(query);
+    
+    res.json({
+      logs,
+      total,
+      pages: Math.ceil(total / Number(limit)),
+      currentPage: Number(page)
+    });
+  } catch (err) {
+    console.error("getActionLogs controller error:", err);
+    res.status(500).json({ message: "Failed to fetch logs" });
   }
 };

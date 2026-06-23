@@ -23,6 +23,7 @@ import {
   deletePulseAdmin,
   getAllPulsesAdmin,
   restorePulseAdmin,
+  getActionLogs,
 } from "../controllers/adminController.js";
 
 const router = express.Router();
@@ -51,6 +52,7 @@ router.delete("/opportunity/:id", protect, admin, deleteOpportunityAdmin);
 router.delete("/pulse/:id", protect, admin, deletePulseAdmin);
 router.get("/pulses", protect, admin, getAllPulsesAdmin);
 router.post("/pulse/:id/restore", protect, admin, restorePulseAdmin);
+router.get("/logs", protect, admin, getActionLogs);
 
 router.post("/challenges/upload", protect, admin, uploadChallenges);
 

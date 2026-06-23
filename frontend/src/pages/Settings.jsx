@@ -3,6 +3,7 @@ import api from "../api/axios"
 import { useNavigate } from "react-router-dom"
 import toast from "react-hot-toast"
 import { Settings as SettingsIcon } from "lucide-react"
+import { supabase } from "../lib/supabaseClient"
 
 export default function Settings() {
 
@@ -48,10 +49,21 @@ export default function Settings() {
     }
 
     try {
-      await api.put("/auth/change-password", {
-        currentPassword,
-        newPassword
-      })
+      const { data: { session } } = await supabase.auth.getSession()
+
+      if (!session) {
+        toast.error("You must be logged in to update your password")
+        return
+      }
+
+      const isOAuth = session.user?.app_metadata?.provider !== 'email'
+      if (isOAuth) {
+        toast.error("Google accounts cannot change password directly.")
+        return
+      }
+
+      const { error } = await supabase.auth.updateUser({ password: newPassword })
+      if (error) throw error
 
       toast.success("Password updated successfully")
       setCurrentPassword("")
@@ -59,7 +71,7 @@ export default function Settings() {
       setConfirmPassword("")
 
     } catch (err) {
-      toast.error(err.response?.data?.message || "Failed to update password")
+      toast.error(err.message || "Failed to update password")
     }
   }
 

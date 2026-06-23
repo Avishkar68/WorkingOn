@@ -2,25 +2,16 @@ import express from "express";
 import {
   registerUser,
   loginUser,
-  verifyEmail,
-  forgotPassword,
-  resetPassword,
-  getCurrentUser,
-  changePassword
+  getCurrentUser
 } from "../controllers/authController.js";
 
 import protect from "../middleware/authMiddleware.js";
 import upload from "../middleware/upload.js";
+import { authLimiter } from "../middleware/rateLimiter.js";
 
 const router = express.Router();
-router.put("/change-password", protect, changePassword);
-router.post("/register", upload.single("profileImage"), registerUser);
-router.post("/login", loginUser);
-
-router.post("/verify-email", verifyEmail);
-router.post("/forgot-password", forgotPassword);
-router.post("/reset-password", resetPassword);
-
-router.get("/me", protect, getCurrentUser);   // 👈 ADD THIS
+router.post("/register", authLimiter, upload.single("profileImage"), registerUser);
+router.post("/login", authLimiter, loginUser);
+router.get("/me", protect, getCurrentUser);
 
 export default router;

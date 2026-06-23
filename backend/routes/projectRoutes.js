@@ -1,5 +1,6 @@
 import express from "express";
 import protect from "../middleware/authMiddleware.js";
+import { contentCreationLimiter } from "../middleware/rateLimiter.js";
 
 import {
   createProject,
@@ -15,7 +16,7 @@ import {
 
 const router = express.Router();
 
-router.post("/", protect, createProject);
+router.post("/", protect, contentCreationLimiter, createProject);
 router.get("/", protect, getProjects);
 router.get("/:id", protect, getProjectById);
 

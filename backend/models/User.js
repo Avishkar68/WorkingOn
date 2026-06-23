@@ -16,9 +16,14 @@ const userSchema = new mongoose.Schema(
     match: /@spit\.ac\.in$/
   },
 
+  supabaseId: {
+    type: String,
+    unique: true,
+    sparse: true
+  },
+
   password: {
     type: String,
-    required: true,
     minlength: 6
   },
 

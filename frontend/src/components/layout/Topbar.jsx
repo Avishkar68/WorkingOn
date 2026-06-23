@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react"
 import { Bell, Menu, Plus, Search } from "lucide-react"
 import { useLocation, useNavigate, Link } from "react-router-dom"
-import { jwtDecode } from "jwt-decode"
 import { AnimatePresence, motion } from "framer-motion"
 import api from "../../api/axios"
 
@@ -44,10 +43,8 @@ export default function Topbar({ openSidebar }) {
 
   const loadUser = async () => {
     try {
-      const token = localStorage.getItem("token")
-      if (!token) return
-      const decoded = jwtDecode(token)
-      const id = decoded.id || decoded._id
+      const id = localStorage.getItem("userId")
+      if (!id) return
       const res = await api.get(`/users/${id}`)
       setUser(res.data)
     } catch (err) {

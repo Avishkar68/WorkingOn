@@ -9,12 +9,13 @@ import {
 } from "../controllers/pulseController.js";
 import auth from "../middleware/authMiddleware.js";
 import multer from "multer";
+import { contentCreationLimiter } from "../middleware/rateLimiter.js";
 
 const upload = multer({ dest: "uploads/" });
 const router = express.Router();
 
 router.get("/", auth, getAllPulses);
-router.post("/", auth, upload.single("image"), createPulse);
+router.post("/", auth, contentCreationLimiter, upload.single("image"), createPulse);
 router.post("/:id/react", auth, reactToPulse);
 router.post("/:id/vote", auth, voteInPoll);
 router.post("/:id/vote-pulse", auth, votePulse);
