@@ -6,7 +6,6 @@ import { trackEvent } from "../utils/analytics"
 
 import SearchPostCard from "../components/search/SearchPostCard"
 import SearchUserCard from "../components/search/SearchUserCard"
-import Skeleton from "../components/ui/Skeleton"
 
 export default function Search() {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -15,7 +14,6 @@ export default function Search() {
   const [query, setQuery] = useState(q)
   const [results, setResults] = useState(null)
   const [activeTab, setActiveTab] = useState("posts")
-  const [loading, setLoading] = useState(false)
 
   // Sync local query with URL param
   useEffect(() => {
@@ -27,19 +25,15 @@ export default function Search() {
   useEffect(() => {
     if (!q.trim()) {
       setResults(null)
-      setLoading(false)
       return
     }
 
-    setLoading(true)
     const handler = setTimeout(async () => {
       try {
         const res = await api.get(`/search?q=${q}`)
         setResults(res.data)
       } catch (err) {
         console.error(err)
-      } finally {
-        setLoading(false)
       }
     }, 300)
 
@@ -107,73 +101,35 @@ export default function Search() {
       )}
 
       {/* RESULTS */}
-      {loading ? (
-        <div className="space-y-6 mt-6">
-          {activeTab === "posts" ? (
-            [...Array(3)].map((_, i) => (
-              <div key={i} className="glass p-4 sm:p-5 rounded-2xl space-y-4 border border-white/10">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <Skeleton className="w-10 h-10 rounded-full" />
-                    <div className="space-y-2">
-                      <Skeleton className="w-32 h-4 rounded-lg" />
-                      <Skeleton className="w-20 h-3 rounded-lg" />
-                    </div>
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Skeleton className="w-full h-5 rounded-lg" />
-                  <Skeleton className="w-5/6 h-5 rounded-lg" />
-                </div>
-              </div>
-            ))
+
+      {/* POSTS */}
+      {results && activeTab === "posts" && (
+        <div className="space-y-6">
+
+          {results.posts?.length === 0 ? (
+            <p className="text-slate-400">No posts found</p>
           ) : (
-            [...Array(4)].map((_, i) => (
-              <div key={i} className="glass p-4 rounded-2xl border border-white/5 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <Skeleton className="w-10 h-10 rounded-full" />
-                  <div className="space-y-2">
-                    <Skeleton className="w-32 h-4 rounded-lg" />
-                    <Skeleton className="w-24 h-3 rounded-lg" />
-                  </div>
-                </div>
-                <Skeleton className="w-16 h-6 rounded-lg" />
-              </div>
+            results.posts.map(post => (
+              <SearchPostCard key={post._id} post={post} />
             ))
           )}
+
         </div>
-      ) : (
-        <>
-          {/* POSTS */}
-          {results && activeTab === "posts" && (
-            <div className="space-y-6">
+      )}
 
-              {results.posts?.length === 0 ? (
-                <p className="text-slate-400">No posts found</p>
-              ) : (
-                results.posts.map(post => (
-                  <SearchPostCard key={post._id} post={post} />
-                ))
-              )}
+      {/* USERS */}
+      {results && activeTab === "users" && (
+        <div className="space-y-4">
 
-            </div>
+          {results.users?.length === 0 ? (
+            <p className="text-slate-400">No users found</p>
+          ) : (
+            results.users.map(user => (
+              <SearchUserCard key={user._id} user={user} />
+            ))
           )}
 
-          {/* USERS */}
-          {results && activeTab === "users" && (
-            <div className="space-y-4">
-
-              {results.users?.length === 0 ? (
-                <p className="text-slate-400">No users found</p>
-              ) : (
-                results.users.map(user => (
-                  <SearchUserCard key={user._id} user={user} />
-                ))
-              )}
-
-            </div>
-          )}
-        </>
+        </div>
       )}
 
     </PageShell>

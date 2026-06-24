@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom"
 import toast from "react-hot-toast"
 import { Settings as SettingsIcon } from "lucide-react"
 import { supabase } from "../lib/supabaseClient"
-import Skeleton from "../components/ui/Skeleton"
 
 export default function Settings() {
 
@@ -81,37 +80,7 @@ export default function Settings() {
     navigate("/")
   }
 
-  if (!user) {
-    return (
-      <div className="max-w-3xl mx-auto p-6 md:p-0 space-y-6">
-        <div className="flex items-center gap-2">
-          <Skeleton className="w-6 h-6 rounded-lg" />
-          <Skeleton className="w-24 h-8 rounded-lg" />
-        </div>
-        <div className="glass p-5 md:p-6 rounded-2xl space-y-4">
-          <Skeleton className="w-32 h-5 rounded-lg" />
-          <div className="space-y-4">
-            <div className="space-y-1">
-              <Skeleton className="w-24 h-4 rounded-lg" />
-              <Skeleton className="w-full h-10 rounded-xl" />
-            </div>
-            <div className="space-y-1">
-              <Skeleton className="w-24 h-4 rounded-lg" />
-              <Skeleton className="w-full h-10 rounded-xl" />
-            </div>
-          </div>
-        </div>
-        <div className="glass p-5 md:p-6 rounded-2xl space-y-4">
-          <Skeleton className="w-32 h-5 rounded-lg" />
-          <div className="space-y-3">
-            <Skeleton className="w-full h-12 rounded-xl" />
-            <Skeleton className="w-full h-12 rounded-xl" />
-            <Skeleton className="w-full h-12 rounded-xl" />
-          </div>
-        </div>
-      </div>
-    )
-  }
+  if (!user) return null
 
   return (
     /* Added responsive padding (px-4 on mobile, p-6 on desktop) */

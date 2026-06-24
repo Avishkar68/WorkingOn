@@ -6,7 +6,6 @@ import { Users, Calendar, Briefcase, Share2, MessageSquare, ChevronLeft } from "
 import { motion } from "framer-motion"
 import { fadeInUp, buttonTap } from "../lib/motion"
 import toast from "react-hot-toast"
-import Skeleton from "../components/ui/Skeleton"
 
 export default function ProjectDetail() {
   const { id } = useParams()
@@ -42,69 +41,9 @@ export default function ProjectDetail() {
 
   if (loading) {
     return (
-      <PageShell eyebrow="Project Details" title="Loading Project..." subtitle="Fetching details...">
-        <div className="max-w-4xl mx-auto space-y-6 pb-20">
-          <div className="flex items-center justify-between mb-4">
-            <Skeleton className="w-16 h-5 rounded-lg" />
-            <Skeleton className="w-9 h-9 rounded-xl" />
-          </div>
-          <div className="glass-card p-6 sm:p-10 space-y-8">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-8 border-b border-white/10">
-              <div className="space-y-4 flex-1">
-                <Skeleton className="w-2/3 h-10 rounded-xl" />
-                <div className="flex items-center gap-4">
-                  <div className="flex -space-x-2">
-                    <Skeleton className="w-8 h-8 rounded-full" />
-                    <Skeleton className="w-8 h-8 rounded-full" />
-                    <Skeleton className="w-8 h-8 rounded-full" />
-                  </div>
-                  <Skeleton className="w-28 h-4 rounded-lg" />
-                </div>
-              </div>
-              <div className="flex flex-col gap-3 shrink-0 w-full md:w-44">
-                <Skeleton className="h-12 rounded-xl" />
-                <Skeleton className="h-12 rounded-xl" />
-              </div>
-            </div>
-            <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-10">
-              <div className="space-y-8">
-                <div className="space-y-4">
-                  <Skeleton className="w-24 h-4 rounded-lg" />
-                  <Skeleton className="w-full h-6 rounded-lg" />
-                  <Skeleton className="w-5/6 h-6 rounded-lg" />
-                  <Skeleton className="w-4/5 h-6 rounded-lg" />
-                </div>
-                <div className="space-y-4">
-                  <Skeleton className="w-24 h-4 rounded-lg" />
-                  <div className="flex flex-wrap gap-2">
-                    <Skeleton className="w-16 h-8 rounded-full" />
-                    <Skeleton className="w-20 h-8 rounded-full" />
-                    <Skeleton className="w-24 h-8 rounded-full" />
-                  </div>
-                </div>
-              </div>
-              <div className="space-y-6">
-                <div className="glass p-5 rounded-2xl border border-white/10 space-y-4">
-                  <Skeleton className="w-20 h-4 rounded-lg" />
-                  <div className="space-y-3">
-                    <Skeleton className="w-full h-4 rounded-lg" />
-                    <Skeleton className="w-full h-4 rounded-lg" />
-                    <Skeleton className="w-full h-4 rounded-lg" />
-                  </div>
-                </div>
-                <div className="glass p-5 rounded-2xl border border-white/10 space-y-4">
-                  <Skeleton className="w-24 h-4 rounded-lg" />
-                  <div className="flex items-center gap-3">
-                    <Skeleton className="w-10 h-10 rounded-full" />
-                    <div className="space-y-2 flex-1">
-                      <Skeleton className="w-3/4 h-4 rounded-lg" />
-                      <Skeleton className="w-1/2 h-3 rounded-lg" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+      <PageShell title="Loading..." subtitle="Fetching project details">
+        <div className="flex justify-center items-center h-[40vh]">
+          <div className="animate-pulse text-slate-500">Retrieving project data...</div>
         </div>
       </PageShell>
     )

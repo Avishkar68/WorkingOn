@@ -6,25 +6,20 @@ import { AnimatePresence, motion } from "framer-motion";
 import toast from "react-hot-toast";
 import { useNotifications } from "../context/NotificationContext";
 import { trackEvent } from "../utils/analytics";
-import Skeleton from "../components/ui/Skeleton";
 
 const Notifications = () => {
   const [notifications, setNotifications] = useState([]);
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [contact, setContact] = useState("");
   const [loadingId, setLoadingId] = useState(null);
-  const [loading, setLoading] = useState(true);
   const { setUnreadCount } = useNotifications();
 
   const loadNotifications = async () => {
     try {
-      setLoading(true);
       const res = await api.get("/notifications");
       setNotifications(res.data);
     } catch (err) {
       console.error(err);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -122,21 +117,7 @@ const Notifications = () => {
       }
     >
       <div className="flex flex-col gap-4 pb-10">
-        {loading ? (
-          [...Array(4)].map((_, i) => (
-            <div key={i} className="glass p-4 rounded-2xl border border-white/5 flex items-start gap-4">
-              <Skeleton className="w-10 h-10 rounded-full shrink-0" />
-              <div className="flex-1 space-y-2">
-                <div className="flex items-center justify-between">
-                  <Skeleton className="w-1/4 h-4 rounded-lg" />
-                  <Skeleton className="w-16 h-3 rounded-lg" />
-                </div>
-                <Skeleton className="w-3/4 h-4 rounded-lg" />
-                <Skeleton className="w-1/2 h-3 rounded-lg" />
-              </div>
-            </div>
-          ))
-        ) : notifications.length === 0 ? (
+        {notifications.length === 0 ? (
           <div className="py-20 text-center">
             <p className="text-slate-500">No notifications yet</p>
           </div>
