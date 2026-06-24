@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import api from "../api/axios";
 import PageShell from "../components/layout/PageShell";
 import { Trophy, Sparkles, Crown, Zap } from "lucide-react";
+import Skeleton from "../components/ui/Skeleton";
 
 export default function Leaderboard() {
   const [leaders, setLeaders] = useState([]);
@@ -44,69 +45,100 @@ export default function Leaderboard() {
 
         {/* Podium - Responsive Grid */}
         <div className="flex flex-col md:grid md:grid-cols-3 gap-8 md:gap-4 items-center md:items-end pt-8">
-          {topThree.map((user, index) => {
-            const theme = podiumThemes[index];
-            const isFirst = theme.rank === 1;
-
-            return (
-              <div
-                key={user._id}
-                className={`${theme.order} relative group w-full max-w-[400px] md:max-w-none`}
-              >
-                {/* Ranking Badge */}
-                <div className={`absolute -top-4 left-1/2 -translate-x-1/2 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-[#1a1f2e] border-2 ${theme.border} ${theme.text} font-bold text-sm shadow-xl`}>
-                  #{theme.rank}
-                </div>
-
-                <div className={`
-                  relative overflow-hidden glass-card p-5
-                  ${isFirst ? "min-h-[300px] md:min-h-[320px] scale-[1.02] md:scale-105 z-10 border-amber-500/40" : "min-h-[260px] md:min-h-[280px] border-white/5"}
-                  ${theme.glow} shadow-2xl
-                `}>
-                  {/* Subtle Top Light Glow */}
-                  <div className={`absolute top-0 left-0 right-0 h-24 bg-gradient-to-b ${isFirst ? 'from-amber-500/10' : 'from-white/5'} to-transparent opacity-50`} />
-
-                  <div className="relative z-10 flex flex-col items-center text-center h-full">
-                    <Link
-                      to={`/user/${user._id}`}
-                      className={`mb-4 mt-2 flex h-14 w-14 items-center justify-center rounded-2xl bg-white/5 border border-white/10 ${theme.text} hover:scale-110 transition-transform`}
-                    >
-                      <theme.icon size={isFirst ? 32 : 24} />
-                    </Link>
-
-                    <Link to={`/user/${user._id}`} className="hover:text-indigo-400 transition-colors w-full px-2">
-                      <h3 className="text-lg font-bold text-white truncate">{user.name}</h3>
-                    </Link>
-                    <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-4">Ranked {theme.rank}</p>
-
-                    {/* Stats Pills */}
-                    <div className="flex flex-wrap justify-center gap-2 mb-6">
-                      <div className="flex items-center gap-1.5 rounded-lg bg-white/5 px-2.5 py-1 border border-white/5">
-                        <Zap size={12} className="text-indigo-400" />
-                        <span className="text-xs font-bold text-white">{user.streakCount || 0}d</span>
+          {loading ? (
+            podiumThemes.map((theme) => {
+              const isFirst = theme.rank === 1;
+              return (
+                <div key={theme.rank} className={`${theme.order} relative w-full max-w-[400px] md:max-w-none`}>
+                  <div className={`relative overflow-hidden glass-card p-5 ${isFirst ? "min-h-[300px] md:min-h-[320px] scale-[1.02] md:scale-105 z-10" : "min-h-[260px] md:min-h-[280px]"} border-white/5 shadow-2xl`}>
+                    <div className="flex flex-col items-center text-center h-full space-y-4 mt-4 w-full">
+                      <Skeleton className="w-14 h-14 rounded-2xl" />
+                      <Skeleton className="w-2/3 h-5 rounded-lg" />
+                      <Skeleton className="w-1/3 h-3 rounded-lg" />
+                      <div className="flex gap-2">
+                        <Skeleton className="w-14 h-6 rounded-lg" />
+                        <Skeleton className="w-14 h-6 rounded-lg" />
                       </div>
-                      <div className="flex items-center gap-1.5 rounded-lg bg-white/5 px-2.5 py-1 border border-white/5">
-                        <Trophy size={12} className={theme.text} />
-                        <span className="text-xs font-bold text-white">{user.score || 0}</span>
-                      </div>
-                    </div>
-
-                    {/* Footer Activity */}
-                    <div className="mt-auto w-full grid grid-cols-2 border-t border-white/5 pt-4">
-                      <div>
-                        <p className="text-sm font-bold text-white">{user.totalPosts || 0}</p>
-                        <p className="text-[9px] uppercase text-slate-500 font-bold">Posts</p>
-                      </div>
-                      <div className="border-l border-white/5">
-                        <p className="text-sm font-bold text-white">{user.totalComments || 0}</p>
-                        <p className="text-[9px] uppercase text-slate-500 font-bold">Comments</p>
+                      <div className="w-full grid grid-cols-2 pt-4 border-t border-white/5">
+                        <div className="space-y-1">
+                          <Skeleton className="mx-auto w-8 h-4 rounded-lg" />
+                          <Skeleton className="mx-auto w-10 h-3 rounded-lg" />
+                        </div>
+                        <div className="space-y-1 border-l border-white/5">
+                          <Skeleton className="mx-auto w-8 h-4 rounded-lg" />
+                          <Skeleton className="mx-auto w-10 h-3 rounded-lg" />
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })
+          ) : (
+            topThree.map((user, index) => {
+              const theme = podiumThemes[index];
+              const isFirst = theme.rank === 1;
+
+              return (
+                <div
+                  key={user._id}
+                  className={`${theme.order} relative group w-full max-w-[400px] md:max-w-none`}
+                >
+                  {/* Ranking Badge */}
+                  <div className={`absolute -top-4 left-1/2 -translate-x-1/2 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-[#1a1f2e] border-2 ${theme.border} ${theme.text} font-bold text-sm shadow-xl`}>
+                    #{theme.rank}
+                  </div>
+
+                  <div className={`
+                    relative overflow-hidden glass-card p-5
+                    ${isFirst ? "min-h-[300px] md:min-h-[320px] scale-[1.02] md:scale-105 z-10 border-amber-500/40" : "min-h-[260px] md:min-h-[280px] border-white/5"}
+                    ${theme.glow} shadow-2xl
+                  `}>
+                    {/* Subtle Top Light Glow */}
+                    <div className={`absolute top-0 left-0 right-0 h-24 bg-gradient-to-b ${isFirst ? 'from-amber-500/10' : 'from-white/5'} to-transparent opacity-50`} />
+
+                    <div className="relative z-10 flex flex-col items-center text-center h-full">
+                      <Link
+                        to={`/user/${user._id}`}
+                        className={`mb-4 mt-2 flex h-14 w-14 items-center justify-center rounded-2xl bg-white/5 border border-white/10 ${theme.text} hover:scale-110 transition-transform`}
+                      >
+                        <theme.icon size={isFirst ? 32 : 24} />
+                      </Link>
+
+                      <Link to={`/user/${user._id}`} className="hover:text-indigo-400 transition-colors w-full px-2">
+                        <h3 className="text-lg font-bold text-white truncate">{user.name}</h3>
+                      </Link>
+                      <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-4">Ranked {theme.rank}</p>
+
+                      {/* Stats Pills */}
+                      <div className="flex flex-wrap justify-center gap-2 mb-6">
+                        <div className="flex items-center gap-1.5 rounded-lg bg-white/5 px-2.5 py-1 border border-white/5">
+                          <Zap size={12} className="text-indigo-400" />
+                          <span className="text-xs font-bold text-white">{user.streakCount || 0}d</span>
+                        </div>
+                        <div className="flex items-center gap-1.5 rounded-lg bg-white/5 px-2.5 py-1 border border-white/5">
+                          <Trophy size={12} className={theme.text} />
+                          <span className="text-xs font-bold text-white">{user.score || 0}</span>
+                        </div>
+                      </div>
+
+                      {/* Footer Activity */}
+                      <div className="mt-auto w-full grid grid-cols-2 border-t border-white/5 pt-4">
+                        <div>
+                          <p className="text-sm font-bold text-white">{user.totalPosts || 0}</p>
+                          <p className="text-[9px] uppercase text-slate-500 font-bold">Posts</p>
+                        </div>
+                        <div className="border-l border-white/5">
+                          <p className="text-sm font-bold text-white">{user.totalComments || 0}</p>
+                          <p className="text-[9px] uppercase text-slate-500 font-bold">Comments</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })
+          )}
         </div>
 
         {/* List for the rest */}
@@ -118,7 +150,21 @@ export default function Leaderboard() {
 
           <div className="space-y-2">
             {loading ? (
-              <p className="text-slate-500 text-sm text-center py-4">Calculating rankings...</p>
+              [...Array(5)].map((_, i) => (
+                <div key={i} className="flex items-center justify-between rounded-2xl border border-white/5 bg-white/[0.01] px-3 md:px-4 py-3">
+                  <div className="flex items-center gap-3 md:gap-4 overflow-hidden flex-1">
+                    <Skeleton className="w-6 h-4 rounded-lg shrink-0" />
+                    <div className="space-y-2 flex-1">
+                      <Skeleton className="w-1/3 h-4 rounded-lg" />
+                      <div className="flex gap-2">
+                        <Skeleton className="w-16 h-3 rounded-lg" />
+                        <Skeleton className="w-14 h-3 rounded-lg" />
+                      </div>
+                    </div>
+                  </div>
+                  <Skeleton className="w-8 h-5 rounded-lg shrink-0 ml-2" />
+                </div>
+              ))
             ) : (
               others.map((user, index) => (
                 <div key={user._id} className="group flex items-center justify-between rounded-2xl border border-white/5 bg-white/[0.01] px-3 md:px-4 py-3 hover:bg-white/[0.04] transition-all">

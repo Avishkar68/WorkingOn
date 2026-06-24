@@ -7,6 +7,7 @@ import CreatePulseModal from "../components/campus-pulse/CreatePulseModal";
 import { buttonTap, staggerContainer } from "../lib/motion";
 import api from "../api/axios";
 import { useSocket } from "../context/SocketContext";
+import Skeleton from "../components/ui/Skeleton";
 
 export default function CampusPulse() {
   const [posts, setPosts] = useState([]);
@@ -143,9 +144,27 @@ export default function CampusPulse() {
 
           {/* Feed */}
           {loading ? (
-            <div className="flex justify-center items-center py-20 text-slate-500 gap-3">
-              <div className="h-4 w-4 border-2 border-brand-500 border-t-transparent rounded-full animate-spin" />
-              <span className="text-sm font-medium">Loading Pulses...</span>
+            <div className="columns-1 md:columns-2 xl:columns-3 gap-4 lg:gap-6 space-y-4 md:space-y-0">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="break-inside-avoid mb-4 md:mb-6 glass p-5 rounded-2xl border border-white/10 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <Skeleton className="w-20 h-5 rounded-full" />
+                    <Skeleton className="w-16 h-3 rounded-lg" />
+                  </div>
+                  <div className="space-y-2">
+                    <Skeleton className="w-full h-4 rounded-lg" />
+                    <Skeleton className="w-5/6 h-4 rounded-lg" />
+                    <Skeleton className="w-4/5 h-4 rounded-lg" />
+                  </div>
+                  <div className="flex items-center justify-between pt-2 border-t border-white/5">
+                    <div className="flex items-center gap-3">
+                      <Skeleton className="w-12 h-6 rounded-lg" />
+                      <Skeleton className="w-12 h-6 rounded-lg" />
+                    </div>
+                    <Skeleton className="w-16 h-6 rounded-lg" />
+                  </div>
+                </div>
+              ))}
             </div>
           ) : (
             <motion.div

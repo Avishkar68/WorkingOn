@@ -10,6 +10,7 @@ import { fadeInUp } from "../lib/motion"
 import { AuthContext } from "../context/AuthContext"
 import CreateCommunityModal from "../components/dialogueboxes/CreateCommunityModal"
 import CreatePostModal from "../components/post/CreatePostModal"
+import Skeleton from "../components/ui/Skeleton"
 
 export default function CommunitiesPage() {
   const [communities, setCommunities] = useState([])
@@ -176,7 +177,14 @@ export default function CommunitiesPage() {
               </button>
 
               {loadingCommunities ? (
-                <p className="text-sm text-slate-400 px-2 py-3">Loading communities...</p>
+                <div className="space-y-2 p-2">
+                  {[...Array(4)].map((_, i) => (
+                    <div key={i} className="rounded-xl border border-white/10 p-3 space-y-2">
+                      <Skeleton className="w-2/3 h-4 rounded-lg" />
+                      <Skeleton className="w-1/2 h-3 rounded-lg" />
+                    </div>
+                  ))}
+                </div>
               ) : filteredCommunities.length === 0 ? (
                 <div className="px-4 py-8 text-center">
                   <p className="text-sm text-slate-500 italic">No {filter === "joined" ? "joined " : ""}communities found.</p>
@@ -322,7 +330,25 @@ export default function CommunitiesPage() {
                     {view === "posts" ? (
                       <div className="space-y-4 max-w-4xl mx-auto">
                         {loadingPosts ? (
-                          <p className="text-sm text-slate-400">Loading posts...</p>
+                          <div className="space-y-4">
+                            {[...Array(3)].map((_, i) => (
+                              <div key={i} className="glass p-4 sm:p-5 rounded-2xl space-y-4 border border-white/10">
+                                <div className="flex items-center justify-between">
+                                  <div className="flex items-center gap-3">
+                                    <Skeleton className="w-10 h-10 rounded-full" />
+                                    <div className="space-y-2">
+                                      <Skeleton className="w-32 h-4 rounded-lg" />
+                                      <Skeleton className="w-20 h-3 rounded-lg" />
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="space-y-2">
+                                  <Skeleton className="w-full h-5 rounded-lg" />
+                                  <Skeleton className="w-5/6 h-5 rounded-lg" />
+                                </div>
+                              </div>
+                            ))}
+                          </div>
                         ) : posts.length === 0 ? (
                           <div className="py-20 text-center">
                             <p className="text-sm text-slate-500 italic">No posts in this community yet.</p>

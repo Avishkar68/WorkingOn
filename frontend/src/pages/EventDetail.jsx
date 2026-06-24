@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import api from "../api/axios"
 import { Calendar, MapPin, Users, ExternalLink } from "lucide-react"
+import Skeleton from "../components/ui/Skeleton"
 
 export default function EventDetail(){
 
@@ -21,10 +22,41 @@ export default function EventDetail(){
     loadEvent()
   },[id])
 
-  if(!event){
+  if (!event) {
     return (
-      <div className="flex justify-center items-center h-[60vh] text-gray-400">
-        Loading event...
+      <div className="max-w-3xl mx-auto p-6 space-y-6">
+        <div className="glass rounded-2xl p-6 space-y-5 border border-white/10 shadow-[0_0_30px_rgba(99,102,241,0.1)]">
+          <div className="space-y-2">
+            <Skeleton className="w-2/3 h-9 rounded-xl" />
+            <Skeleton className="w-1/3 h-4 rounded-lg" />
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="flex items-center gap-2">
+              <Skeleton className="w-5 h-5 rounded-full" />
+              <Skeleton className="w-40 h-4 rounded-lg" />
+            </div>
+            <div className="flex items-center gap-2">
+              <Skeleton className="w-5 h-5 rounded-full" />
+              <Skeleton className="w-48 h-4 rounded-lg" />
+            </div>
+            <div className="flex items-center gap-2">
+              <Skeleton className="w-5 h-5 rounded-full" />
+              <Skeleton className="w-24 h-4 rounded-lg" />
+            </div>
+          </div>
+          <div className="space-y-2 pt-2">
+            <Skeleton className="w-24 h-5 rounded-lg" />
+            <Skeleton className="w-full h-4 rounded-lg" />
+            <Skeleton className="w-5/6 h-4 rounded-lg" />
+            <Skeleton className="w-4/5 h-4 rounded-lg" />
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Skeleton className="w-16 h-6 rounded-full" />
+            <Skeleton className="w-20 h-6 rounded-full" />
+            <Skeleton className="w-14 h-6 rounded-full" />
+          </div>
+          <Skeleton className="w-full h-12 rounded-xl mt-4" />
+        </div>
       </div>
     )
   }
