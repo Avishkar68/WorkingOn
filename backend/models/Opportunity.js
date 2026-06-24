@@ -51,6 +51,16 @@ const opportunitySchema = new mongoose.Schema(
   registrationLink: {
     type: String
   },  
+  branch: {
+    type: String,
+    enum: [
+      "Computer Engineering",
+      "Computer Science and Engineering",
+      "Electronics Engineering",
+      "All"
+    ],
+    default: "All"
+  },
   status: {
     type: String,
     enum: ["active","closed","hidden"],

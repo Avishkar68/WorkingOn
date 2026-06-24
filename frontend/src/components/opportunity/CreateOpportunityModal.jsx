@@ -13,6 +13,7 @@ export default function CreateOpportunityModal({ close, refresh }) {
   const [tags, setTags] = useState([])
   const [tagInput, setTagInput] = useState("")
   const [registrationLink, setRegistrationLink] = useState("")
+  const [branch, setBranch] = useState("All")
   const [loading, setLoading] = useState(false)
 
   const handleTagInput = (e) => {
@@ -62,7 +63,8 @@ export default function CreateOpportunityModal({ close, refresh }) {
         type: "internship",
         stipend: "",
         duration: "",
-        registrationLink
+        registrationLink,
+        branch
       })
 
       toast.success("Opportunity posted successfully!", { id: loadToast })
@@ -165,6 +167,21 @@ export default function CreateOpportunityModal({ close, refresh }) {
                 className="input"
               />
             </div>
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 ml-1 flex items-center gap-1">
+              Target Department
+            </label>
+            <select
+              value={branch}
+              onChange={(e) => setBranch(e.target.value)}
+              className="input w-full"
+            >
+              <option value="All">All Departments</option>
+              <option value="Computer Engineering">Computer Engineering</option>
+              <option value="Electronics Engineering">Electronics Engineering</option>
+            </select>
           </div>
 
           {/* TAGS */}

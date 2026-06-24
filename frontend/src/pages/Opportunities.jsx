@@ -47,6 +47,7 @@ export default function Opportunities() {
   const [userSkills, setUserSkills] = useState([])
   const [search, setSearch] = useState("")
   const [filter, setFilter] = useState("all")
+  const [deptFilter, setDeptFilter] = useState("all")
   const [showModal, setShowModal] = useState(false)
   const [loading, setLoading] = useState(true)
 
@@ -54,14 +55,23 @@ export default function Opportunities() {
     try {
       const token = localStorage.getItem("token")
       let skills = []
+      let branch = "all"
       if (token) {
         const id = localStorage.getItem("userId")
         const userRes = await api.get(`/users/${id}`)
         skills = userRes.data.skills || []
         setUserSkills(skills.map(s => normalize(s)))
+
+        const userBranch = userRes.data.branch
+        if (userBranch === "Computer Engineering" || userBranch === "Computer Science and Engineering") {
+          branch = "Computer Engineering"
+        } else if (userBranch === "Electronics Engineering") {
+          branch = "Electronics Engineering"
+        }
       }
       const res = await api.get("/opportunities")
       setOpportunities(res.data)
+      setDeptFilter(branch)
       trackEvent('view_opportunity_list', { count: res.data.length });
     } catch (err) {
       console.error(err)
@@ -95,6 +105,14 @@ export default function Opportunities() {
 
   useEffect(() => {
     let data = [...opportunities]
+
+    if (deptFilter !== "all") {
+      data = data.filter(op => {
+        if (!op.branch || op.branch === "All") return true;
+        return op.branch === deptFilter;
+      });
+    }
+
     if (search) {
       const q = search.toLowerCase()
       data = data.filter(op =>
@@ -116,7 +134,7 @@ export default function Opportunities() {
         .sort((a, b) => b.score - a.score)
     }
     setFiltered(data)
-  }, [search, filter, opportunities, userSkills])
+  }, [search, filter, deptFilter, opportunities, userSkills])
 
   return (
     <PageShell
@@ -145,6 +163,16 @@ export default function Opportunities() {
           onChange={(e) => setSearch(e.target.value)}
           className="input flex-1 w-full"
         />
+
+        <select
+          value={deptFilter}
+          onChange={(e) => setDeptFilter(e.target.value)}
+          className="input w-full md:max-w-[220px]"
+        >
+          <option value="all">All Departments</option>
+          <option value="Computer Engineering">Computer Engineering</option>
+          <option value="Electronics Engineering">Electronics Engineering</option>
+        </select>
 
         <select
           value={filter}
@@ -194,6 +222,9 @@ export default function Opportunities() {
                   <span className="pill-badge bg-amber-400/10 text-amber-400 border-amber-500/20">⭐ College</span>
                 ) : (
                   <span className="pill-badge">🌐 External</span>
+                )}
+                {op.branch && op.branch !== "All" && (
+                  <span className="pill-badge bg-indigo-500/10 text-indigo-400 border-indigo-500/20">🎓 {op.branch}</span>
                 )}
                 {filter === "best" && op.score > 0 && (
                   <span className="pill-badge bg-emerald-500/10 text-emerald-400 border-emerald-500/20">🔥 {op.score} Match</span>

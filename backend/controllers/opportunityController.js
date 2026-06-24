@@ -15,7 +15,8 @@ export const createOpportunity = async (req, res) => {
     duration,
     deadline,
     tags,
-    registrationLink
+    registrationLink,
+    branch
   } = req.body;
 
   const opportunity = await Opportunity.create({
@@ -28,6 +29,7 @@ export const createOpportunity = async (req, res) => {
     deadline,
     tags,
     registrationLink,
+    branch,
     postedBy: req.user._id
   });
 
