@@ -2,6 +2,7 @@ import { Server } from "socket.io";
 import User from "./models/User.js";
 import Message from "./models/Message.js";
 import { supabase } from "./config/supabase.js";
+import { getCache, setCache } from "./services/redisService.js";
 
 let io;
 
@@ -17,31 +18,69 @@ export const initSocket = (httpServer) => {
   io.use(async (socket, next) => {
     try {
       const token = socket.handshake.auth?.token;
+
+      // 1. Development bypass fallback
+      if (process.env.NODE_ENV !== "production") {
+        if (!token || token === "undefined" || token === "null" || token.startsWith("mock-")) {
+          const user = await User.findById("6a396eaf88d3cb29f4cfc436").select("-password");
+          if (user) {
+            socket.user = user;
+            return next();
+          }
+        }
+      }
+
       if (!token) {
-        return next(new Error("Authentication error"));
+        return next(new Error("Authentication error: token missing"));
+      }
+
+      // 2. Try checking Redis cache first
+      const cacheKey = `spitians:auth:token:${token}`;
+      try {
+        const cachedAuth = await getCache(cacheKey);
+        if (cachedAuth && cachedAuth.user) {
+          socket.user = cachedAuth.user;
+          return next();
+        }
+      } catch (cacheErr) {
+        console.error("[Socket Auth] Cache read error:", cacheErr.message);
       }
 
       let user;
 
-      // Try Supabase verification via the Supabase client
+      // 3. Try Supabase verification via the Supabase client
       try {
         const { data: { user: supabaseUser }, error } = await supabase.auth.getUser(token);
-        if (!error && supabaseUser) {
-          if (supabaseUser.email && supabaseUser.email.endsWith("@spit.ac.in")) {
-            user = await User.findOne({ supabaseId: supabaseUser.id }).select("-password");
+        if (error || !supabaseUser) throw error || new Error("User not found on Supabase");
+
+        if (supabaseUser.email && supabaseUser.email.endsWith("@spit.ac.in")) {
+          user = await User.findOne({ supabaseId: supabaseUser.id }).select("-password");
+
+          // Auto-link MongoDB profile on the fly if profile exists in MongoDB but doesn't have supabaseId or has outdated ID
+          if (!user && supabaseUser.email) {
+            user = await User.findOne({ email: supabaseUser.email }).select("-password");
+            if (user) {
+              user.supabaseId = supabaseUser.id;
+              user.emailVerified = true;
+              await user.save();
+              console.log(`[Socket Auth] Auto-linked MongoDB user ${user.email} with Supabase ID ${supabaseUser.id}`);
+            }
+          }
+
+          if (user) {
+            socket.user = user;
+            // Cache successful authentication for 10 minutes (600 seconds)
+            await setCache(cacheKey, { user }, 600);
+            return next();
           }
         }
       } catch (supabaseErr) {
-        // Fall through
+        console.error("[Socket Auth] Supabase verification failed:", supabaseErr.message);
       }
 
-      if (!user) {
-        return next(new Error("User not found or unauthorized"));
-      }
-
-      socket.user = user;
-      next();
+      return next(new Error("User not found or unauthorized"));
     } catch (err) {
+      console.error("[Socket Auth] Fatal middleware error:", err.message);
       next(new Error("Authentication error"));
     }
   });

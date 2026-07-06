@@ -4,8 +4,11 @@ import { getCache, setCache } from "../services/redisService.js";
 
 const protect = async (req, res, next) => {
   try {
-    // Development bypass for local testing
-    if (process.env.NODE_ENV !== "production" && req.headers["x-dev-bypass"] === "true") {
+    const authHeader = req.headers.authorization;
+    const hasToken = authHeader && authHeader.startsWith("Bearer") && authHeader.split(" ")[1] !== "null" && authHeader.split(" ")[1] !== "undefined";
+
+    // Development bypass for local testing (only if no auth token is provided)
+    if (process.env.NODE_ENV !== "production" && req.headers["x-dev-bypass"] === "true" && !hasToken) {
       const user = await User.findById("6a396eaf88d3cb29f4cfc436").select("-password");
       if (user) {
         req.user = user;
