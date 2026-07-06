@@ -1,5 +1,6 @@
 import { supabase } from "../config/supabase.js";
 import User from "../models/User.js";
+import { getCache, setCache } from "../services/redisService.js";
 
 const protect = async (req, res, next) => {
   try {
@@ -19,8 +20,34 @@ const protect = async (req, res, next) => {
       req.headers.authorization.startsWith("Bearer")
     ) {
       token = req.headers.authorization.split(" ")[1];
+      req.token = token;
 
-      // Try Supabase verification via the Supabase client
+      // 1. Try checking cache first
+      const cacheKey = `spitians:auth:token:${token}`;
+      try {
+        const cachedAuth = await getCache(cacheKey);
+        if (cachedAuth) {
+          if (cachedAuth.user) {
+            req.user = cachedAuth.user;
+            return next();
+          } else if (cachedAuth.supabaseUser) {
+            const isSelfRoute = 
+              req.originalUrl === "/api/auth/me" || 
+              req.originalUrl === "/api/users/me" || 
+              req.path === "/me";
+
+            if (isSelfRoute) {
+              req.supabaseUser = cachedAuth.supabaseUser;
+              req.supabaseUser.sub = cachedAuth.supabaseUser.id;
+              return next();
+            }
+          }
+        }
+      } catch (cacheErr) {
+        console.error("[Auth Middleware] Cache read error:", cacheErr.message);
+      }
+
+      // 2. Try Supabase verification via the Supabase client
       try {
         const { data: { user: supabaseUser }, error } = await supabase.auth.getUser(token);
         
@@ -48,6 +75,8 @@ const protect = async (req, res, next) => {
 
           if (user) {
             req.user = user;
+            // Cache successful authentication for 10 minutes (600 seconds)
+            await setCache(cacheKey, { user }, 600);
             return next();
           }
 
@@ -60,6 +89,8 @@ const protect = async (req, res, next) => {
           if (isSelfRoute) {
             req.supabaseUser = supabaseUser;
             req.supabaseUser.sub = supabaseUser.id; // Backward compatibility with controller expectations
+            // Cache supabaseUser verification for unregistered user for 10 minutes
+            await setCache(cacheKey, { supabaseUser }, 600);
             return next();
           }
 

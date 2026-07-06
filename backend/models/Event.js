@@ -69,4 +69,7 @@ const eventSchema = new mongoose.Schema(
 }
 );
 
+eventSchema.index({ status: 1, date: 1 });
+eventSchema.index({ organizer: 1, createdAt: -1 });
+
 export default mongoose.model("Event", eventSchema);

@@ -66,4 +66,8 @@ const postSchema = new mongoose.Schema(
   }
 );
 
+postSchema.index({ status: 1, createdAt: -1 });
+postSchema.index({ community: 1, status: 1, createdAt: -1 });
+postSchema.index({ author: 1, createdAt: -1 });
+
 export default mongoose.model("Post", postSchema);

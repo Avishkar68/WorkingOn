@@ -26,8 +26,7 @@ export default function SocketProvider({ children }) {
 
     const SOCKET_URL = import.meta.env.VITE_API_BASE_URL
       ? import.meta.env.VITE_API_BASE_URL.replace("/api", "")
-      : "https://spitconnect.onrender.com";
-    // : "http://localhost:4000";
+      : (import.meta.env.DEV ? "http://localhost:4000" : "https://spitconnect.onrender.com");
 
     const s = io(SOCKET_URL, {
       auth: { token },
@@ -54,7 +53,7 @@ export default function SocketProvider({ children }) {
      * This ensures that when the user logs in and the token is set, 
      * this effect re-runs and establishes the connection without a page reload.
      */
-  }, [token, user]);
+  }, [token]);
 
   return (
     <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>

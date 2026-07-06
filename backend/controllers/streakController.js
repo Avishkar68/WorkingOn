@@ -1,6 +1,7 @@
 import User from "../models/User.js";
 import Post from "../models/Post.js";
 import Comment from "../models/Comment.js";
+import { invalidateCachePattern } from "../services/redisService.js";
 
 const normalizeDay = (value) => {
   const date = new Date(value);
@@ -89,6 +90,7 @@ export const tryUpdateStreakIfReady = async (user) => {
   user.streakCount = calculateStreakFromHistory(user.streakHistory, user.dailyTasksCompleted, user._id);
 
   await user.save();
+  await invalidateCachePattern("spitians:cache:streak:*");
 
 
   return {
@@ -253,6 +255,19 @@ export const getStreakStatus = async (req, res) => {
 
     // 2. RECONCILIATION: Recover missing days from post history (last 5 days)
     let historyUpdated = false;
+    const fiveDaysAgo = new Date();
+    fiveDaysAgo.setDate(fiveDaysAgo.getDate() - 5);
+    fiveDaysAgo.setHours(0, 0, 0, 0);
+
+    // Fetch all posts by this user created in the last 5 days (single query)
+    const recentPosts = await Post.find({
+      author: user._id,
+      createdAt: { $gte: fiveDaysAgo }
+    }).select("createdAt");
+
+    // Group the formatted dates in a Set for O(1) checks
+    const postDates = new Set(recentPosts.map(p => toDateString(p.createdAt)));
+
     for (let i = 1; i <= 5; i++) {
       const checkDate = new Date();
       checkDate.setDate(checkDate.getDate() - i);
@@ -260,17 +275,9 @@ export const getStreakStatus = async (req, res) => {
 
       const inHistory = user.streakHistory?.some(h => toDateString(h) === checkDayStr);
       if (!inHistory) {
-        const dayStart = new Date(checkDate);
-        dayStart.setHours(0, 0, 0, 0);
-        const dayEnd = new Date(checkDate);
-        dayEnd.setHours(23, 59, 59, 999);
-
-        const postCount = await Post.countDocuments({
-          author: user._id,
-          createdAt: { $gte: dayStart, $lte: dayEnd }
-        });
-
-        if (postCount > 0) {
+        if (postDates.has(checkDayStr)) {
+          const dayStart = new Date(checkDate);
+          dayStart.setHours(0, 0, 0, 0);
           user.streakHistory.push(dayStart);
           historyUpdated = true;
         }
@@ -284,6 +291,7 @@ export const getStreakStatus = async (req, res) => {
       user.streakCount = newCount;
       user.streakHistory.sort((a, b) => new Date(a) - new Date(b));
       await user.save();
+      await invalidateCachePattern("spitians:cache:streak:*");
     }
 
     const isTodayComplete = user.dailyTasksCompleted?.quizCompleted && user.dailyTasksCompleted?.postCreated;

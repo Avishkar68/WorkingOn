@@ -2,6 +2,7 @@
 
 import express from "express";
 import protect from "../middleware/authMiddleware.js";
+import cacheMiddleware from "../middleware/cacheMiddleware.js";
 
 import {
   createOpportunity,
@@ -27,13 +28,13 @@ router.get("/scrape", async (req, res) => {
 
 router.post("/", protect, createOpportunity);
 
-router.get("/", protect, getOpportunities);
-router.get("/:id", protect, getOpportunityById);
+router.get("/", protect, cacheMiddleware({ namespace: "opportunities", ttl: 3600 }), getOpportunities);
+router.get("/:id", protect, cacheMiddleware({ namespace: "opportunities", ttl: 3600 }), getOpportunityById);
 
 router.post("/:id/apply", protect, applyOpportunity);
 
 router.put("/:id/close", protect, closeOpportunity);
-router.get("/user/:id", protect, getUserOpportunities);
+router.get("/user/:id", protect, cacheMiddleware({ namespace: "opportunities", ttl: 3600 }), getUserOpportunities);
 router.delete("/:id", protect, deleteOpportunity);
 
 export default router;

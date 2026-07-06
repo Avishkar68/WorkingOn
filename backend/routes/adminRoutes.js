@@ -3,6 +3,7 @@
 import express from "express";
 import protect from "../middleware/authMiddleware.js";
 import admin from "../middleware/adminMiddleware.js";
+import cacheMiddleware from "../middleware/cacheMiddleware.js";
 
 import {
   getAdminStats,
@@ -30,7 +31,7 @@ const router = express.Router();
 
 router.get("/users", protect, admin, getAllUsers);
 
-router.get("/stats", protect, admin, getAdminStats);
+router.get("/stats", protect, admin, cacheMiddleware({ namespace: "admin", ttl: 300 }), getAdminStats);
 
 router.get("/reported-posts", protect, admin, getReportedPosts);
 router.get("/reports", protect, admin, getUnifiedReports);

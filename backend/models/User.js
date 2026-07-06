@@ -125,4 +125,6 @@ const userSchema = new mongoose.Schema(
 }
 );
 
+userSchema.index({ streakCount: -1 });
+
 export default mongoose.model("User", userSchema);

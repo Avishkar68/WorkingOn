@@ -2,6 +2,7 @@ import Opportunity from "../models/Opportunity.js";
 import User from "../models/User.js";
 import { createNotification } from "../services/notificationService.js";
 import { sendOpportunityEmail } from "../services/emailService.js";
+import { invalidateCachePattern } from "../services/redisService.js";
 
 
 export const createOpportunity = async (req, res) => {
@@ -33,7 +34,6 @@ export const createOpportunity = async (req, res) => {
     postedBy: req.user._id
   });
 
-  // Notify active, non-banned users via email in the background
   (async () => {
     try {
       const users = await User.find({ isBanned: false, email: { $exists: true } }).select("email name");
@@ -43,6 +43,9 @@ export const createOpportunity = async (req, res) => {
       console.error("Error in background email notification:", err);
     }
   })();
+
+  await invalidateCachePattern("spitians:cache:opportunities:*");
+  await invalidateCachePattern("spitians:cache:admin:*");
 
   res.status(201).json(opportunity);
 
@@ -101,6 +104,7 @@ export const createOpportunity = async (req, res) => {
       "Opportunity"
     );
   
+    await invalidateCachePattern("spitians:cache:opportunities:*");
     res.json({ message: "Application submitted" });
   
   };
@@ -116,6 +120,7 @@ export const createOpportunity = async (req, res) => {
   
     await opportunity.save();
   
+    await invalidateCachePattern("spitians:cache:opportunities:*");
     res.json({ message: "Opportunity closed" });
   
   };
@@ -146,5 +151,7 @@ export const createOpportunity = async (req, res) => {
   
     await op.deleteOne()
   
-    res.json({message:"Deleted"})
+    await invalidateCachePattern("spitians:cache:opportunities:*");
+    await invalidateCachePattern("spitians:cache:admin:*");
+    res.json({ message: "Deleted" });
   }

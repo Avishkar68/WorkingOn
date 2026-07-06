@@ -39,7 +39,6 @@ const userActionLogSchema = new mongoose.Schema(
 
 // Add indexes for efficient searching
 userActionLogSchema.index({ userName: 1 });
-userActionLogSchema.index({ action: 1 });
 userActionLogSchema.index({ timestamp: -1 });
 
 export default mongoose.model("UserActionLog", userActionLogSchema);

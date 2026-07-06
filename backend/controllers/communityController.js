@@ -1,4 +1,5 @@
 import Community from "../models/Community.js";
+import { invalidateCachePattern } from "../services/redisService.js";
 
 
 // ✅ CREATE COMMUNITY
@@ -23,6 +24,8 @@ export const createCommunity = async (req, res) => {
       members: [req.user._id] // creator auto joins
     });
 
+    await invalidateCachePattern("spitians:cache:communities:*");
+    await invalidateCachePattern("spitians:cache:admin:*");
     res.status(201).json(community);
 
   } catch (err) {
@@ -75,6 +78,7 @@ export const joinCommunity = async (req, res) => {
     if (!community.members.includes(req.user._id)) {
       community.members.push(req.user._id);
       await community.save();
+      await invalidateCachePattern("spitians:cache:communities:*");
     }
 
     res.json({ message: "Joined community" });
@@ -96,6 +100,7 @@ export const leaveCommunity = async (req, res) => {
 
     community.members.pull(req.user._id);
     await community.save();
+    await invalidateCachePattern("spitians:cache:communities:*");
 
     res.json({ message: "Left community" });
 

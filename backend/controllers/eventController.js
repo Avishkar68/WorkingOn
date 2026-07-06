@@ -147,6 +147,7 @@
 import Event from "../models/Event.js";
 import uploadImage from "../utils/uploadImage.js";
 import { createNotification } from "../services/notificationService.js";
+import { invalidateCachePattern } from "../services/redisService.js";
 
 // ✅ CREATE EVENT (SAFE + IMAGE UPLOAD)
 export const createEvent = async (req, res) => {
@@ -200,6 +201,8 @@ export const createEvent = async (req, res) => {
       organizer: req.user._id
     });
 
+    await invalidateCachePattern("spitians:cache:events:*");
+    await invalidateCachePattern("spitians:cache:admin:*");
     res.status(201).json(event);
 
   } catch (err) {
@@ -213,7 +216,8 @@ export const createEvent = async (req, res) => {
 export const getEvents = async (req, res) => {
 
   const events = await Event.find({
-    status: "active"
+    status: "active",
+    date: { $gte: new Date() }
   })
     .populate("organizer", "name profileImage")
     .sort({ date: 1 });
@@ -270,6 +274,7 @@ export const registerEvent = async (req, res) => {
     "Event"
   );
 
+  await invalidateCachePattern("spitians:cache:events:*");
   res.json({ message: "Registered successfully" });
 };
 
@@ -285,6 +290,7 @@ export const cancelRegistration = async (req, res) => {
 
   await event.save();
 
+  await invalidateCachePattern("spitians:cache:events:*");
   res.json({ message: "Registration cancelled" });
 };
 
@@ -322,5 +328,7 @@ export const deleteEvent = async (req, res) => {
 
   await event.deleteOne();
 
+  await invalidateCachePattern("spitians:cache:events:*");
+  await invalidateCachePattern("spitians:cache:admin:*");
   res.json({ message: "Event deleted" });
 };

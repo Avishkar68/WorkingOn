@@ -1,5 +1,6 @@
 import User from "../models/User.js";
 import uploadImage from "../utils/uploadImage.js";
+import { deleteCache } from "../services/redisService.js";
 
 export const getUserProfile = async (req, res) => {
 
@@ -65,6 +66,9 @@ export const updateProfile = async (req, res) => {
 
     const updatedUser = await user.save();
 
+    if (req.token) {
+      await deleteCache(`spitians:auth:token:${req.token}`);
+    }
     res.json(updatedUser);
 
   } catch (err) {
@@ -89,6 +93,9 @@ export const followUser = async (req, res) => {
 
   }
 
+  if (req.token) {
+    await deleteCache(`spitians:auth:token:${req.token}`);
+  }
   res.json({ message: "Followed" });
 
 };
@@ -105,6 +112,9 @@ export const unfollowUser = async (req, res) => {
   await userToUnfollow.save();
   await currentUser.save();
 
+  if (req.token) {
+    await deleteCache(`spitians:auth:token:${req.token}`);
+  }
   res.json({ message: "Unfollowed" });
 
 };

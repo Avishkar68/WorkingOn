@@ -1,6 +1,7 @@
 import express from "express";
 import protect from "../middleware/authMiddleware.js";
 import { contentCreationLimiter } from "../middleware/rateLimiter.js";
+import cacheMiddleware from "../middleware/cacheMiddleware.js";
 
 import {
   createCommunity,
@@ -17,16 +18,16 @@ const router = express.Router();
 router.post("/", protect, contentCreationLimiter, createCommunity);
 
 // ✅ GET ALL (Home page)
-router.get("/", protect, getAllCommunities);
+router.get("/", protect, cacheMiddleware({ namespace: "communities", ttl: 1800 }), getAllCommunities);
 
 // ✅ GET ONE
-router.get("/:id", protect, getSingleCommunity);
+router.get("/:id", protect, cacheMiddleware({ namespace: "communities", ttl: 1800 }), getSingleCommunity);
 
 // ✅ JOIN / LEAVE
 router.post("/:id/join", protect, joinCommunity);
 router.post("/:id/leave", protect, leaveCommunity);
 
 // ✅ USER COMMUNITIES (sidebar)
-router.get("/user/me", protect, getUserCommunities);
+router.get("/user/me", protect, cacheMiddleware({ namespace: "communities", ttl: 1800, userSpecific: true }), getUserCommunities);
 
 export default router;

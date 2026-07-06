@@ -7,6 +7,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./config/swagger.js";
+import compression from "compression";
 
 import connectDB from "./config/db.js";
 import cron from "node-cron";
@@ -36,6 +37,7 @@ import actionLogger from "./middleware/actionLogger.js";
 dotenv.config();
 
 const app = express();
+app.use(compression());
 const httpServer = http.createServer(app);
 initSocket(httpServer);
 

@@ -72,4 +72,7 @@ const opportunitySchema = new mongoose.Schema(
 }
 );
 
+opportunitySchema.index({ status: 1, type: 1, createdAt: -1 });
+opportunitySchema.index({ postedBy: 1, createdAt: -1 });
+
 export default mongoose.model("Opportunity", opportunitySchema);

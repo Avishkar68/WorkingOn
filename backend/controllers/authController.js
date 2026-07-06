@@ -1,6 +1,7 @@
 import User from "../models/User.js";
 import uploadImage from "../utils/uploadImage.js";
 import { supabase } from "../config/supabase.js";
+import { deleteCache } from "../services/redisService.js";
 
 export const registerUser = async (req, res) => {
   try {
@@ -36,6 +37,12 @@ export const registerUser = async (req, res) => {
       await user.save();
       console.log(`[Auth Controller] Linked legacy user ${email} with Supabase ID ${supabaseId} during registration`);
 
+      const authHeader = req.headers.authorization;
+      if (authHeader && authHeader.startsWith("Bearer")) {
+        const token = authHeader.split(" ")[1];
+        await deleteCache(`spitians:auth:token:${token}`);
+      }
+
       return res.status(200).json({
         _id: user._id,
         name: user.name,
@@ -58,6 +65,12 @@ export const registerUser = async (req, res) => {
     }
 
     const newUser = await User.create(userData);
+
+    const authHeader = req.headers.authorization;
+    if (authHeader && authHeader.startsWith("Bearer")) {
+      const token = authHeader.split(" ")[1];
+      await deleteCache(`spitians:auth:token:${token}`);
+    }
 
     res.status(201).json({
       _id: newUser._id,
@@ -105,6 +118,8 @@ export const loginUser = async (req, res) => {
       user.emailVerified = true;
       await user.save();
     }
+
+    await deleteCache(`spitians:auth:token:${token}`);
 
     return res.json({
       _id: user._id,

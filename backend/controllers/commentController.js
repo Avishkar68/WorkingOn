@@ -1,6 +1,7 @@
 import Comment from "../models/Comment.js";
 import Post from "../models/Post.js";
 import { createNotification } from "../services/notificationService.js";
+import { invalidateCachePattern } from "../services/redisService.js";
 
 export const addComment = async (req, res) => {
 
@@ -31,6 +32,7 @@ export const addComment = async (req, res) => {
   
     }
   
+    await invalidateCachePattern("spitians:cache:explore:*");
     res.json(comment);
   
   };
@@ -57,6 +59,7 @@ export const addComment = async (req, res) => {
   
     await comment.deleteOne();
   
+    await invalidateCachePattern("spitians:cache:explore:*");
     res.json({ message: "Comment deleted" });
   
   };

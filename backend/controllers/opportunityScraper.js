@@ -1,6 +1,7 @@
 import axios from "axios";
 import * as cheerio from "cheerio";
 import Opportunity from "../models/Opportunity.js";
+import { invalidateCachePattern } from "../services/redisService.js";
 
 export const scrapeInternshala = async () => {
   try {
@@ -102,6 +103,8 @@ export const scrapeInternshala = async () => {
     } else {
       console.log("⚠️ No internships scraped.");
     }
+
+    await invalidateCachePattern("spitians:cache:opportunities:*");
 
   } catch (err) {
     console.error("Scraping error:", err);

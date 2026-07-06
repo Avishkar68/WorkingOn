@@ -1,5 +1,6 @@
 import express from "express";
 import protect from "../middleware/authMiddleware.js";
+import cacheMiddleware from "../middleware/cacheMiddleware.js";
 import {
   handleStreakUpdate,
   getLeaderboard,
@@ -25,7 +26,7 @@ router.post("/post-created", protect, async (req, res) => {
 });
 
 router.post("/update", protect, handleStreakUpdate);
-router.get("/leaderboard", protect, getLeaderboard);
+router.get("/leaderboard", protect, cacheMiddleware({ namespace: "streak", ttl: 600 }), getLeaderboard);
 router.get("/status", protect, getStreakStatus);
 
 export default router;

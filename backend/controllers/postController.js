@@ -5,6 +5,7 @@ import { createNotification } from "../services/notificationService.js";
 import { markPostCreated } from "./streakController.js";
 import uploadImage from "../utils/uploadImage.js";
 import mongoose from "mongoose";
+import { invalidateCachePattern } from "../services/redisService.js";
 
 // ✅ CREATE POST (WITH COMMUNITY)
 export const createPost = async (req, res) => {
@@ -52,6 +53,8 @@ export const createPost = async (req, res) => {
 
     await markPostCreated(req.user._id);
 
+    await invalidateCachePattern("spitians:cache:explore:*");
+    await invalidateCachePattern("spitians:cache:admin:*");
     res.status(201).json(post);
 
   } catch (err) {
@@ -117,6 +120,7 @@ export const likePost = async (req, res) => {
       }
     }
 
+    await invalidateCachePattern("spitians:cache:explore:*");
     res.json({ message: "Post liked" });
 
   } catch (err) {
@@ -133,6 +137,7 @@ export const unlikePost = async (req, res) => {
     post.likes.pull(req.user._id);
     await post.save();
 
+    await invalidateCachePattern("spitians:cache:explore:*");
     res.json({ message: "Post unliked" });
 
   } catch (err) {
@@ -156,6 +161,8 @@ export const deletePost = async (req, res) => {
 
     await post.deleteOne();
 
+    await invalidateCachePattern("spitians:cache:explore:*");
+    await invalidateCachePattern("spitians:cache:admin:*");
     res.json({ message: "Post deleted" });
 
   } catch (err) {
@@ -175,6 +182,8 @@ export const reportPost = async (req, res) => {
       await post.save();
     }
 
+    await invalidateCachePattern("spitians:cache:explore:*");
+    await invalidateCachePattern("spitians:cache:admin:*");
     res.json({ message: "Post reported" });
 
   } catch (err) {

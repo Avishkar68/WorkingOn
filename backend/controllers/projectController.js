@@ -1,6 +1,7 @@
 import Project from "../models/Project.js";
 import Notification from "../models/Notification.js";
 import { createNotification } from "../services/notificationService.js";
+import { invalidateCachePattern } from "../services/redisService.js";
 
 export const createProject = async (req, res) => {
 
@@ -22,6 +23,8 @@ export const createProject = async (req, res) => {
     tags
   });
 
+  await invalidateCachePattern("spitians:cache:projects:*");
+  await invalidateCachePattern("spitians:cache:admin:*");
   res.status(201).json(project);
 };
 
@@ -85,6 +88,7 @@ export const requestJoinProject = async (req, res) => {
     );
   }
 
+  await invalidateCachePattern("spitians:cache:projects:*");
   res.json({ message: "Request sent" });
 };
 
@@ -136,6 +140,7 @@ export const acceptJoinRequest = async (req, res) => {
     "Project"
   );
 
+  await invalidateCachePattern("spitians:cache:projects:*");
   res.json({ message: "Accepted" });
 };
 
@@ -173,6 +178,7 @@ export const rejectJoinRequest = async (req, res) => {
     "Project"
   );
 
+  await invalidateCachePattern("spitians:cache:projects:*");
   res.json({ message: "Rejected" });
 };
 export const getUserProjects = async (req,res)=>{
@@ -196,7 +202,9 @@ export const deleteProject = async (req,res)=>{
 
   await project.deleteOne()
 
-  res.json({message:"Project deleted"})
+  await invalidateCachePattern("spitians:cache:projects:*");
+  await invalidateCachePattern("spitians:cache:admin:*");
+  res.json({ message: "Project deleted" });
 }
 export const getProjectById = async (req, res) => { const project = await Project.findById(req.params.id).populate("creator", "name profileImage").populate("members", "name profileImage").populate("joinRequests.user", "name profileImage"); res.json(project); };
-export const leaveProject = async (req, res) => { const project = await Project.findById(req.params.id); project.members.pull(req.user._id); project.teamSize.current -= 1; await project.save(); res.json({ message: "Left project" }); };
+export const leaveProject = async (req, res) => { const project = await Project.findById(req.params.id); project.members.pull(req.user._id); project.teamSize.current -= 1; await project.save(); await invalidateCachePattern("spitians:cache:projects:*"); res.json({ message: "Left project" }); };
