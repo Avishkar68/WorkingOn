@@ -14,29 +14,49 @@ import BlogHome from "./pages/blogs/BlogHome"
 import BlogDetail from "./pages/blogs/BlogDetail"
 import OurTeam from "./pages/OurTeam.jsx"
 
+// Helper to automatically recover from chunk loading errors (like new production deployments)
+const safeLazy = (importFn) => {
+  return lazy(async () => {
+    try {
+      const module = await importFn();
+      sessionStorage.removeItem("chunk-reload-retry");
+      return module;
+    } catch (error) {
+      console.error("Failed to load component chunk, reloading page...", error);
+      const hasReloaded = sessionStorage.getItem("chunk-reload-retry");
+      if (!hasReloaded) {
+        sessionStorage.setItem("chunk-reload-retry", "true");
+        window.location.reload();
+        return new Promise(() => {}); // Keep pending to halt mount
+      }
+      throw error;
+    }
+  });
+};
+
 // ✅ Lazy (heavy pages)
-const Home = lazy(() => import("./pages/Home"))
-const Opportunities = lazy(() => import("./pages/Opportunities"))
-const AcademicHelp = lazy(() => import("./pages/AcademicHelp"))
-const Projects = lazy(() => import("./pages/Projects"))
-const Events = lazy(() => import("./pages/Events"))
-const Explore = lazy(() => import("./pages/Explore"))
-const Search = lazy(() => import("./pages/Search"))
-const Profile = lazy(() => import("./pages/Profile"))
-const Notifications = lazy(() => import("./pages/Notifications"))
-const Settings = lazy(() => import("./pages/Settings"))
-const AdminPanel = lazy(() => import("./pages/AdminPanel"))
-const UserProfile = lazy(() => import("./pages/UserProfile"))
-const EventDetail = lazy(() => import("./pages/EventDetail"))
-const OpportunityDetail = lazy(() => import("./pages/OpportunityDetail"))
-const ProjectDetail = lazy(() => import("./pages/ProjectDetail"))
-const PostDetail = lazy(() => import("./pages/PostDetail"))
-const Opportunity = lazy(() => import("./pages/try/Opportunity"))
-const ChallengePage = lazy(() => import("./pages/ChallengePage"))
-const Leaderboard = lazy(() => import("./pages/Leaderboard"))
-const CommunityPage = lazy(() => import("./pages/CommunityPage"))
-const CommunitiesPage = lazy(() => import("./pages/CommunitiesPage"))
-const CampusPulse = lazy(() => import("./pages/CampusPulse.jsx"))
+const Home = safeLazy(() => import("./pages/Home"))
+const Opportunities = safeLazy(() => import("./pages/Opportunities"))
+const AcademicHelp = safeLazy(() => import("./pages/AcademicHelp"))
+const Projects = safeLazy(() => import("./pages/Projects"))
+const Events = safeLazy(() => import("./pages/Events"))
+const Explore = safeLazy(() => import("./pages/Explore"))
+const Search = safeLazy(() => import("./pages/Search"))
+const Profile = safeLazy(() => import("./pages/Profile"))
+const Notifications = safeLazy(() => import("./pages/Notifications"))
+const Settings = safeLazy(() => import("./pages/Settings"))
+const AdminPanel = safeLazy(() => import("./pages/AdminPanel"))
+const UserProfile = safeLazy(() => import("./pages/UserProfile"))
+const EventDetail = safeLazy(() => import("./pages/EventDetail"))
+const OpportunityDetail = safeLazy(() => import("./pages/OpportunityDetail"))
+const ProjectDetail = safeLazy(() => import("./pages/ProjectDetail"))
+const PostDetail = safeLazy(() => import("./pages/PostDetail"))
+const Opportunity = safeLazy(() => import("./pages/try/Opportunity"))
+const ChallengePage = safeLazy(() => import("./pages/ChallengePage"))
+const Leaderboard = safeLazy(() => import("./pages/Leaderboard"))
+const CommunityPage = safeLazy(() => import("./pages/CommunityPage"))
+const CommunitiesPage = safeLazy(() => import("./pages/CommunitiesPage"))
+const CampusPulse = safeLazy(() => import("./pages/CampusPulse.jsx"))
 
 import SocketProvider from "./context/SocketContext"
 import NotificationProvider from "./context/NotificationContext"
