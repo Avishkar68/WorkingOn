@@ -1,5 +1,6 @@
 import { useState, useContext, useEffect } from "react"
 import api from "../../api/axios"
+import { Eye, EyeOff } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import toast from "react-hot-toast"
 import { AuthContext } from "../../context/AuthContext"
@@ -22,6 +23,7 @@ export default function Register() {
   const [preview, setPreview] = useState(null)
   const [loading, setLoading] = useState(false)
   const [isSyncing, setIsSyncing] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
 
   useEffect(() => {
     trackEvent('page_view_component', { page: 'Register' });
@@ -213,14 +215,27 @@ export default function Register() {
               <label className="label">
                 {isSyncing ? "Password (Optional - to enable email login later)" : "Password"}
               </label>
-              <input
-                type="password"
-                placeholder="••••••••"
-                className="input"
-                required={!isSyncing}
-                value={form.password}
-                onChange={(e) => setForm({ ...form, password: e.target.value })}
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="••••••••"
+                  className="input pr-10"
+                  required={!isSyncing}
+                  value={form.password}
+                  onChange={(e) => setForm({ ...form, password: e.target.value })}
+                />
+                <button
+                  type="button"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-text-secondary hover:text-text-primary focus:outline-none cursor-pointer flex items-center justify-center"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
+                </button>
+              </div>
             </div>
 
             <div className="grid grid-cols-2 gap-15">

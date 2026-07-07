@@ -1,5 +1,6 @@
 import { useState, useContext, useEffect } from "react"
 import api from "../../api/axios"
+import { Eye, EyeOff } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import toast from "react-hot-toast"
 import { AuthContext } from "../../context/AuthContext"
@@ -13,6 +14,7 @@ export default function Login() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
 
   useEffect(() => {
     trackEvent('page_view_component', { page: 'Login' });
@@ -120,14 +122,27 @@ export default function Login() {
 
           <div className="space-y-1.5">
             <label className="label">Password</label>
-            <input
-              type="password"
-              placeholder="••••••••"
-              className="input"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="••••••••"
+                className="input pr-10"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <button
+                type="button"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-text-secondary hover:text-text-primary focus:outline-none cursor-pointer flex items-center justify-center"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? (
+                  <EyeOff className="w-5 h-5" />
+                ) : (
+                  <Eye className="w-5 h-5" />
+                )}
+              </button>
+            </div>
           </div>
         </div>
 
