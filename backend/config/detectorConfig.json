@@ -1,0 +1,7 @@
+{
+  "similarityThreshold": 0.96,
+  "minFuzzyLength": 5,
+  "levenshteinLimitLength": 6,
+  "levenshteinMaxDistance": 1,
+  "minExactSlidingLength": 4
+}
