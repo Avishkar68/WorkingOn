@@ -45,7 +45,7 @@ export default function Explore() {
     <PageShell
       eyebrow="Discovery"
       title="Explore"
-      subtitle="Trending topics and posts from across the platform."
+      subtitle="Explore recent posts and topics from across the platform."
     >
 
       {/* TRENDING TAGS */}
@@ -82,7 +82,7 @@ export default function Explore() {
       <motion.div className="space-y-4" variants={staggerContainer} initial="hidden" animate="visible">
 
         <h2 className="text-lg font-semibold text-slate-100">
-          Trending Posts
+          Recent Posts
         </h2>
 
         {loading ? (

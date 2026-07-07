@@ -1,6 +1,7 @@
 import Pulse from "../models/Pulse.js";
 import { getIO } from "../socket.js";
 import uploadImage from "../utils/uploadImage.js";
+import { containsFacultyName } from "../services/SensitiveContentDetector.js";
 
 // ✅ CREATE PULSE
 export const createPulse = async (req, res) => {
@@ -9,6 +10,29 @@ export const createPulse = async (req, res) => {
 
     if (!type || !content) {
       return res.status(400).json({ message: "Type and content are required" });
+    }
+
+    if (containsFacultyName(content)) {
+      return res.status(400).json({
+        message: "This post cannot be published because it contains faculty names. Please remove personal references and try again."
+      });
+    }
+
+    if (type === "poll" && pollOptions) {
+      try {
+        const parsedOptions = JSON.parse(pollOptions);
+        if (Array.isArray(parsedOptions)) {
+          for (const option of parsedOptions) {
+            if (option && option.text && containsFacultyName(option.text)) {
+              return res.status(400).json({
+                message: "This post cannot be published because it contains faculty names. Please remove personal references and try again."
+              });
+            }
+          }
+        }
+      } catch (err) {
+        // Safe check
+      }
     }
 
     let imageUrl = null;

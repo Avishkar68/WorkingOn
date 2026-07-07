@@ -18,9 +18,7 @@ export const getTrendingPosts = async (req, res) => {
 
       {
         $sort: {
-          likeCount: -1,
-          commentCount: -1,
-          createdAt: -1   // ✅ NEW: freshness boost
+          createdAt: -1
         }
       },
 

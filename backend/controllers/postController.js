@@ -6,6 +6,7 @@ import { markPostCreated } from "./streakController.js";
 import uploadImage from "../utils/uploadImage.js";
 import mongoose from "mongoose";
 import { invalidateCachePattern } from "../services/redisService.js";
+import { containsFacultyName } from "../services/SensitiveContentDetector.js";
 
 // ✅ CREATE POST (WITH COMMUNITY)
 export const createPost = async (req, res) => {
@@ -15,6 +16,12 @@ export const createPost = async (req, res) => {
     // 🔥 VALIDATION
     if (!content) {
       return res.status(400).json({ message: "Content is required" });
+    }
+
+    if ((isAnonymous === true || isAnonymous === "true") && containsFacultyName(content)) {
+      return res.status(400).json({
+        message: "This post cannot be published because it contains faculty names. Please remove personal references and try again."
+      });
     }
 
     // ✅ CHECK COMMUNITY EXISTS
