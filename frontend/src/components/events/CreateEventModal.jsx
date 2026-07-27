@@ -16,6 +16,7 @@ export default function CreateEventModal({ close, refresh }) {
   const [registrationLink, setRegistrationLink] = useState("")
   const [file, setFile] = useState(null)
   const [eventType, setEventType] = useState("")
+  const [requiresRegistration, setRequiresRegistration] = useState(true)
   const [loading, setLoading] = useState(false)
 
   const addTag = () => {
@@ -35,7 +36,7 @@ export default function CreateEventModal({ close, refresh }) {
     }
 
     if (!registrationLink) {
-      toast.error("Please add registration link")
+      toast.error(requiresRegistration ? "Please add registration link" : "Please add join link")
       return
     }
 
@@ -49,6 +50,7 @@ export default function CreateEventModal({ close, refresh }) {
       formData.append("location", location)
       formData.append("capacity", capacity)
       formData.append("registrationLink", registrationLink)
+      formData.append("requiresRegistration", requiresRegistration)
       formData.append("eventType", eventType)
       formData.append("tags", JSON.stringify(tags))
 
@@ -162,6 +164,35 @@ export default function CreateEventModal({ close, refresh }) {
             </div>
           </div>
 
+          {/* REGISTRATION TYPE */}
+          <div className="space-y-1.5">
+            <label className="text-[10px] font-bold uppercase tracking-widest text-white ml-1">Registration Settings</label>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => setRequiresRegistration(true)}
+                className={`flex-1 py-2.5 rounded-xl text-xs font-semibold border transition duration-200
+                  ${requiresRegistration
+                    ? "bg-indigo-600 text-white border-indigo-500 shadow-md"
+                    : "bg-white/5 text-zinc-400 border-white/10 hover:bg-white/10 hover:text-white"
+                  }`}
+              >
+                Registration Required
+              </button>
+              <button
+                type="button"
+                onClick={() => setRequiresRegistration(false)}
+                className={`flex-1 py-2.5 rounded-xl text-xs font-semibold border transition duration-200
+                  ${!requiresRegistration
+                    ? "bg-indigo-600 text-white border-indigo-500 shadow-md"
+                    : "bg-white/5 text-zinc-400 border-white/10 hover:bg-white/10 hover:text-white"
+                  }`}
+              >
+                Direct Join Link
+              </button>
+            </div>
+          </div>
+
           {/* CAPACITY + LINK */}
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
@@ -178,10 +209,10 @@ export default function CreateEventModal({ close, refresh }) {
             </div>
             <div className="space-y-1.5">
               <label className="text-[10px] font-bold uppercase tracking-widest text-white ml-1 flex items-center gap-1">
-                <LinkIcon size={12} /> Registration Link
+                <LinkIcon size={12} /> {requiresRegistration ? "Register Interest Link" : "Join Link"}
               </label>
               <input
-                placeholder="https://..."
+                placeholder={requiresRegistration ? "https://googleforms..." : "https://zoom..."}
                 value={registrationLink}
                 onChange={(e) => setRegistrationLink(e.target.value)}
                 className="input"

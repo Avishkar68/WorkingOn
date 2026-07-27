@@ -146,8 +146,10 @@
 
 import Event from "../models/Event.js";
 import uploadImage from "../utils/uploadImage.js";
+import User from "../models/User.js";
 import { createNotification } from "../services/notificationService.js";
 import { invalidateCachePattern } from "../services/redisService.js";
+import { sendEventEmail } from "../services/emailService.js";
 
 // ✅ CREATE EVENT (SAFE + IMAGE UPLOAD)
 export const createEvent = async (req, res) => {
@@ -163,7 +165,8 @@ export const createEvent = async (req, res) => {
       location,
       eventType,
       capacity,
-      registrationLink
+      registrationLink,
+      requiresRegistration
     } = body;
 
     // ✅ basic validation
@@ -198,8 +201,19 @@ export const createEvent = async (req, res) => {
       capacity: capacity || undefined,
       tags: parsedTags,
       registrationLink,
+      requiresRegistration: requiresRegistration === undefined ? true : (requiresRegistration === "true" || requiresRegistration === true),
       organizer: req.user._id
     });
+
+    (async () => {
+      try {
+        const users = await User.find({ isBanned: false, email: { $exists: true } }).select("email name");
+        const platformUrl = req.headers.origin || process.env.FRONTEND_URL || "http://localhost:5173";
+        await sendEventEmail(event, users, platformUrl);
+      } catch (err) {
+        console.error("Error in background event email notification:", err);
+      }
+    })();
 
     await invalidateCachePattern("spitians:cache:events:*");
     await invalidateCachePattern("spitians:cache:admin:*");

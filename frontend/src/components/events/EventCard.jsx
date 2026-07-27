@@ -122,7 +122,7 @@ export default function EventCard({ event, refresh }) {
             whileTap={buttonTap}
             className="flex-1 btn-primary font-semibold text-sm py-3 rounded-xl"
           >
-            Register Interest
+            {event.requiresRegistration === false ? "Join Now" : "Register Interest"}
           </motion.button>
 
           <div className="flex gap-3 justify-center">

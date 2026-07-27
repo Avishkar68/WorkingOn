@@ -1,7 +1,9 @@
 import Project from "../models/Project.js";
 import Notification from "../models/Notification.js";
+import User from "../models/User.js";
 import { createNotification } from "../services/notificationService.js";
 import { invalidateCachePattern } from "../services/redisService.js";
+import { sendTeammateEmail } from "../services/emailService.js";
 
 export const createProject = async (req, res) => {
   const { title, description, projectType, availability, openings, skillsRequired } = req.body;
@@ -22,6 +24,16 @@ export const createProject = async (req, res) => {
     availability: Number(availability) || 0,
     openings: Number(openings) || 0
   });
+
+  (async () => {
+    try {
+      const users = await User.find({ isBanned: false, email: { $exists: true } }).select("email name");
+      const platformUrl = req.headers.origin || process.env.FRONTEND_URL || "http://localhost:5173";
+      await sendTeammateEmail(project, users, platformUrl);
+    } catch (err) {
+      console.error("Error in background teammate email notification:", err);
+    }
+  })();
 
   await invalidateCachePattern("spitians:cache:projects:*");
   await invalidateCachePattern("spitians:cache:admin:*");

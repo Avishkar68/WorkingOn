@@ -58,6 +58,10 @@ const eventSchema = new mongoose.Schema(
   registrationLink: {
     type: String
   },    
+  requiresRegistration: {
+    type: Boolean,
+    default: true
+  },
   status: {
     type: String,
     enum: ["active","completed","cancelled"],

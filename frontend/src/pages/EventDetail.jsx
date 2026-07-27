@@ -95,7 +95,7 @@ export default function EventDetail(){
             rel="noreferrer"
             className="flex items-center justify-center gap-2 bg-indigo-500 hover:bg-indigo-600 text-white py-3 rounded-xl transition shadow-[0_0_20px_rgba(99,102,241,0.4)]"
           >
-            Register Now
+            {event.requiresRegistration === false ? "Join Now" : "Register Interest"}
             <ExternalLink size={16}/>
           </a>
         )}
