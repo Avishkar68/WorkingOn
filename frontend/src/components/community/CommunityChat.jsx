@@ -96,15 +96,13 @@ export default function CommunityChat({ communityId }) {
                 </Link>
 
                 <div className={`max-w-[85%] md:max-w-[70%] space-y-1`}>
-                  {!isMe && (
-                    <Link 
-                      to={`/user/${msg.sender?._id || msg.sender}`}
-                      className="text-[10px] font-medium text-slate-400 ml-1"
-                    >
-                      {msg.sender?.name || "User"}
-                    </Link>
-                  )}
-                  <div className={`px-3 md:px-4 py-2 md:py-2.5 rounded-2xl text-xs md:text-sm ${
+                  <Link 
+                    to={isMe ? "/profile" : `/user/${msg.sender?._id || msg.sender}`}
+                    className={`text-[10px] font-medium text-slate-400 block ${isMe ? "text-right mr-1" : "ml-1"}`}
+                  >
+                    {msg.sender?.name ? msg.sender.name.split(" ")[0] : (isMe && user?.name ? user.name.split(" ")[0] : "User")}
+                  </Link>
+                  <div className={`px-3 md:px-4 py-2 md:py-2.5 rounded-2xl text-xs md:text-sm whitespace-pre-wrap ${
                     isMe 
                       ? "bg-indigo-600 text-white rounded-br-none" 
                       : "bg-slate-800/80 text-slate-100 border border-white/5 rounded-bl-none"
@@ -128,12 +126,19 @@ export default function CommunityChat({ communityId }) {
         className="p-3 md:p-4 border-t border-white/10 bg-black/20"
       >
         <div className="relative flex items-center gap-2">
-          <input
-            type="text"
+          <textarea
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                handleSendMessage(e);
+              }
+            }}
             placeholder="Type your message..."
-            className="flex-1 bg-slate-900/50 border border-white/10 rounded-xl px-4 py-2.5 md:py-3 text-xs md:text-sm text-slate-100 focus:outline-none focus:border-indigo-500/50 transition-all"
+            rows="1"
+            className="flex-1 bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-xs md:text-sm text-slate-100 focus:outline-none focus:border-indigo-500/50 transition-all resize-none overflow-y-auto align-middle"
+            style={{ maxHeight: "120px" }}
           />
           <button
             type="submit"
