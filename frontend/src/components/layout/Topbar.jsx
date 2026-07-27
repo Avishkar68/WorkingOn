@@ -26,7 +26,7 @@ export default function Topbar({ openSidebar }) {
 
   const titleMap = {
     "/home": "Dashboard",
-    "/projects": "Projects",
+    "/projects": "Find My Teammate",
     "/events": "Events",
     "/opportunities": "Opportunities",
     "/explore": "Explore",

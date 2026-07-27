@@ -35,8 +35,8 @@ export default function Projects(){
   return(
     <PageShell
       eyebrow="Collaboration"
-      title="Projects"
-      subtitle="Build products together and find teammates with matching skills."
+      title="Find My Teammate"
+      subtitle="Find teammates with matching skills for Hackathons, Startups, and Projects."
       actions={
         <button
           onClick={()=>{
@@ -45,7 +45,7 @@ export default function Projects(){
           }}
           className="w-full sm:w-auto btn-primary px-4 py-2 rounded-xl text-sm font-medium"
         >
-          Create Project
+          Post Requirement
         </button>
       }
     >
@@ -79,7 +79,7 @@ export default function Projects(){
           ))
         ) : (
           <div className="text-center text-slate-400 py-10">
-            No projects found
+            No teammate requirements found
           </div>
         )}
 

@@ -43,7 +43,7 @@ initSocket(httpServer);
 
 connectDB();
 cron.schedule("0 9 * * *", async () => {
-  console.log("⏳ Running scraper every minute...");
+  console.log("⏳ Running daily morning scraper at 9:00 AM...");
   await scrapeInternshala();
 });
 app.use(express.json());

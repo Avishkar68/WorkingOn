@@ -4,23 +4,23 @@ import { createNotification } from "../services/notificationService.js";
 import { invalidateCachePattern } from "../services/redisService.js";
 
 export const createProject = async (req, res) => {
-
-  const { title, description, techStack, skillsRequired, teamSize, tags } = req.body;
+  const { title, description, projectType, availability, openings, skillsRequired } = req.body;
 
   const project = await Project.create({
     title,
-    description,
+    description: description || `Looking for teammates for a ${projectType || 'project'}.`,
     creator: req.user._id,
-    members: [req.user._id],
-
+    members: [],
     teamSize: {
-      current: 1,
-      needed: teamSize.needed
+      current: 0,
+      needed: Number(openings) || 0
     },
-
-    techStack,
-    skillsRequired,
-    tags
+    skillsRequired: skillsRequired || [],
+    techStack: skillsRequired || [],
+    tags: [projectType].filter(Boolean),
+    projectType: projectType || "Other",
+    availability: Number(availability) || 0,
+    openings: Number(openings) || 0
   });
 
   await invalidateCachePattern("spitians:cache:projects:*");
@@ -28,28 +28,21 @@ export const createProject = async (req, res) => {
   res.status(201).json(project);
 };
 
-
-
 // ✅ GET PROJECTS
 export const getProjects = async (req, res) => {
-
   const projects = await Project.find({ status: "active" })
-    .populate("creator", "name profileImage")
-    .populate("members", "name profileImage")
-    .populate("joinRequests.user", "name profileImage") // IMPORTANT
+    .populate("creator", "name profileImage email branch year")
+    .populate("members", "name profileImage email branch year")
+    .populate("joinRequests.user", "name profileImage email branch year")
     .sort({ createdAt: -1 });
 
   res.json(projects);
 };
 
-
-
-// ✅ JOIN REQUEST
+// ✅ JOIN REQUEST (APPLY)
 export const requestJoinProject = async (req, res) => {
-
   const project = await Project.findById(req.params.id);
 
-  // already member
   if (project.members.includes(req.user._id)) {
     return res.status(400).json({ message: "Already in project" });
   }
@@ -62,9 +55,16 @@ export const requestJoinProject = async (req, res) => {
     return res.status(400).json({ message: "Already requested" });
   }
 
+  const { skills, interests, availability, github, portfolio, message } = req.body;
+
   project.joinRequests.push({
     user: req.user._id,
-    message: req.body.message,
+    skills: skills || [],
+    interests: interests || "",
+    availability: Number(availability) || 0,
+    github: github || "",
+    portfolio: portfolio || "",
+    message: message || "",
     status: "pending"
   });
 
@@ -92,17 +92,13 @@ export const requestJoinProject = async (req, res) => {
   res.json({ message: "Request sent" });
 };
 
-
-
 // ✅ ACCEPT
 export const acceptJoinRequest = async (req, res) => {
-
   const { projectId, userId } = req.params;
   const { contact } = req.body;
 
   const project = await Project.findById(projectId);
 
-  // already member (🔥 prevents duplicate)
   if (project.members.includes(userId)) {
     return res.status(400).json({ message: "Already accepted" });
   }
@@ -123,8 +119,10 @@ export const acceptJoinRequest = async (req, res) => {
     return res.status(400).json({ message: "Team full" });
   }
 
+  const contactInfo = contact || req.user.email || "";
+
   request.status = "accepted";
-  request.contact = contact;
+  request.contact = contactInfo;
 
   project.members.push(userId);
   project.teamSize.current += 1;
@@ -135,7 +133,7 @@ export const acceptJoinRequest = async (req, res) => {
     userId,
     req.user._id,
     "joinAccepted",
-    `Your request for "${project.title}" was accepted. Contact: ${contact}`,
+    `Your request for "${project.title}" was accepted. Contact: ${contactInfo}`,
     project._id,
     "Project"
   );
@@ -144,11 +142,8 @@ export const acceptJoinRequest = async (req, res) => {
   res.json({ message: "Accepted" });
 };
 
-
-
 // ✅ REJECT
 export const rejectJoinRequest = async (req, res) => {
-
   const { projectId, userId } = req.params;
 
   const project = await Project.findById(projectId);
@@ -181,30 +176,47 @@ export const rejectJoinRequest = async (req, res) => {
   await invalidateCachePattern("spitians:cache:projects:*");
   res.json({ message: "Rejected" });
 };
-export const getUserProjects = async (req,res)=>{
+
+export const getUserProjects = async (req, res) => {
   const projects = await Project.find({ creator: req.params.id })
-    .populate("creator", "name profileImage branch year")
-    .populate("members", "name profileImage")
+    .populate("creator", "name profileImage branch year email")
+    .populate("members", "name profileImage email branch year")
+    .populate("joinRequests.user", "name profileImage email branch year")
     .sort({ createdAt: -1 });
-  res.json(projects)
-}
-export const deleteProject = async (req,res)=>{
+  res.json(projects);
+};
 
-  const project = await Project.findById(req.params.id)
+export const deleteProject = async (req, res) => {
+  const project = await Project.findById(req.params.id);
 
-  if(!project){
-    return res.status(404).json({message:"Not found"})
+  if (!project) {
+    return res.status(404).json({ message: "Not found" });
   }
 
-  if(project.creator.toString() !== req.user._id.toString()){
-    return res.status(403).json({message:"Not allowed"})
+  if (project.creator.toString() !== req.user._id.toString()) {
+    return res.status(403).json({ message: "Not allowed" });
   }
 
-  await project.deleteOne()
+  await project.deleteOne();
 
   await invalidateCachePattern("spitians:cache:projects:*");
   await invalidateCachePattern("spitians:cache:admin:*");
   res.json({ message: "Project deleted" });
-}
-export const getProjectById = async (req, res) => { const project = await Project.findById(req.params.id).populate("creator", "name profileImage").populate("members", "name profileImage").populate("joinRequests.user", "name profileImage"); res.json(project); };
-export const leaveProject = async (req, res) => { const project = await Project.findById(req.params.id); project.members.pull(req.user._id); project.teamSize.current -= 1; await project.save(); await invalidateCachePattern("spitians:cache:projects:*"); res.json({ message: "Left project" }); };
+};
+
+export const getProjectById = async (req, res) => {
+  const project = await Project.findById(req.params.id)
+    .populate("creator", "name profileImage email branch year")
+    .populate("members", "name profileImage email branch year")
+    .populate("joinRequests.user", "name profileImage email branch year");
+  res.json(project);
+};
+
+export const leaveProject = async (req, res) => {
+  const project = await Project.findById(req.params.id);
+  project.members.pull(req.user._id);
+  project.teamSize.current -= 1;
+  await project.save();
+  await invalidateCachePattern("spitians:cache:projects:*");
+  res.json({ message: "Left project" });
+};

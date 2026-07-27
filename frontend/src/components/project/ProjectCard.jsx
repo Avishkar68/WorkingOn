@@ -1,15 +1,16 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import JoinProjectModal from "./JoinProjectModal";
 import { motion } from "framer-motion";
 import { buttonTap, cardHover, fadeInUp } from "../../lib/motion";
-import { Users, Share2, Trash2 } from "lucide-react";
-import toast from "react-hot-toast";
-import ConfirmationModal from "../common/ConfirmationModal";
-import api from "../../api/axios";
-import { trackEvent } from "../../utils/analytics";
+import { Users, Share2, Trash2, Calendar, Briefcase, Mail } from "lucide-react";
+import toast from "react-hot-toast"
+import ConfirmationModal from "../common/ConfirmationModal"
+import api from "../../api/axios"
+import { trackEvent } from "../../utils/analytics"
 
 export default function ProjectCard({ project, refresh }) {
+  const navigate = useNavigate();
   const [showJoin, setShowJoin] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
@@ -38,14 +39,16 @@ export default function ProjectCard({ project, refresh }) {
   const handleDelete = async () => {
     try {
       await api.delete(`/projects/${project._id}`);
-      toast.success("Project deleted!");
+      toast.success("Requirement deleted!");
       refresh();
       setShowDeleteConfirm(false);
     } catch (err) {
       console.error(err);
-      toast.error("Failed to delete project");
+      toast.error("Failed to delete requirement");
     }
   };
+
+  const isOwner = (project.creator?._id || project.creator)?.toString() === currentUserId?.toString();
 
   return (
     <motion.div
@@ -55,17 +58,28 @@ export default function ProjectCard({ project, refresh }) {
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
       whileHover={cardHover}
-      onClick={() => trackEvent('card_click', { card_type: 'project', id: project._id, title: project.title })}
+      onClick={() => {
+        trackEvent('card_click', { card_type: 'project', id: project._id, title: project.title });
+        navigate(`/projects/${project._id}`);
+      }}
     >
-      {/* TITLE */}
-      <h2 className="text-base sm:text-lg font-semibold text-white">
-        {project.title}
-      </h2>
+      {/* HEADER: ROLE & TYPE */}
+      <div className="flex flex-wrap items-start justify-between gap-2">
+        <h2 className="text-base sm:text-lg font-semibold text-white">
+          {project.title}
+        </h2>
+        {project.projectType && (
+          <span className="pill-badge bg-indigo-500/10 text-indigo-300 border-indigo-500/20 text-xs font-semibold">
+            {project.projectType}
+          </span>
+        )}
+      </div>
 
       {/* CREATOR */}
       <Link
         to={`/user/${project.creator?._id}`}
         className="flex items-center gap-3 group/creator"
+        onClick={(e) => e.stopPropagation()}
       >
         {project.creator?.profileImage ? (
           <img
@@ -89,65 +103,75 @@ export default function ProjectCard({ project, refresh }) {
         </div>
       </Link>
 
-      {/* DESCRIPTION */}
-      <p className="text-gray-300 text-sm leading-relaxed whitespace-pre-wrap">
-        {project.description}
-      </p>
-
-      {/* TECH STACK */}
-      <div className="flex gap-2 flex-wrap">
-        {project.techStack?.flatMap(t => t.split(",")).map(t => t.trim()).filter(Boolean).map(tag => (
-          <span
-            key={tag}
-            className="pill-badge"
-          >
-            {tag}
-          </span>
-        ))}
+      {/* REQUIRED SKILLS */}
+      <div className="space-y-1">
+        <p className="text-xs text-gray-500 font-semibold uppercase tracking-wider">Required Skills</p>
+        <div className="flex gap-2 flex-wrap">
+          {project.skillsRequired?.length > 0 ? (
+            project.skillsRequired.flatMap(t => t.split(",")).map(t => t.trim()).filter(Boolean).map(tag => (
+              <span
+                key={tag}
+                className="pill-badge"
+              >
+                {tag}
+              </span>
+            ))
+          ) : (
+            <span className="text-xs text-slate-400">None specified</span>
+          )}
+        </div>
       </div>
 
-      <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-sm text-slate-400 font-medium">
-        <span className="flex items-center gap-2">
+      {/* METADATA GRID */}
+      <div className="grid grid-cols-2 gap-4 text-xs font-semibold text-slate-400 border-t border-white/5 pt-3">
+        <div className="flex items-center gap-2">
           <Users size={14} className="text-[#2DD4BF]" />
-          {project.teamSize.current}/{project.teamSize.needed}
-        </span>
-
-        <span
-          className="pill-badge bg-indigo-500/10 text-indigo-200 border-indigo-500/20"
-          style={{ backgroundColor: "#2DD4BF05", color: "#2DD4BF" }}
-        >
-          in-progress
-        </span>
+          <span>Openings: {project.teamSize?.needed || project.openings || 0}</span>
+        </div>
+        {project.availability ? (
+          <div className="flex items-center gap-2">
+            <Briefcase size={14} className="text-[#2DD4BF]" />
+            <span>{project.availability} hrs/week</span>
+          </div>
+        ) : null}
       </div>
 
       {/* ACTIONS */}
-      <div className="border-t border-white/10 pt-4 flex flex-col sm:flex-row gap-3">
-        {isMember ? (
-          <button className="flex-1 bg-green-500/20 text-green-400 py-2 rounded-xl cursor-default">
-            Joined
+      <div className="border-t border-white/10 pt-4 flex flex-col sm:flex-row gap-3" onClick={(e) => e.stopPropagation()}>
+        {isOwner ? (
+          <button className="flex-1 bg-indigo-500/20 text-indigo-400 py-2 rounded-xl text-sm font-semibold cursor-default">
+            You Own This Post
           </button>
+        ) : isMember ? (
+          <div className="flex-1 flex gap-2">
+            <button className="flex-1 bg-green-500/20 text-green-400 py-2 rounded-xl cursor-default text-sm font-semibold">
+              Accepted
+            </button>
+            {project.creator?.email && (
+              <a
+                href={`mailto:${project.creator.email}?subject=Regarding Spitians Teammate Requirement: ${project.title}`}
+                className="flex-1 bg-indigo-500 text-white text-center py-2 rounded-xl text-sm font-semibold hover:bg-indigo-600 transition flex items-center justify-center gap-1.5"
+              >
+                <Mail size={14} /> Send Email
+              </a>
+            )}
+          </div>
         ) : request?.status === "pending" ? (
-          <button className="flex-1 bg-yellow-500/20 text-yellow-400 py-2 rounded-xl cursor-default">
-            Pending
-          </button>
-        ) : request?.status === "accepted" ? (
-          <button className="flex-1 bg-green-500/20 text-green-400 py-2 rounded-xl cursor-default">
-            Accepted
+          <button className="flex-1 bg-yellow-500/20 text-yellow-400 py-2 rounded-xl cursor-default text-sm font-semibold">
+            Applied (Pending)
           </button>
         ) : request?.status === "rejected" ? (
           <button className="flex-1 bg-red-500/20 text-red-400 py-2 rounded-xl text-sm font-semibold cursor-default">
-            Rejected
+            Application Rejected
           </button>
-        ) : project.teamSize.current >= project.teamSize.needed ? (
-          /* ✅ TEAM FULL STATE */
+        ) : (project.teamSize?.current >= project.teamSize?.needed) && (project.teamSize?.needed > 0) ? (
           <button
             disabled
             className="flex-1 bg-slate-500/20 text-slate-400 py-2 rounded-xl text-sm font-semibold cursor-not-allowed border border-white/5"
           >
-            Team Full
+            Position Filled
           </button>
         ) : (
-          /* ✅ JOIN ALLOWED */
           <motion.button
             onClick={(e) => {
               e.stopPropagation();
@@ -158,31 +182,33 @@ export default function ProjectCard({ project, refresh }) {
             whileTap={buttonTap}
             className="flex-1 btn-primary py-2 rounded-xl text-sm font-semibold"
           >
-            Join Project
+            Apply
           </motion.button>
         )}
 
+        {/* DETAILS BUTTON */}
         <motion.button
+          onClick={() => navigate(`/projects/${project._id}`)}
           whileTap={buttonTap}
           className="flex-1 btn-secondary py-2 rounded-xl text-sm font-semibold"
         >
-          Message
+          View Details
         </motion.button>
 
         <motion.button
           onClick={handleShare}
           whileTap={buttonTap}
-          title="Share Project"
+          title="Share Post"
           className="p-2.5 rounded-xl border border-white/10 bg-white/5 text-slate-400 hover:text-white hover:bg-white/10 transition-all flex items-center justify-center shrink-0"
         >
           <Share2 size={18} />
         </motion.button>
 
-        {(project.creator?._id || project.creator)?.toString() === currentUserId?.toString() && (
+        {isOwner && (
           <motion.button
             onClick={() => setShowDeleteConfirm(true)}
             whileTap={buttonTap}
-            title="Delete Project"
+            title="Delete Requirement"
             className="p-2.5 rounded-xl border border-white/10 bg-white/5 text-red-400 hover:text-red-500 hover:bg-white/10 transition-all flex items-center justify-center shrink-0"
           >
             <Trash2 size={18} />
@@ -199,13 +225,12 @@ export default function ProjectCard({ project, refresh }) {
         />
       )}
 
-
       <ConfirmationModal
         isOpen={showDeleteConfirm}
         onClose={() => setShowDeleteConfirm(false)}
         onConfirm={handleDelete}
-        title="Delete Project"
-        message="Are you sure you want to delete this project? This action cannot be undone."
+        title="Delete Requirement"
+        message="Are you sure you want to delete this teammate requirement? This action cannot be undone."
         confirmText="Confirm Delete"
       />
     </motion.div>

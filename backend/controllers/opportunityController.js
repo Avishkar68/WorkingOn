@@ -3,6 +3,7 @@ import User from "../models/User.js";
 import { createNotification } from "../services/notificationService.js";
 import { sendOpportunityEmail } from "../services/emailService.js";
 import { invalidateCachePattern } from "../services/redisService.js";
+import { scrapeInternshala } from "./opportunityScraper.js";
 
 
 export const createOpportunity = async (req, res) => {
@@ -62,9 +63,22 @@ export const createOpportunity = async (req, res) => {
   
     if (tag) filter.tags = tag;
   
-    const opportunities = await Opportunity.find(filter)
+    let opportunities = await Opportunity.find(filter)
       .populate("postedBy", "name profileImage")
       .sort({ createdAt: -1 });
+  
+    const totalActiveCount = await Opportunity.countDocuments({ status: "active" });
+    if (totalActiveCount === 0) {
+      console.log("No active opportunities found in DB. Triggering automated scrape...");
+      try {
+        await scrapeInternshala();
+        opportunities = await Opportunity.find(filter)
+          .populate("postedBy", "name profileImage")
+          .sort({ createdAt: -1 });
+      } catch (err) {
+        console.error("Error during automated scrape:", err);
+      }
+    }
   
     res.json(opportunities);
   

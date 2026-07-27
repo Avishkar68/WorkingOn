@@ -36,7 +36,7 @@ export default function Sidebar({ close }) {
     { to: "/home", label: "Home", icon: Home },
     { to: "/opportunities", label: "Opportunities", icon: Briefcase },
     { to: "/academic-help", label: "Academic Help", icon: GraduationCap },
-    { to: "/projects", label: "Projects", icon: FolderKanban },
+    { to: "/projects", label: "Find My Teammate", icon: FolderKanban },
     { to: "/events", label: "Events", icon: Calendar },
     { to: "/explore", label: "Explore", icon: Compass },
     { to: "/campus-pulse", label: "Campus Pulse", icon: Zap },

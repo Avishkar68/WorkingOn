@@ -28,12 +28,12 @@ const projectSchema = new mongoose.Schema(
   teamSize: {
     current: {
       type: Number,
-      default: 1
+      default: 0
     },
 
     needed: {
       type: Number,
-      required: true
+      default: 0
     }
   },
 
@@ -59,16 +59,37 @@ const projectSchema = new mongoose.Schema(
     }
   ],
 
+  projectType: {
+    type: String,
+    enum: ["Hackathon", "Startup", "College Project", "Open Source", "Other"],
+    default: "Other"
+  },
+
+  availability: {
+    type: Number,
+    default: 0
+  },
+
+  openings: {
+    type: Number,
+    default: 0
+  },
+
   joinRequests: [
     {
       user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-      message: String,
       status: {
         type: String,
         enum: ["pending", "accepted", "rejected"],
         default: "pending"
       },
-      contact: String 
+      skills: [String],
+      interests: String,
+      availability: Number,
+      github: String,
+      portfolio: String,
+      message: String,
+      contact: String
     }
   ],
 

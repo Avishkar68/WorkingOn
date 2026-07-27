@@ -24,10 +24,10 @@ const getDefaultChallenge = () => ({
 const getIstStartOfDay = (date = new Date()) => {
   const istDateStr = new Date(date).toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" });
   const [year, month, day] = istDateStr.split("-").map(Number);
-  
-  // ✅ 18:30 UTC of previous day = 00:00 IST of today
+
+
   const d = new Date(Date.UTC(year, month - 1, day, 0, 0, 0));
-  d.setMinutes(d.getMinutes() - 330); 
+  d.setMinutes(d.getMinutes() - 330);
   return d;
 };
 
@@ -39,8 +39,8 @@ export const getTodayChallenge = async (req, res) => {
 
     console.log(`[Challenge] Searching in Range: ${start.toISOString()} to ${end.toISOString()}`);
 
-    let challenge = await DailyChallenge.findOne({ 
-      date: { $gte: start, $lt: end } 
+    let challenge = await DailyChallenge.findOne({
+      date: { $gte: start, $lt: end }
     });
 
     if (!challenge) {
@@ -48,7 +48,7 @@ export const getTodayChallenge = async (req, res) => {
       const defaultData = getDefaultChallenge();
       challenge = await DailyChallenge.create({
         ...defaultData,
-        date: start, // ✅ Store at the IST Midnight anchor (18:30 UTC)
+        date: start,
         active: true
       });
     }
@@ -67,8 +67,8 @@ export const completeChallenge = async (req, res) => {
     const end = new Date(start);
     end.setHours(end.getHours() + 24);
 
-    const challenge = await DailyChallenge.findOne({ 
-      date: { $gte: start, $lt: end } 
+    const challenge = await DailyChallenge.findOne({
+      date: { $gte: start, $lt: end }
     });
 
     if (!challenge) {
@@ -93,27 +93,27 @@ export const completeChallenge = async (req, res) => {
     // 🏆 Calculate Rank (adding try/catch here to prevent 500 if aggregation fails)
     let rank = 0;
     try {
-        const leaderboard = await User.aggregate([
-            { $lookup: { from: "posts", localField: "_id", foreignField: "author", as: "posts" } },
-            { $lookup: { from: "comments", localField: "_id", foreignField: "author", as: "comments" } },
-            {
-              $addFields: {
-                score: {
-                  $add: [
-                    { $multiply: ["$streakCount", 10] },
-                    { $size: "$posts" },
-                    { $size: "$comments" }
-                  ]
-                }
-              }
-            },
-            { $sort: { score: -1, streakCount: -1 } },
-            { $group: { _id: null, users: { $push: "$_id" } } }
-          ]);
-      
-          rank = leaderboard[0]?.users.findIndex(id => id.toString() === user._id.toString()) + 1 || 0;
+      const leaderboard = await User.aggregate([
+        { $lookup: { from: "posts", localField: "_id", foreignField: "author", as: "posts" } },
+        { $lookup: { from: "comments", localField: "_id", foreignField: "author", as: "comments" } },
+        {
+          $addFields: {
+            score: {
+              $add: [
+                { $multiply: ["$streakCount", 10] },
+                { $size: "$posts" },
+                { $size: "$comments" }
+              ]
+            }
+          }
+        },
+        { $sort: { score: -1, streakCount: -1 } },
+        { $group: { _id: null, users: { $push: "$_id" } } }
+      ]);
+
+      rank = leaderboard[0]?.users.findIndex(id => id.toString() === user._id.toString()) + 1 || 0;
     } catch (rankErr) {
-        console.error("Rank calculation failed:", rankErr);
+      console.error("Rank calculation failed:", rankErr);
     }
 
     res.json({

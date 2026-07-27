@@ -5,54 +5,63 @@ import toast from "react-hot-toast"
 
 export default function CreateProjectModal({ close, refresh }) {
 
-  const [title, setTitle] = useState("")
-  const [description, setDescription] = useState("")
-  const [techStack, setTechStack] = useState([])
-  const [stackInput, setStackInput] = useState("")
-  const [teamSize, setTeamSize] = useState(2)
+  const [title, setTitle] = useState("") // Role(s) required
+  const [skillsRequired, setSkillsRequired] = useState([])
+  const [skillInput, setSkillInput] = useState("")
+  const [projectType, setProjectType] = useState("Hackathon")
+  const [availability, setAvailability] = useState(10)
+  const [openings, setOpenings] = useState(1)
 
-  const handleStackInput = (e) => {
+  const handleSkillInput = (e) => {
     const val = e.target.value;
     if (val.includes(",")) {
       const parts = val.split(",").map(p => p.trim()).filter(p => p !== "");
-      const newStack = [...new Set([...techStack, ...parts])];
-      setTechStack(newStack);
-      setStackInput("");
+      const newSkills = [...new Set([...skillsRequired, ...parts])];
+      setSkillsRequired(newSkills);
+      setSkillInput("");
     } else {
-      setStackInput(val);
+      setSkillInput(val);
     }
   };
 
-  const addStack = () => {
-    if (!stackInput.trim()) return;
-    if (!techStack.includes(stackInput.trim())) {
-      setTechStack([...techStack, stackInput.trim()]);
+  const addSkill = () => {
+    if (!skillInput.trim()) return;
+    if (!skillsRequired.includes(skillInput.trim())) {
+      setSkillsRequired([...skillsRequired, skillInput.trim()]);
     }
-    setStackInput("");
+    setSkillInput("");
   };
 
-  const removeStack = (tech) => {
-    setTechStack(techStack.filter(t => t !== tech))
+  const removeSkill = (skill) => {
+    setSkillsRequired(skillsRequired.filter(s => s !== skill))
   }
 
-  const createProject = async () => {
+  const createRequirement = async () => {
+    if (!title.trim()) {
+      toast.error("Role(s) required is required");
+      return;
+    }
+    if (skillsRequired.length === 0) {
+      toast.error("At least one required skill is required");
+      return;
+    }
     try {
       await api.post("/projects", {
-        title,
-        description,
-        techStack,
-        skillsRequired: techStack,
-        teamSize: { needed: teamSize },
-        tags: techStack
+        title, // Role(s) required
+        description: `Looking for teammates for a ${projectType} project.`,
+        skillsRequired,
+        projectType,
+        availability: Number(availability),
+        openings: Number(openings)
       })
 
-      toast.success("Project created successfully!")
+      toast.success("Requirement posted successfully!")
       refresh()
       close()
 
     } catch (err) {
       console.error(err)
-      toast.error("Failed to create project")
+      toast.error("Failed to post requirement")
     }
   }
 
@@ -67,10 +76,10 @@ export default function CreateProjectModal({ close, refresh }) {
         <div className="flex justify-between items-center">
           <div>
             <h2 className="text-xl font-semibold tracking-wide">
-              Create Project
+              Post Teammate Requirement
             </h2>
             <p className="text-sm text-gray-400">
-              Build something and find teammates 
+              Find partners to work with
             </p>
           </div>
 
@@ -82,39 +91,33 @@ export default function CreateProjectModal({ close, refresh }) {
           </button>
         </div>
 
-        {/* TITLE */}
-        <input
-          placeholder="Project Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="input"
-        />
+        {/* ROLE(S) */}
+        <div>
+          <label className="text-sm text-gray-400">Role(s) Required</label>
+          <input
+            placeholder="e.g. Frontend Developer, UI Designer"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="input mt-1"
+          />
+        </div>
 
-        {/* DESCRIPTION */}
-        <textarea
-          placeholder="Describe your project idea..."
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          rows="4"
-          className="input"
-        />
-
-        {/* TECH STACK */}
+        {/* REQUIRED SKILLS */}
         <div className="space-y-2">
 
-          <label className="text-sm text-gray-400">Tech Stack</label>
+          <label className="text-sm text-gray-400">Required Skills</label>
 
           <div className="flex gap-2">
             <input
-              placeholder="React, Node, AI..."
-              value={stackInput}
-              onChange={handleStackInput}
-              onKeyDown={(e) => e.key === "Enter" && addStack()}
+              placeholder="e.g. React, Python, Figma..."
+              value={skillInput}
+              onChange={handleSkillInput}
+              onKeyDown={(e) => e.key === "Enter" && addSkill()}
               className="flex-1 input"
             />
 
             <button
-              onClick={addStack}
+              onClick={addSkill}
               className="px-4 rounded-xl bg-indigo-500 hover:bg-indigo-600 text-white 
               shadow-[0_0_10px_rgba(99,102,241,0.4)] transition"
             >
@@ -122,16 +125,16 @@ export default function CreateProjectModal({ close, refresh }) {
             </button>
           </div>
 
-          {/* STACK CHIPS */}
+          {/* SKILLS CHIPS */}
           <div className="flex flex-wrap gap-2">
-            {techStack.map(t => (
+            {skillsRequired.map(s => (
               <span
-                key={t}
+                key={s}
                 className="flex items-center gap-1 bg-white/10 px-3 py-1 rounded-full text-xs border border-white/10"
               >
-                {t}
+                {s}
                 <button
-                  onClick={() => removeStack(t)}
+                  onClick={() => removeSkill(s)}
                   className="text-gray-400 hover:text-red-400"
                 >
                   ✕
@@ -142,17 +145,45 @@ export default function CreateProjectModal({ close, refresh }) {
 
         </div>
 
-        {/* TEAM SIZE */}
+        {/* PROJECT TYPE */}
         <div>
-          <label className="text-sm text-gray-400">Team Size Needed</label>
+          <label className="text-sm text-gray-400">Project Type</label>
+          <select
+            value={projectType}
+            onChange={(e) => setProjectType(e.target.value)}
+            className="input mt-1 w-full bg-[#1c1d1f] text-white border border-white/10 rounded-xl p-3 outline-none"
+          >
+            <option value="Hackathon">Hackathon</option>
+            <option value="Startup">Startup</option>
+            <option value="College Project">College Project</option>
+            <option value="Open Source">Open Source</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
 
-          <input
-            type="number"
-            min="1"
-            value={teamSize}
-            onChange={(e) => setTeamSize(e.target.value)}
-            className="input mt-1"
-          />
+        {/* AVAILABILITY & OPENINGS GRID */}
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="text-sm text-gray-400 font-medium">Availability (hours/week)</label>
+            <input
+              type="number"
+              min="1"
+              value={availability}
+              onChange={(e) => setAvailability(e.target.value)}
+              className="input mt-1"
+            />
+          </div>
+
+          <div>
+            <label className="text-sm text-gray-400 font-medium">Number of Openings</label>
+            <input
+              type="number"
+              min="1"
+              value={openings}
+              onChange={(e) => setOpenings(e.target.value)}
+              className="input mt-1"
+            />
+          </div>
         </div>
 
         {/* ACTIONS */}
@@ -166,11 +197,11 @@ export default function CreateProjectModal({ close, refresh }) {
           </button>
 
           <button
-            onClick={createProject}
+            onClick={createRequirement}
             className="px-5 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-600 text-white 
             shadow-[0_0_15px_rgba(99,102,241,0.4)] hover:scale-105 transition"
           >
-            Create 
+            Post
           </button>
 
         </div>
