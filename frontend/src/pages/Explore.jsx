@@ -49,7 +49,7 @@ export default function Explore() {
     >
 
       {/* TRENDING TAGS */}
-      <div className="glass p-6 rounded-2xl border border-white/10">
+      {/* <div className="glass p-6 rounded-2xl border border-white/10">
 
         <h2 className="font-semibold mb-4 text-slate-100">
           Trending Tags
@@ -76,7 +76,7 @@ export default function Explore() {
 
         </div>
 
-      </div>
+      </div> */}
 
       {/* POSTS */}
       <motion.div className="space-y-4" variants={staggerContainer} initial="hidden" animate="visible">
